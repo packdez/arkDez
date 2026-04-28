@@ -296,7 +296,7 @@ body {
     <div class="auth-left-bg"></div>
     <div class="auth-left-grid"></div>
 
-    <a href="../index.html" class="auth-brand">
+    <a href="https://packdez.com" class="auth-brand">
       <div class="auth-brand-mark">A</div>
       <span class="auth-brand-name">ArkDez</span>
     </a>
@@ -330,7 +330,7 @@ body {
   <div class="auth-right">
     <div class="auth-form-wrap">
 
-      <a href="../index.html" class="mobile-brand">
+      <a href="https://packdez.com" class="mobile-brand">
         <div class="mobile-brand-mark">A</div>
         <span class="mobile-brand-name">ArkDez</span>
       </a>
@@ -458,7 +458,7 @@ document.getElementById("login-form").addEventListener("submit", async function(
         return;
       }
       showToast("Welcome back!", "success");
-      setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
+      setTimeout(() => { window.location.href = "/app/dashboard.html"; }, 1000);
       return;
     }
     const body = new Blob([JSON.stringify({ action: "login", email, password, remember })], { type: "text/plain" });
@@ -468,7 +468,7 @@ document.getElementById("login-form").addEventListener("submit", async function(
       store.setItem("ark_token", res.token);
       store.setItem("ark_user", JSON.stringify(res.user));
       showToast("Welcome back!", "success");
-      setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
+      setTimeout(() => { window.location.href = "/app/dashboard.html"; }, 1000);
     } else {
       showAuthError(res.error || "Invalid email or password.");
     }
