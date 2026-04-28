@@ -351,7 +351,7 @@ body {
     <div class="auth-left-bg"></div>
     <div class="auth-left-grid"></div>
 
-    <a href="../index.html" class="auth-brand">
+    <a href="https://packdez.com" class="auth-brand">
       <div class="auth-brand-mark">A</div>
       <span class="auth-brand-name">ArkDez</span>
     </a>
@@ -394,7 +394,7 @@ body {
   <div class="auth-right">
     <div class="auth-form-wrap">
 
-      <a href="../index.html" class="mobile-brand">
+      <a href="https://packdez.com" class="mobile-brand">
         <div class="mobile-brand-mark">A</div>
         <span class="mobile-brand-name">ArkDez</span>
       </a>
@@ -573,7 +573,7 @@ document.getElementById("signup-form").addEventListener("submit", async function
       // Demo mode — simulate success
       await new Promise(r => setTimeout(r, 1400));
       showToast("Account created! Redirecting…", "success");
-      setTimeout(() => { window.location.href = "dashboard.html"; }, 1200);
+      setTimeout(() => { window.location.href = "/app/dashboard.html"; }, 1200);
       return;
     }
     const body = new Blob([JSON.stringify({
@@ -584,7 +584,7 @@ document.getElementById("signup-form").addEventListener("submit", async function
       localStorage.setItem("ark_token", res.token);
       localStorage.setItem("ark_user", JSON.stringify({ firstName, lastName, email, workspace }));
       showToast("Account created! Redirecting…", "success");
-      setTimeout(() => { window.location.href = "dashboard.html"; }, 1200);
+      setTimeout(() => { window.location.href = "/app/dashboard.html"; }, 1200);
     } else {
       showToast(res.error || "Something went wrong", "error");
     }
