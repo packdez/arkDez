@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — ArkDez</title>
+<link rel="stylesheet" href="assets/ark.css">
+<style>
+/* Dashboard-specific only */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 18px;
+}
+</style>
+</head>
+<body>
+
+<div id="auth-gate">
+  <div class="gate-logo">A</div>
+  <span class="gate-text">Loading your workspace…</span>
+</div>
+
+<div id="sidebar-overlay" onclick="ARK.closeSidebar()"></div>
+
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <a href="/" class="sidebar-brand">
+        <div class="sidebar-brand-mark">A</div>
+        <span class="sidebar-brand-name">ArkDez</span>
+      </a>
+    </div>
+
+    <div class="workspace-pill" onclick="ARK.toggleUserMenu()">
+      <div class="workspace-av" id="ws-av">P</div>
+      <div class="workspace-info">
+        <div class="workspace-name" id="ws-name">Workspace</div>
+        <div class="workspace-plan">Free plan</div>
+      </div>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--ink4);flex-shrink:0"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+      <a class="nav-item active" data-page="dashboard" onclick="navigate('dashboard',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-item" data-page="clients" onclick="navigate('clients',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Clients
+        <span class="nav-badge" id="badge-clients">0</span>
+      </a>
+      <a class="nav-item" data-page="projects" onclick="navigate('projects',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+        Projects
+        <span class="nav-badge" id="badge-projects">0</span>
+      </a>
+      <a class="nav-item" data-page="messages" onclick="navigate('messages',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Messages
+        <span class="nav-badge" id="badge-messages">0</span>
+      </a>
+      <div class="nav-section-label">Finance</div>
+      <a class="nav-item" data-page="invoices" onclick="navigate('invoices',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Invoices
+      </a>
+      <div class="nav-section-label">Delivery</div>
+      <a class="nav-item" data-page="documents" onclick="navigate('documents',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+        Documents
+      </a>
+      <a class="nav-item" data-page="onboarding" onclick="navigate('onboarding',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Onboarding
+      </a>
+      <div class="nav-section-label">Account</div>
+      <a class="nav-item" data-page="settings" onclick="navigate('settings',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Settings
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-pill" onclick="ARK.toggleUserMenu()" id="user-pill">
+        <div class="user-av" id="user-av">R</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Loading…</div>
+          <div class="user-email" id="user-email">…</div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--ink4);flex-shrink:0"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      </div>
+    </div>
+  </nav>
+
+  <!-- User menu -->
+  <div id="user-menu">
+    <div style="padding:4px;">
+      <div class="menu-item" onclick="navigate('settings');ARK.closeUserMenu()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Profile & settings
+      </div>
+      <div class="menu-divider"></div>
+      <div class="menu-item danger" onclick="ARK.logout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign out
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+    <header id="topbar">
+      <div class="topbar-left">
+        <button class="topbar-hamburger" onclick="ARK.openSidebar()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="topbar-page-title" id="topbar-title">Dashboard</div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn" onclick="ARK.toggleNotifications()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <div class="topbar-notif-dot" id="notif-dot"></div>
+        </button>
+        <button class="btn-primary" id="topbar-action" onclick="handlePrimaryAction()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span id="topbar-action-label">New client</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="content">
+
+      <!-- DASHBOARD -->
+      <section class="page active" id="page-dashboard">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 id="greeting">Good morning, there 👋</h1>
+            <p>Here's what's happening in your workspace today.</p>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Active clients</div>
+            <div class="stat-value" id="stat-clients">—</div>
+            <div class="stat-delta flat">No data yet</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Active projects</div>
+            <div class="stat-value" id="stat-projects">—</div>
+            <div class="stat-delta flat">No data yet</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Revenue this month</div>
+            <div class="stat-value" id="stat-revenue">—</div>
+            <div class="stat-delta flat">No data yet</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>Outstanding</div>
+            <div class="stat-value" id="stat-outstanding">—</div>
+            <div class="stat-delta flat">No invoices yet</div>
+          </div>
+        </div>
+        <div class="content-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Recent projects</span>
+              <span class="panel-link" onclick="navigate('projects')">View all →</span>
+            </div>
+            <div class="panel-body" id="dash-projects">
+              <div class="panel-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+                No projects yet. Add your first client to get started.
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:18px;">
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-title">Recent clients</span>
+                <span class="panel-link" onclick="navigate('clients')">View all →</span>
+              </div>
+              <div class="panel-body" id="dash-clients">
+                <div class="panel-empty">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  No clients yet.
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-title">Pending invoices</span>
+                <span class="panel-link" onclick="navigate('invoices')">View all →</span>
+              </div>
+              <div class="panel-body" id="dash-invoices">
+                <div class="panel-empty">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+                  No pending invoices.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CLIENTS -->
+      <section class="page" id="page-clients">
+        <div class="page-header">
+          <div class="page-header-left"><h1>Clients</h1><p>Manage your client relationships and portals.</p></div>
+          <div class="page-header-actions"><button class="btn-primary" onclick="handlePrimaryAction()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add client</button></div>
+        </div>
+        <div class="coming-soon"><div class="coming-soon-badge"><div class="coming-soon-badge-dot"></div>Coming next</div><h2>Client management</h2><p>Add clients, generate their portal link, and manage everything from one place.</p></div>
+      </section>
+
+      <!-- PROJECTS -->
+      <section class="page" id="page-projects">
+        <div class="page-header"><div class="page-header-left"><h1>Projects</h1><p>Track every project from kickoff to delivery.</p></div></div>
+        <div class="coming-soon"><div class="coming-soon-badge"><div class="coming-soon-badge-dot"></div>Coming next</div><h2>Project tracking</h2><p>Create projects, set milestones, track progress and update clients in real time.</p></div>
+      </section>
+
+      <!-- MESSAGES -->
+      <section class="page" id="page-messages">
+        <div class="page-header"><div class="page-header-left"><h1>Messages</h1><p>All client conversations in one place.</p></div></div>
+        <div class="coming-soon"><div class="coming-soon-badge"><div class="coming-soon-badge-dot"></div>Coming next</div><h2>Client messaging</h2><p>Send and receive messages per project. Clients reply through their portal.</p></div>
+      </section>
+
+      <!-- INVOICES -->
+      <section class="page" id="page-invoices">
+        <div class="page-header"><div class="page-header-left"><h1>Invoices</h1><p>Create, send and track payments.</p></div></div>
+        <div class="coming-soon"><div class="coming-soon-badge"><div class="coming-soon-badge-dot"></div>Coming next</div><h2>Invoice management</h2><p>Generate professional invoices, track payment status and send reminders.</p></div>
+      </section>
+
+      <!-- DOCUMENTS -->
+      <section class="page" id="page-documents">
+        <div class="page-header"><div class="page-header-left"><h1>Documents</h1><p>Contracts, proposals and deliverables.</p></div></div>
+        <div class="coming-soon"><div class="coming-soon-badge"><div class="coming-soon-badge-dot"></div>Coming next</div><h2>Document signing</h2><p>Send contracts for signature, share proposals and deliver final files — all tracked.</p></div>
+      </section>
+
+      <!-- ONBOARDING -->
+      <section class="page" id="page-onboarding">
+        <div class="page-header"><div class="page-header-left"><h1>Onboarding</h1><p>Client intake forms and templates.</p></div></div>
+        <div class="coming-soon"><div class="coming-soon-badge"><div class="coming-soon-badge-dot"></div>Coming next</div><h2>Onboarding templates</h2><p>Build intake forms once, assign to any client. Collect briefs, assets and approvals cleanly.</p></div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="page" id="page-settings">
+        <div class="page-header"><div class="page-header-left"><h1>Settings</h1><p>Manage your profile and workspace.</p></div></div>
+        <div class="coming-soon"><div class="coming-soon-badge"><div class="coming-soon-badge-dot"></div>Coming next</div><h2>Workspace settings</h2><p>Update your profile, branding, notification preferences and billing.</p></div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- Notification drawer -->
+<div id="notif-overlay" onclick="ARK.closeNotifications()"></div>
+<div id="notif-drawer">
+  <div class="notif-header">
+    <h3>Notifications</h3>
+    <button class="notif-close" onclick="ARK.closeNotifications()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="notif-list">
+    <div class="panel-empty" style="padding:40px 20px;">
+      <svg style="width:32px;height:32px;margin:0 auto 10px;display:block;color:var(--line)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      No notifications yet.
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="assets/ark.js"></script>
+<script>
+const PAGE_TITLES = {
+  dashboard:"Dashboard", clients:"Clients", projects:"Projects",
+  messages:"Messages", invoices:"Invoices", documents:"Documents",
+  onboarding:"Onboarding", settings:"Settings"
+};
+const PAGE_ACTIONS = {
+  dashboard:"New client", clients:"Add client", projects:"New project",
+  messages:"New message", invoices:"New invoice", documents:"Upload",
+  onboarding:"New template", settings:null
+};
+
+let currentPage = "dashboard";
+
+function navigate(page, el) {
+  if (page === currentPage && el) return;
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  const target = el || document.querySelector(`[data-page="${page}"]`);
+  if (target) target.classList.add("active");
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("page-" + page)?.classList.add("active");
+  document.getElementById("topbar-title").textContent = PAGE_TITLES[page] || page;
+  const action = PAGE_ACTIONS[page];
+  const btn = document.getElementById("topbar-action");
+  btn.style.display = action ? "" : "none";
+  if (action) document.getElementById("topbar-action-label").textContent = action;
+  currentPage = page;
+  ARK.closeSidebar();
+  ARK.closeUserMenu();
+  history.replaceState(null, "", "#" + page);
+}
+
+function handlePrimaryAction() {
+  ARK.showToast("This page is coming soon!", "warn");
+}
+
+function bootApp(user) {
+  ARK.bootSidebar(user);
+  // Greeting
+  const h = new Date().getHours();
+  const g = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+  document.getElementById("greeting").textContent = `${g}, ${user.firstName} 👋`;
+  // Hide gate, show app
+  document.getElementById("auth-gate").classList.add("hidden");
+  document.getElementById("app").classList.add("ready");
+  // Stats placeholders
+  ["stat-clients","stat-projects","stat-revenue","stat-outstanding"].forEach(id => {
+    document.getElementById(id).textContent = "0";
+  });
+  // Hash routing
+  const hash = window.location.hash.replace("#", "");
+  if (hash && PAGE_TITLES[hash]) navigate(hash);
+}
+
+ARK.requireAuth(bootApp);
+</script>
+</body>
+</html>
