@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in — ArkDez</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#0d0d0d;--ink2:#3d3d3d;--ink3:#737373;--ink4:#a3a3a3;
+  --line:#e5e5e5;--line2:#f0f0f0;--bg:#ffffff;--bg2:#fafafa;--bg3:#f5f5f5;
+  --accent:#1a6b3c;--accent2:#22c55e;--accent-bg:#f0fdf4;--accent-ln:#bbf7d0;
+  --red:#dc2626;--red-bg:#fef2f2;
+  --serif:'Instrument Serif',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
+  --r:10px;--ease:cubic-bezier(.22,1,.36,1);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:100svh;display:flex;-webkit-font-smoothing:antialiased;}
+.auth-split{display:flex;width:100%;min-height:100svh;}
+.auth-left{width:44%;min-height:100svh;background:#0a1a0f;display:flex;flex-direction:column;justify-content:space-between;padding:40px 48px;position:relative;overflow:hidden;flex-shrink:0;}
+.auth-left-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 20% 20%,rgba(34,197,94,.12) 0%,transparent 60%),radial-gradient(ellipse 50% 60% at 80% 80%,rgba(26,107,60,.18) 0%,transparent 60%);pointer-events:none;}
+.auth-left-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+.auth-brand{position:relative;z-index:1;display:flex;align-items:center;gap:10px;text-decoration:none;}
+.auth-brand-mark{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1rem;color:#fff;box-shadow:0 2px 8px rgba(34,197,94,.35);}
+.auth-brand-name{font-size:1.1rem;font-weight:700;color:#fff;letter-spacing:-.01em;}
+.auth-left-content{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:center;padding:40px 0;}
+.auth-left-heading{font-family:var(--serif);font-size:clamp(2rem,3.5vw,2.8rem);font-weight:400;color:#fff;line-height:1.15;margin-bottom:20px;letter-spacing:-.02em;}
+.auth-left-heading em{font-style:italic;color:#4ade80;}
+.auth-left-sub{font-size:.9rem;color:rgba(255,255,255,.5);line-height:1.7;max-width:320px;margin-bottom:36px;}
+.auth-testimonial{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 22px;}
+.auth-testimonial-text{font-size:.85rem;color:rgba(255,255,255,.7);line-height:1.65;font-style:italic;margin-bottom:14px;}
+.auth-testimonial-author{display:flex;align-items:center;gap:10px;}
+.auth-testimonial-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#103320,#22c55e);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:#fff;}
+.auth-testimonial-name{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.8);}
+.auth-testimonial-role{font-size:.7rem;color:rgba(255,255,255,.4);}
+.auth-left-footer{position:relative;z-index:1;font-size:.75rem;color:rgba(255,255,255,.25);}
+.auth-right{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;overflow-y:auto;}
+.auth-form-wrap{width:100%;max-width:400px;}
+.auth-form-header{margin-bottom:32px;}
+.auth-form-title{font-family:var(--serif);font-size:1.9rem;font-weight:400;color:var(--ink);letter-spacing:-.025em;line-height:1.2;margin-bottom:8px;}
+.auth-form-sub{font-size:.86rem;color:var(--ink3);line-height:1.55;}
+.auth-form-sub a{color:var(--accent);text-decoration:none;font-weight:600;}
+.auth-form-sub a:hover{text-decoration:underline;}
+.auth-form{display:flex;flex-direction:column;gap:16px;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field-label-row{display:flex;align-items:center;justify-content:space-between;}
+.field-label{font-size:.78rem;font-weight:600;color:var(--ink2);letter-spacing:.01em;}
+.field-label-link{font-size:.75rem;color:var(--accent);text-decoration:none;font-weight:500;}
+.field-label-link:hover{text-decoration:underline;}
+.field-input-wrap{position:relative;}
+.field-input{width:100%;height:46px;background:var(--bg2);border:1.5px solid var(--line);border-radius:var(--r);padding:0 14px;font-size:.875rem;color:var(--ink);font-family:var(--sans);outline:none;transition:border-color .18s,background .18s,box-shadow .18s;-webkit-appearance:none;}
+.field-input::placeholder{color:var(--ink4);}
+.field-input:focus{border-color:var(--accent);background:var(--bg);box-shadow:0 0 0 3px rgba(34,197,94,.1);}
+.field-input.error{border-color:var(--red);background:var(--red-bg);}
+.field-input.has-toggle{padding-right:40px;}
+.toggle-pw{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;padding:4px;transition:color .15s;}
+.toggle-pw:hover{color:var(--ink2);}
+.field-err{font-size:.72rem;color:var(--red);font-weight:500;display:none;margin-top:2px;}
+.field-err.show{display:block;}
+.auth-error-banner{background:var(--red-bg);border:1px solid #fecaca;border-radius:var(--r);padding:12px 14px;font-size:.82rem;color:var(--red);display:none;align-items:center;gap:8px;line-height:1.4;}
+.auth-error-banner.show{display:flex;}
+.auth-remember{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;}
+.auth-remember input[type="checkbox"]{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--line);appearance:none;cursor:pointer;background:var(--bg2);transition:background .15s,border-color .15s;flex-shrink:0;}
+.auth-remember input[type="checkbox"]:checked{background:var(--accent);border-color:var(--accent);}
+.auth-remember input[type="checkbox"]:checked::after{content:'';display:block;width:8px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);margin:auto;}
+.auth-remember span{font-size:.8rem;color:var(--ink3);}
+.btn-submit{width:100%;height:48px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.9rem;font-weight:700;font-family:var(--sans);cursor:pointer;transition:background .18s,transform .15s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 2px 8px rgba(26,107,60,.25);}
+.btn-submit:hover{background:#155c33;}
+.btn-submit:active{transform:scale(.98);}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.btn-submit .spinner{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;display:none;}
+.btn-submit.loading .btn-text{display:none;}
+.btn-submit.loading .spinner{display:block;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:10px;font-size:.82rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.15);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap;z-index:999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.success{background:var(--accent);}
+.toast.error{background:var(--red);}
+.mobile-brand{display:none;align-items:center;gap:8px;margin-bottom:32px;text-decoration:none;}
+.mobile-brand-mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:.9rem;color:#fff;}
+.mobile-brand-name{font-size:1rem;font-weight:700;color:var(--ink);}
+@media(max-width:860px){.auth-split{flex-direction:column;}.auth-left{display:none;}.auth-right{justify-content:flex-start;padding:32px 24px 48px;min-height:100svh;}.mobile-brand{display:flex;}}
+@media(max-width:480px){.auth-right{padding:24px 20px 40px;}.auth-form-title{font-size:1.65rem;}}
+</style>
+</head>
+<body>
+<div class="auth-split">
+  <div class="auth-left">
+    <div class="auth-left-bg"></div>
+    <div class="auth-left-grid"></div>
+    <a href="/" class="auth-brand">
+      <div class="auth-brand-mark">A</div>
+      <span class="auth-brand-name">ArkDez</span>
+    </a>
+    <div class="auth-left-content">
+      <h1 class="auth-left-heading">Welcome<br><em>back.</em></h1>
+      <p class="auth-left-sub">Your workspace is waiting. Pick up right where you left off.</p>
+      <div class="auth-testimonial">
+        <p class="auth-testimonial-text">"ArkDez changed how I deliver work. Clients feel taken care of from day one — onboarding, updates, invoices, all in one place."</p>
+        <div class="auth-testimonial-author">
+          <div class="auth-testimonial-av">RL</div>
+          <div>
+            <div class="auth-testimonial-name">Raphael L.</div>
+            <div class="auth-testimonial-role">Founder, Packdez</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="auth-left-footer">© 2025 ArkDez. All rights reserved.</div>
+  </div>
+
+  <div class="auth-right">
+    <div class="auth-form-wrap">
+      <a href="/" class="mobile-brand">
+        <div class="mobile-brand-mark">A</div>
+        <span class="mobile-brand-name">ArkDez</span>
+      </a>
+      <div class="auth-form-header">
+        <h2 class="auth-form-title">Sign in to ArkDez</h2>
+        <p class="auth-form-sub">Don't have an account? <a href="signup.html">Create one free</a></p>
+      </div>
+      <form class="auth-form" id="login-form" novalidate>
+        <div class="auth-error-banner" id="auth-error">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="auth-error-text">Invalid email or password.</span>
+        </div>
+        <div class="field">
+          <label class="field-label" for="email">Email address</label>
+          <input class="field-input" type="email" id="email" placeholder="raphael@packdez.com" autocomplete="email" required>
+          <span class="field-err" id="err-email">Enter a valid email address</span>
+        </div>
+        <div class="field">
+          <div class="field-label-row">
+            <label class="field-label" for="password">Password</label>
+            <a href="#" class="field-label-link">Forgot password?</a>
+          </div>
+          <div class="field-input-wrap">
+            <input class="field-input has-toggle" type="password" id="password" placeholder="Your password" autocomplete="current-password" required>
+            <button type="button" class="toggle-pw" id="toggle-pw">
+              <svg id="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <span class="field-err" id="err-password">Please enter your password</span>
+        </div>
+        <label class="auth-remember">
+          <input type="checkbox" id="remember">
+          <span>Keep me signed in for 30 days</span>
+        </label>
+        <button type="submit" class="btn-submit" id="submit-btn">
+          <span class="btn-text">Sign in</span>
+          <div class="spinner"></div>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsjcZmIhwJF5DslXrFTPZJENckjKB_3re9qK73dewpLCCUNBcEi4-_iHBr6UvhVCSQpA/exec";
+
+const pwInput = document.getElementById("password");
+const eyeIcon = document.getElementById("eye-icon");
+let pwVisible = false;
+document.getElementById("toggle-pw").addEventListener("click", () => {
+  pwVisible = !pwVisible;
+  pwInput.type = pwVisible ? "text" : "password";
+  eyeIcon.innerHTML = pwVisible
+    ? '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+    : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+});
+
+function showErr(id,msg){document.getElementById("err-"+id).textContent=msg||document.getElementById("err-"+id).textContent;document.getElementById("err-"+id).classList.add("show");document.getElementById(id).classList.add("error");}
+function clearErr(id){document.getElementById("err-"+id)?.classList.remove("show");document.getElementById(id)?.classList.remove("error");}
+function validEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);}
+function showAuthErr(msg){document.getElementById("auth-error-text").textContent=msg;document.getElementById("auth-error").classList.add("show");}
+function hideAuthErr(){document.getElementById("auth-error").classList.remove("show");}
+function showToast(msg,type){const t=document.getElementById("toast");t.textContent=msg;t.className="toast "+(type||"")+" show";setTimeout(()=>t.className="toast "+(type||""),3000);}
+
+["email","password"].forEach(id=>{document.getElementById(id).addEventListener("input",()=>{clearErr(id);hideAuthErr();});});
+
+// Auto-fill returning user
+try{const u=JSON.parse(localStorage.getItem("ark_user")||"{}");if(u.email)document.getElementById("email").value=u.email;}catch(e){}
+
+document.getElementById("login-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  hideAuthErr();
+  let ok = true;
+  const email    = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const remember = document.getElementById("remember").checked;
+
+  if (!validEmail(email)) { showErr("email","Enter a valid email"); ok = false; }
+  if (!password)           { showErr("password","Please enter your password"); ok = false; }
+  if (!ok) return;
+
+  const btn = document.getElementById("submit-btn");
+  btn.classList.add("loading"); btn.disabled = true;
+
+  try {
+    if (!APPS_SCRIPT_URL) {
+      await new Promise(r => setTimeout(r, 1200));
+      const stored = localStorage.getItem("ark_user");
+      if (!stored) { showAuthErr("No account found. Please sign up first."); return; }
+      showToast("Welcome back!", "success");
+      setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
+      return;
+    }
+    const body = new Blob([JSON.stringify({ action:"login", email, password, remember })], { type:"text/plain" });
+    const res  = await fetch(APPS_SCRIPT_URL, { method:"POST", body }).then(r => r.json());
+    if (res.success) {
+      const store = remember ? localStorage : sessionStorage;
+      store.setItem("ark_token", res.token);
+      store.setItem("ark_user", JSON.stringify(res.user));
+      showToast("Welcome back!", "success");
+      setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
+    } else {
+      showAuthErr(res.error || "Invalid email or password.");
+    }
+  } catch(err) {
+    showToast("Connection error. Try again.", "error");
+  } finally {
+    btn.classList.remove("loading"); btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
