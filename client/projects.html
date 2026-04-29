@@ -52,7 +52,7 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
 .sidebar-brand-tag{font-size:.58rem;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;margin-top:1px;}
 
 /* User pill */
-.client-pill{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line2);}
+
 .client-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#0a1a0f,#22c55e);display:flex;align-items:center;justify-content:center;font-size:.74rem;font-weight:700;color:#fff;flex-shrink:0;}
 .client-info{flex:1;min-width:0;}
 .client-name{font-size:.8rem;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -69,19 +69,23 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
 .nav-item.active svg{color:var(--accent);}
 
 /* Red notification badge on nav item */
-.nav-badge{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-width:18px;height:18px;padding:0 5px;
-  background:var(--red);color:#fff;border-radius:999px;
-  font-size:.6rem;font-weight:700;margin-left:auto;
-  animation:badgePop .3s var(--ease);
-}
-@keyframes badgePop{from{transform:scale(0)}to{transform:scale(1)}}
+.nav-dot{width:8px;height:8px;border-radius:50%;background:var(--red);margin-left:auto;flex-shrink:0;}
 
 .sidebar-footer{padding:10px 8px 14px;border-top:1px solid var(--line2);}
-.signout-btn{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:.8rem;color:var(--ink3);cursor:pointer;transition:all .15s;background:none;border:none;font-family:var(--sans);width:100%;font-weight:500;}
-.signout-btn:hover{background:var(--red-bg);color:var(--red);}
-.signout-btn svg{width:13px;height:13px;}
+.sidebar-footer{padding:10px 8px 14px;border-top:1px solid var(--line2);}
+.user-pill{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;transition:background .15s;user-select:none;}
+.user-pill:hover{background:var(--bg2);}
+.user-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0a1a0f,#22c55e);display:flex;align-items:center;justify-content:center;font-size:.74rem;font-weight:700;color:#fff;flex-shrink:0;}
+.user-info{flex:1;min-width:0;}
+.user-name{font-size:.8rem;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.user-email{font-size:.65rem;color:var(--ink4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+.user-menu-popup{background:var(--bg);border:1px solid var(--line2);border-radius:var(--r);box-shadow:0 -4px 16px rgba(0,0,0,.08);margin-bottom:4px;overflow:hidden;}
+.user-menu-item{display:flex;align-items:center;gap:9px;padding:9px 12px;font-size:.8rem;color:var(--ink2);cursor:pointer;transition:background .12s;}
+.user-menu-item:hover{background:var(--bg2);}
+.user-menu-item.danger{color:var(--red);}
+.user-menu-item.danger:hover{background:var(--red-bg);}
+.user-menu-item svg{width:13px;height:13px;flex-shrink:0;}
+.user-menu-divider{height:1px;background:var(--line2);}
 
 /* ── Main area ── */
 #main{flex:1;margin-left:var(--sidebar-w);display:flex;flex-direction:column;min-height:100svh;}
@@ -443,19 +447,8 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
     <div class="sidebar-header">
       <a href="dashboard.html" class="sidebar-brand">
         <div class="sidebar-brand-mark">A</div>
-        <div>
-          <div class="sidebar-brand-name">ArkDez</div>
-          <div class="sidebar-brand-tag">Client Portal</div>
-        </div>
+        <span class="sidebar-brand-name">ArkDez</span>
       </a>
-    </div>
-
-    <div class="client-pill">
-      <div class="client-av" id="client-av">C</div>
-      <div class="client-info">
-        <div class="client-name" id="client-name">Loading…</div>
-        <div class="client-role">Client account</div>
-      </div>
     </div>
 
     <div class="sidebar-nav">
@@ -467,7 +460,7 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
       <a class="nav-item active" href="projects.html" id="nav-projects">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
         Projects
-        <span class="nav-badge" id="nav-projects-badge" style="display:none;"></span>
+        <span class="nav-dot" id="nav-projects-badge" style="display:none;"></span>
       </a>
       <a class="nav-item" href="messages.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
@@ -484,10 +477,25 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
     </div>
 
     <div class="sidebar-footer">
-      <button class="signout-btn" onclick="logout()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Sign out
-      </button>
+      <div class="user-menu-popup" id="user-menu" style="display:none;">
+        <div class="user-menu-item" onclick="window.location.href='settings.html'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Settings
+        </div>
+        <div class="user-menu-divider"></div>
+        <div class="user-menu-item danger" onclick="logout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign out
+        </div>
+      </div>
+      <div class="user-pill" id="user-pill" onclick="toggleUserMenu()">
+        <div class="user-av" id="client-av">C</div>
+        <div class="user-info">
+          <div class="user-name" id="client-name">Loading…</div>
+          <div class="user-email" id="client-email"></div>
+        </div>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--ink4);flex-shrink:0;"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      </div>
     </div>
   </nav>
 
@@ -619,6 +627,7 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
           Add milestone
         </button>
       </div>
+      <div id="milestone-status-hint" style="display:none;padding:7px 10px;background:var(--amber-bg);border:1px solid var(--amber-ln);border-radius:var(--r);font-size:.74rem;color:#92400e;margin-bottom:8px;"></div>
       <div class="add-milestone-form" id="add-milestone-form">
         <input class="inline-input" type="text" id="new-ms-title" placeholder="Milestone title…" onkeydown="if(event.key==='Enter')saveNewMilestone()">
         <div class="inline-form-btns">
@@ -875,17 +884,27 @@ function startPolling(){
 }
 
 function detectChanges(incoming){const seen=getSeenMap();incoming.forEach(p=>{if(!seen[p.id])markProjectSeen(p.id,p.updatedAt);});}
-function updateChangeBadges(){const count=countChangedProjects();const b=document.getElementById("nav-projects-badge");if(b){b.textContent=count;b.style.display=count>0?"inline-flex":"none";}}
+function updateChangeBadges(){const count=countChangedProjects();const b=document.getElementById("nav-projects-badge");if(b){b.style.display=count>0?"inline-block":"none";}}
 function showChangeBanner(count){const banner=document.getElementById("change-banner");document.getElementById("change-banner-text").textContent=`Your freelancer made updates to ${count} project${count>1?"s":""}.`;banner.classList.add("show");}
 function dismissChangeBanner(){document.getElementById("change-banner").classList.remove("show");}
 
 function bootUI(){
   if(!currentAccount){try{const s=localStorage.getItem("ark_client")||sessionStorage.getItem("ark_client");if(s)currentAccount=JSON.parse(s);}catch(e){}}
   if(!currentAccount)return;
-  const{firstName,lastName}=currentAccount,init=((firstName||"?")[0]+(lastName||"")[0]).toUpperCase();
+  const{firstName,lastName,email}=currentAccount,init=((firstName||"?")[0]+(lastName||"")[0]).toUpperCase();
   const av=document.getElementById("client-av");if(av)av.textContent=init;
   const nm=document.getElementById("client-name");if(nm)nm.textContent=firstName+" "+lastName;
+  const em=document.getElementById("client-email");if(em&&email)em.textContent=email;
 }
+function toggleUserMenu(){
+  const menu=document.getElementById("user-menu");if(!menu)return;
+  menu.style.display=menu.style.display==="none"?"block":"none";
+}
+document.addEventListener("click",e=>{
+  if(!e.target.closest("#user-pill")&&!e.target.closest("#user-menu")){
+    const m=document.getElementById("user-menu");if(m)m.style.display="none";
+  }
+});
 
 function renderAll(){renderFreelancerTabs();renderProjects();}
 
@@ -989,6 +1008,13 @@ function openDetail(id){
   if(p.requestStatus==="pending"){notice.style.display="";notice.textContent="⏳ Awaiting freelancer acceptance. You can still add milestones and files below.";}else notice.style.display="none";
   document.getElementById("detail-change-section").style.display="none";
   renderMilestones(p.milestones||[]);
+  // Show/hide "completing locked" hint in milestone section
+  const msHint=document.getElementById("milestone-status-hint");
+  if(msHint){
+    const blocked=["draft","paused","cancelled"].includes(p.status);
+    msHint.style.display=blocked?"":"none";
+    msHint.textContent=`Marking milestones complete is only available when the project is active.`;
+  }
   renderProjectAttachments(p.attachments||[]);
   document.getElementById("add-milestone-form").classList.remove("show");
   document.getElementById("project-link-form").classList.remove("show");
@@ -1031,7 +1057,7 @@ function renderMilestones(milestones){
     let bcolor="var(--line2)";if(ap==="approved")bcolor="var(--accent-ln)";if(ap==="revision_requested")bcolor="var(--purple-ln)";
     return `
     <div style="border:1.5px solid ${bcolor};border-radius:var(--r);overflow:hidden;margin-bottom:6px;">
-      <button class="milestone-header" onclick="toggleMs(this,${mi})">
+      <div class="milestone-header" onclick="toggleMs(this,${mi})">
         <button class="ms-check ${isDone||ap==="approved"?"done":""}" onclick="toggleMilestoneComplete(event,${mi})" style="cursor:${ap==="approved"?"not-allowed":"pointer"}">
           <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
         </button>
@@ -1040,7 +1066,7 @@ function renderMilestones(milestones){
         ${ap==="revision_requested"?`<span style="background:var(--purple-bg);color:var(--purple);font-size:.6rem;flex-shrink:0;padding:2px 7px;border-radius:999px;font-weight:700;">↩ Revision</span>`:""}
         ${m.status==="done"&&ap==="pending"?`<span style="background:#fffbeb;color:#92400e;font-size:.6rem;flex-shrink:0;padding:2px 7px;border-radius:999px;font-weight:700;">Review</span>`:""}
         <div class="ms-chevron ${isOpen?"open":""}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
-      </button>
+      </div>
       <div class="milestone-body ${isOpen?"open":""}">
         ${subtasks.length?`<div style="display:flex;flex-direction:column;gap:5px;">${subtasks.map((s,si)=>`<div class="subtask-row">
           <button class="subtask-check ${s.status==="done"?"done":""}" onclick="toggleSubtaskComplete(${mi},${si})">
@@ -1085,8 +1111,8 @@ function renderMilestones(milestones){
 }
 
 function toggleMs(headerEl,mi){const body=headerEl.nextElementSibling,chev=headerEl.querySelector(".ms-chevron");if(!body)return;body.classList.toggle("open");chev?.classList.toggle("open",body.classList.contains("open"));}
-function toggleMilestoneComplete(e,mi){e.stopPropagation();if(!selectedProject)return;const m=selectedProject.milestones[mi];if(m.approvalStatus==="approved")return;m.status=m.status==="done"?"pending":"done";m.completedAt=m.status==="done"?new Date().toISOString():"";projectsDirty=true;updateLocalProgress();renderMilestones(selectedProject.milestones);scheduleProjectSave();}
-function toggleSubtaskComplete(mi,si){if(!selectedProject)return;const s=selectedProject.milestones[mi].subtasks[si];s.status=s.status==="done"?"pending":"done";s.completedAt=s.status==="done"?new Date().toISOString():"";projectsDirty=true;renderMilestones(selectedProject.milestones);scheduleProjectSave();}
+function toggleMilestoneComplete(e,mi){e.stopPropagation();if(!selectedProject)return;if(['draft','paused','cancelled'].includes(selectedProject.status))return;const m=selectedProject.milestones[mi];if(m.approvalStatus==="approved")return;m.status=m.status==="done"?"pending":"done";m.completedAt=m.status==="done"?new Date().toISOString():"";projectsDirty=true;updateLocalProgress();renderMilestones(selectedProject.milestones);scheduleProjectSave();}
+function toggleSubtaskComplete(mi,si){if(!selectedProject)return;if(['draft','paused','cancelled'].includes(selectedProject.status))return;const s=selectedProject.milestones[mi].subtasks[si];s.status=s.status==="done"?"pending":"done";s.completedAt=s.status==="done"?new Date().toISOString():"";projectsDirty=true;renderMilestones(selectedProject.milestones);scheduleProjectSave();}
 function addSubtaskInline(mi){if(!selectedProject)return;const input=document.getElementById("new-sub-"+mi);const title=input?.value.trim();if(!title)return;selectedProject.milestones[mi].subtasks.push({id:"tmp-"+Date.now(),title,status:"pending",completedAt:""});projectsDirty=true;renderMilestones(selectedProject.milestones);scheduleProjectSave();}
 function updateLocalProgress(){if(!selectedProject)return;const ms=selectedProject.milestones,done=ms.filter(m=>m.status==="done"||m.approvalStatus==="approved").length,prog=ms.length>0?Math.round((done/ms.length)*100):0;selectedProject.progress=prog;document.getElementById("detail-progress-num").textContent=prog+"%";document.getElementById("detail-progress-fill").style.width=prog+"%";const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].progress=prog;renderProjects();}
 
