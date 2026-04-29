@@ -216,8 +216,8 @@ body { font-family:var(--sans); background:var(--bg); color:var(--ink); min-heig
   </div>
 </div>
 <div class="toast" id="toast"></div>
+<script src="../assets/ark.js"></script>
 <script>
-const APPS_SCRIPT_URL = "";
 
 // Password toggle
 const pwInput = document.getElementById("password");
@@ -289,16 +289,7 @@ document.getElementById("signup-form").addEventListener("submit", async e => {
   btn.classList.add("loading"); btn.disabled = true;
 
   try {
-    if (!APPS_SCRIPT_URL) {
-      await new Promise(r => setTimeout(r, 1400));
-      localStorage.setItem("ark_token", "demo-token");
-      localStorage.setItem("ark_user", JSON.stringify({ firstName:fn, lastName:ln, email:em, workspaceName:ws }));
-      showToast("Account created! Redirecting…", "success");
-      setTimeout(() => { window.location.href = "dashboard.html"; }, 1200);
-      return;
-    }
-    const body = new Blob([JSON.stringify({ action:"signup", firstName:fn, lastName:ln, email:em, workspace:ws, password:pw })], { type:"text/plain" });
-    const res = await fetch(APPS_SCRIPT_URL, { method:"POST", body }).then(r => r.json());
+    const res = await ARK.api({ action:"signup", firstName:fn, lastName:ln, email:em, workspace:ws, password:pw });
     if (res.success) {
       localStorage.setItem("ark_token", res.token);
       localStorage.setItem("ark_user", JSON.stringify(res.user));
