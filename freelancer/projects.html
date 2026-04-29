@@ -672,7 +672,7 @@ function openDetail(id) {
 }
 
 function closeDetail() {
-  if (milestonesDirty) saveMilestones();
+  if (milestonesDirty) saveNow();
   document.getElementById("project-detail").classList.remove("open");
   document.getElementById("detail-overlay").classList.remove("open");
   selectedProject = null;
@@ -836,7 +836,7 @@ function toggleMilestone(e, mi) {
   if (title) title.classList.toggle("done", m.status === "done");
   item?.classList.toggle("done", m.status === "done");
   updateProgressFromMilestones();
-  scheduleSave();
+  saveNow();
 }
 
 function toggleSubtask(mi, si) {
@@ -853,7 +853,7 @@ function toggleSubtask(mi, si) {
   const title = stEl?.querySelector(".subtask-title-input");
   if (check) check.classList.toggle("done", s.status === "done");
   if (title) title.classList.toggle("done", s.status === "done");
-  scheduleSave();
+  saveNow();
 }
 
 function editMilestoneTitle(mi, val) {
@@ -942,11 +942,18 @@ function updateProgressFromMilestones() {
   renderProjects();
 }
 
-// ── Debounced auto-save ────────────────────────────────────
+// ── Debounced auto-save ───────────────────────────────────
+// Only save after 8 seconds of inactivity to avoid rapid duplicate rows
 let _saveTimer = null;
 function scheduleSave() {
   clearTimeout(_saveTimer);
-  _saveTimer = setTimeout(saveMilestones, 1500);
+  _saveTimer = setTimeout(saveMilestones, 8000);
+}
+
+// Immediate save — for check/uncheck and close actions only
+function saveNow() {
+  clearTimeout(_saveTimer);
+  saveMilestones();
 }
 
 async function saveMilestones() {
