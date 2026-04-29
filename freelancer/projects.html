@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects — ArkDez</title>
+<link rel="stylesheet" href="../assets/ark.css">
+<style>
+/* ── View toggle ── */
+.view-toggle {
+  display: flex; gap: 2px;
+  background: var(--bg3); border-radius: 8px; padding: 3px;
+}
+.view-btn {
+  width: 30px; height: 28px; border-radius: 6px;
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink4); transition: all .15s;
+}
+.view-btn:hover { color: var(--ink2); }
+.view-btn.active { background: var(--bg); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.view-btn svg { width: 14px; height: 14px; }
+
+/* ── Toolbar ── */
+.projects-toolbar {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px; flex-wrap: wrap;
+}
+.search-wrap { position: relative; flex: 1; min-width: 200px; }
+.search-wrap svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--ink4); pointer-events: none; width: 15px; height: 15px; }
+.search-input { width: 100%; height: 38px; background: var(--bg); border: 1.5px solid var(--line2); border-radius: var(--r); padding: 0 12px 0 36px; font-size: .84rem; color: var(--ink); font-family: var(--sans); outline: none; transition: border-color .18s, box-shadow .18s; }
+.search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,197,94,.08); }
+.search-input::placeholder { color: var(--ink4); }
+.filter-btn { height: 38px; padding: 0 14px; background: var(--bg); border: 1.5px solid var(--line2); border-radius: var(--r); font-size: .8rem; font-weight: 600; color: var(--ink3); cursor: pointer; font-family: var(--sans); display: flex; align-items: center; gap: 6px; transition: all .15s; white-space: nowrap; }
+.filter-btn:hover { border-color: var(--line); color: var(--ink2); background: var(--bg3); }
+.filter-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+
+/* ── Card view ── */
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.project-card {
+  background: var(--bg); border: 1.5px solid var(--line2);
+  border-radius: var(--r-lg); padding: 18px;
+  cursor: pointer; transition: all .2s var(--ease);
+  animation: cardIn .35s var(--ease) both; position: relative;
+}
+.project-card:hover { border-color: var(--accent-ln); box-shadow: var(--sh-md); transform: translateY(-2px); }
+.project-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.project-card-title { font-size: .9rem; font-weight: 700; color: var(--ink); line-height: 1.3; flex: 1; }
+.project-card-client { font-size: .74rem; color: var(--ink4); margin-bottom: 12px; display: flex; align-items: center; gap: 5px; }
+.project-card-client svg { width: 11px; height: 11px; }
+.project-card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.project-type-pill { font-size: .66rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--bg3); color: var(--ink3); letter-spacing: .03em; text-transform: capitalize; }
+.project-budget { font-size: .74rem; color: var(--ink3); font-weight: 600; }
+.project-due { font-size: .72rem; color: var(--ink4); margin-left: auto; }
+.project-due.overdue { color: var(--red); font-weight: 600; }
+.progress-wrap { margin-bottom: 6px; }
+.progress-bar { height: 4px; background: var(--line2); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .6s var(--ease); }
+.progress-label { display: flex; justify-content: space-between; font-size: .67rem; color: var(--ink4); margin-top: 4px; }
+.milestone-preview { font-size: .72rem; color: var(--ink4); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line2); display: flex; align-items: center; gap: 5px; }
+.milestone-preview svg { width: 11px; height: 11px; flex-shrink: 0; }
+
+/* ── List view ── */
+.projects-list { display: flex; flex-direction: column; gap: 0; background: var(--bg); border: 1.5px solid var(--line2); border-radius: var(--r-lg); overflow: hidden; }
+.project-row { display: flex; align-items: center; gap: 14px; padding: 13px 18px; border-bottom: 1px solid var(--line2); cursor: pointer; transition: background .12s; }
+.project-row:last-child { border-bottom: none; }
+.project-row:hover { background: var(--bg2); }
+.project-row-title { font-size: .84rem; font-weight: 600; color: var(--ink); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.project-row-client { font-size: .74rem; color: var(--ink4); width: 130px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.project-row-type { font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--bg3); color: var(--ink3); flex-shrink: 0; text-transform: capitalize; }
+.project-row-budget { font-size: .78rem; font-weight: 600; color: var(--ink2); width: 90px; flex-shrink: 0; text-align: right; }
+.project-row-due { font-size: .72rem; color: var(--ink4); width: 80px; flex-shrink: 0; text-align: right; }
+.project-row-due.overdue { color: var(--red); font-weight: 600; }
+.project-row-progress { width: 80px; flex-shrink: 0; }
+
+/* ── Detail panel ── */
+#project-detail {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 420px; max-width: 100vw;
+  background: var(--bg); border-left: 1px solid var(--line2);
+  z-index: 150; display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .3s var(--ease);
+  box-shadow: -8px 0 40px rgba(0,0,0,.07);
+}
+#project-detail.open { transform: translateX(0); }
+#detail-overlay {
+  position: fixed; inset: 0; z-index: 149;
+  background: rgba(0,0,0,.15);
+  opacity: 0; pointer-events: none; transition: opacity .25s;
+}
+#detail-overlay.open { opacity: 1; pointer-events: all; }
+
+.detail-topbar { height: 56px; border-bottom: 1px solid var(--line2); display: flex; align-items: center; justify-content: space-between; padding: 0 18px; flex-shrink: 0; }
+.detail-topbar-title { font-size: .86rem; font-weight: 700; color: var(--ink); }
+.detail-topbar-actions { display: flex; align-items: center; gap: 6px; }
+.detail-close { width: 28px; height: 28px; border-radius: 7px; background: none; border: none; cursor: pointer; color: var(--ink4); display: flex; align-items: center; justify-content: center; transition: background .15s; }
+.detail-close:hover { background: var(--bg3); }
+
+.detail-scroll { flex: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--line2) transparent; }
+.detail-scroll::-webkit-scrollbar { width: 3px; }
+.detail-scroll::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 2px; }
+
+.detail-section { padding: 16px 18px; border-bottom: 1px solid var(--line2); }
+.detail-section:last-child { border-bottom: none; }
+.detail-section-title { font-size: .68rem; font-weight: 700; color: var(--ink4); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; }
+
+.detail-field { margin-bottom: 12px; }
+.detail-field-label { font-size: .72rem; color: var(--ink4); margin-bottom: 3px; }
+.detail-field-val { font-size: .84rem; color: var(--ink); font-weight: 500; }
+
+.detail-progress-big { margin-bottom: 4px; }
+.detail-progress-num { font-family: var(--serif); font-size: 2rem; color: var(--ink); line-height: 1; margin-bottom: 6px; }
+.detail-progress-bar { height: 6px; background: var(--line2); border-radius: 3px; overflow: hidden; }
+.detail-progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .6s var(--ease); }
+
+/* ── Milestones ── */
+.milestone-list { display: flex; flex-direction: column; gap: 6px; }
+.milestone-item {
+  border: 1.5px solid var(--line2); border-radius: var(--r);
+  overflow: hidden; transition: border-color .15s;
+}
+.milestone-item.done { border-color: var(--accent-ln); }
+.milestone-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; cursor: pointer; background: none;
+  width: 100%; text-align: left; font-family: var(--sans);
+  transition: background .12s;
+}
+.milestone-header:hover { background: var(--bg2); }
+.milestone-check {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid var(--line); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s; cursor: pointer; background: none;
+}
+.milestone-check.done { background: var(--accent); border-color: var(--accent); }
+.milestone-check.done svg { display: block; }
+.milestone-check svg { display: none; width: 10px; height: 10px; }
+.milestone-title { font-size: .82rem; font-weight: 600; color: var(--ink); flex: 1; }
+.milestone-title.done { text-decoration: line-through; color: var(--ink4); }
+.milestone-due { font-size: .68rem; color: var(--ink4); flex-shrink: 0; }
+.milestone-chevron { color: var(--ink4); flex-shrink: 0; transition: transform .2s; }
+.milestone-chevron.open { transform: rotate(90deg); }
+.milestone-chevron svg { width: 12px; height: 12px; }
+
+.subtask-list { padding: 0 12px 10px 40px; display: flex; flex-direction: column; gap: 5px; }
+.subtask-item { display: flex; align-items: center; gap: 8px; }
+.subtask-check {
+  width: 15px; height: 15px; border-radius: 4px;
+  border: 1.5px solid var(--line); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all .15s; background: none;
+}
+.subtask-check.done { background: var(--accent); border-color: var(--accent); }
+.subtask-check.done svg { display: block; }
+.subtask-check svg { display: none; width: 8px; height: 8px; }
+.subtask-title { font-size: .77rem; color: var(--ink2); flex: 1; }
+.subtask-title.done { text-decoration: line-through; color: var(--ink4); }
+
+.milestone-add-btn { display: flex; align-items: center; gap: 6px; padding: 8px 0; font-size: .78rem; color: var(--accent); font-weight: 600; cursor: pointer; background: none; border: none; font-family: var(--sans); transition: opacity .15s; }
+.milestone-add-btn:hover { opacity: .7; }
+
+/* ── Status selector in detail ── */
+.status-select-wrap { display: flex; gap: 6px; flex-wrap: wrap; }
+.status-opt { padding: 5px 12px; border-radius: 999px; font-size: .74rem; font-weight: 700; cursor: pointer; border: 1.5px solid transparent; transition: all .15s; }
+.status-opt.active { border-color: currentColor; }
+.status-opt[data-s="draft"]     { background: var(--bg3);     color: var(--ink3); }
+.status-opt[data-s="active"]    { background: #dcfce7;         color: #166534; }
+.status-opt[data-s="paused"]    { background: #f3f4f6;         color: #374151; }
+.status-opt[data-s="completed"] { background: #dbeafe;         color: #1e40af; }
+.status-opt[data-s="cancelled"] { background: #fee2e2;         color: #991b1b; }
+
+/* ── Kanban view ── */
+.kanban-board { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 8px; }
+.kanban-col { flex-shrink: 0; width: 260px; }
+.kanban-col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; padding: 0 4px; }
+.kanban-col-title { font-size: .74rem; font-weight: 700; color: var(--ink3); letter-spacing: .06em; text-transform: uppercase; }
+.kanban-col-count { font-size: .68rem; color: var(--ink4); background: var(--bg3); padding: 1px 7px; border-radius: 999px; }
+.kanban-col-body { display: flex; flex-direction: column; gap: 8px; }
+.kanban-card { background: var(--bg); border: 1.5px solid var(--line2); border-radius: var(--r); padding: 12px 14px; cursor: pointer; transition: all .18s; }
+.kanban-card:hover { border-color: var(--accent-ln); box-shadow: var(--sh); transform: translateY(-1px); }
+.kanban-card-title { font-size: .82rem; font-weight: 700; color: var(--ink); margin-bottom: 4px; line-height: 1.3; }
+.kanban-card-client { font-size: .7rem; color: var(--ink4); margin-bottom: 8px; }
+.kanban-card-footer { display: flex; align-items: center; justify-content: space-between; }
+
+/* ── Skeleton ── */
+.skeleton { background: linear-gradient(90deg,var(--bg3) 25%,var(--line2) 50%,var(--bg3) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+@media (max-width:768px) {
+  .project-row-client,.project-row-type,.project-row-budget,.project-row-progress { display:none; }
+  #project-detail { width: 100vw; }
+  .projects-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="auth-gate"><div class="gate-logo">A</div><span class="gate-text">Loading your workspace…</span></div>
+<div id="sidebar-overlay" onclick="ARK.closeSidebar()"></div>
+<div id="detail-overlay" onclick="closeDetail()"></div>
+
+<div id="app">
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <a href="/" class="sidebar-brand"><div class="sidebar-brand-mark">A</div><span class="sidebar-brand-name">ArkDez</span></a>
+    </div>
+    <div class="workspace-pill" onclick="ARK.toggleUserMenu()">
+      <div class="workspace-av" id="ws-av">P</div>
+      <div class="workspace-info"><div class="workspace-name" id="ws-name">Workspace</div><div class="workspace-plan">Free plan</div></div>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--ink4);flex-shrink:0"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+      <a class="nav-item" href="dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <a class="nav-item" href="clients.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Clients</a>
+      <a class="nav-item active" href="projects.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Projects</a>
+      <a class="nav-item" href="messages.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages</a>
+      <div class="nav-section-label">Finance</div>
+      <a class="nav-item" href="invoices.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Invoices</a>
+      <div class="nav-section-label">Delivery</div>
+      <a class="nav-item" href="documents.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>Documents</a>
+      <a class="nav-item" href="onboarding.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Onboarding</a>
+      <div class="nav-section-label">Account</div>
+      <a class="nav-item" href="settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-pill" onclick="ARK.toggleUserMenu()" id="user-pill">
+        <div class="user-av" id="user-av">R</div>
+        <div class="user-info"><div class="user-name" id="user-name">Loading…</div><div class="user-email" id="user-email">…</div></div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--ink4);flex-shrink:0"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      </div>
+    </div>
+  </nav>
+
+  <div id="user-menu">
+    <div style="padding:4px;">
+      <div class="menu-item" onclick="window.location.href='settings.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile & settings</div>
+      <div class="menu-divider"></div>
+      <div class="menu-item danger" onclick="ARK.logout()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign out</div>
+    </div>
+  </div>
+
+  <div id="main">
+    <header id="topbar">
+      <div class="topbar-left">
+        <button class="topbar-hamburger" onclick="ARK.openSidebar()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <div class="topbar-page-title">Projects</div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn" onclick="ARK.toggleNotifications()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></button>
+        <button class="btn-primary" onclick="ARK.openModal('modal-new-project')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New project
+        </button>
+      </div>
+    </header>
+
+    <main id="content">
+      <div class="page active">
+
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Projects</h1>
+            <p id="projects-count-label">Track every project from kickoff to delivery.</p>
+          </div>
+        </div>
+
+        <div class="projects-toolbar">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-input" type="text" id="search-input" placeholder="Search projects…" oninput="renderProjects()">
+          </div>
+          <button class="filter-btn active" id="filter-all" onclick="setFilter('all',this)">All</button>
+          <button class="filter-btn" id="filter-active" onclick="setFilter('active',this)">Active</button>
+          <button class="filter-btn" id="filter-draft" onclick="setFilter('draft',this)">Draft</button>
+          <button class="filter-btn" id="filter-completed" onclick="setFilter('completed',this)">Completed</button>
+          <div class="view-toggle" style="margin-left:auto;">
+            <button class="view-btn active" id="view-card" onclick="setView('card',this)" title="Card view">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </button>
+            <button class="view-btn" id="view-list" onclick="setView('list',this)" title="List view">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+            <button class="view-btn" id="view-kanban" onclick="setView('kanban',this)" title="Kanban view">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="5" height="18"/><rect x="10" y="3" width="5" height="12"/><rect x="17" y="3" width="5" height="15"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="projects-loading">
+          <div class="projects-grid">
+            <div style="background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);padding:18px;"><div class="skeleton" style="height:14px;width:60%;margin-bottom:8px;"></div><div class="skeleton" style="height:11px;width:40%;margin-bottom:16px;"></div><div class="skeleton" style="height:4px;margin-bottom:8px;"></div><div class="skeleton" style="height:11px;width:50%;"></div></div>
+            <div style="background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);padding:18px;"><div class="skeleton" style="height:14px;width:55%;margin-bottom:8px;"></div><div class="skeleton" style="height:11px;width:35%;margin-bottom:16px;"></div><div class="skeleton" style="height:4px;margin-bottom:8px;"></div><div class="skeleton" style="height:11px;width:45%;"></div></div>
+          </div>
+        </div>
+
+        <!-- Projects container -->
+        <div id="projects-container"></div>
+
+        <!-- Empty state -->
+        <div id="projects-empty" style="display:none;">
+          <div class="empty-state">
+            <div class="empty-state-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div>
+            <h3>No projects yet</h3>
+            <p>Create your first project and assign it to a client.</p>
+            <button class="btn-primary" onclick="ARK.openModal('modal-new-project')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              New project
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Project detail panel -->
+<div id="project-detail">
+  <div class="detail-topbar">
+    <span class="detail-topbar-title" id="detail-title">Project</span>
+    <div class="detail-topbar-actions">
+      <button class="btn-secondary" style="height:30px;font-size:.75rem;padding:0 10px;" onclick="editProject()">Edit</button>
+      <button class="detail-close" onclick="closeDetail()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+  </div>
+  <div class="detail-scroll">
+
+    <!-- Status -->
+    <div class="detail-section">
+      <div class="detail-section-title">Status</div>
+      <div class="status-select-wrap" id="detail-status-wrap"></div>
+    </div>
+
+    <!-- Info -->
+    <div class="detail-section">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="detail-field"><div class="detail-field-label">Client</div><div class="detail-field-val" id="detail-client">—</div></div>
+        <div class="detail-field"><div class="detail-field-label">Type</div><div class="detail-field-val" id="detail-type">—</div></div>
+        <div class="detail-field"><div class="detail-field-label">Budget</div><div class="detail-field-val" id="detail-budget">—</div></div>
+        <div class="detail-field"><div class="detail-field-label">Due date</div><div class="detail-field-val" id="detail-due">—</div></div>
+        <div class="detail-field"><div class="detail-field-label">Start date</div><div class="detail-field-val" id="detail-start">—</div></div>
+        <div class="detail-field"><div class="detail-field-label">Created</div><div class="detail-field-val" id="detail-created">—</div></div>
+      </div>
+      <div class="detail-field" id="detail-desc-wrap" style="margin-top:4px;display:none;">
+        <div class="detail-field-label">Description</div>
+        <div class="detail-field-val" id="detail-desc" style="line-height:1.6;color:var(--ink3);font-size:.82rem;font-weight:400;"></div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="detail-section">
+      <div class="detail-section-title">Overall progress</div>
+      <div class="detail-progress-num" id="detail-progress-num">0%</div>
+      <div class="detail-progress-bar"><div class="detail-progress-fill" id="detail-progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <!-- Milestones -->
+    <div class="detail-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="detail-section-title" style="margin-bottom:0;">Milestones</div>
+        <button class="milestone-add-btn" onclick="addMilestone()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add milestone
+        </button>
+      </div>
+      <div class="milestone-list" id="milestone-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Notification drawer -->
+<div id="notif-overlay" onclick="ARK.closeNotifications()"></div>
+<div id="notif-drawer">
+  <div class="notif-header"><h3>Notifications</h3><button class="notif-close" onclick="ARK.closeNotifications()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+  <div class="notif-list"><div class="panel-empty" style="padding:40px 20px;text-align:center;color:var(--ink4);font-size:.82rem;">No notifications yet.</div></div>
+</div>
+
+<!-- New project modal -->
+<div class="modal-overlay" id="modal-new-project" onclick="if(event.target===this)ARK.closeModal('modal-new-project')">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-project-title">New project</h2>
+      <button class="modal-close" onclick="ARK.closeModal('modal-new-project')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-project-id">
+      <div class="field">
+        <label class="field-label" for="p-title">Project title *</label>
+        <input class="field-input" type="text" id="p-title" placeholder="e.g. Airbnb Automation System" autocomplete="off">
+        <span class="field-err" id="err-p-title" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span>
+      </div>
+      <div class="field">
+        <label class="field-label" for="p-client">Client *</label>
+        <select class="field-input field-select" id="p-client">
+          <option value="">Select client…</option>
+        </select>
+        <span class="field-err" id="err-p-client" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span>
+      </div>
+      <div class="field">
+        <label class="field-label" for="p-desc">Description</label>
+        <textarea class="field-input" id="p-desc" rows="2" style="height:auto;padding:10px 12px;resize:vertical;" placeholder="What does this project involve?"></textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="field">
+          <label class="field-label" for="p-type">Type</label>
+          <select class="field-input field-select" id="p-type">
+            <option value="one-off">One-off</option>
+            <option value="retainer">Retainer</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label" for="p-due">Due date</label>
+          <input class="field-input" type="date" id="p-due">
+        </div>
+        <div class="field">
+          <label class="field-label" for="p-budget-type">Budget type</label>
+          <select class="field-input field-select" id="p-budget-type" onchange="toggleBudget()">
+            <option value="fixed">Fixed price</option>
+            <option value="hourly">Hourly</option>
+          </select>
+        </div>
+        <div class="field" id="budget-amount-field">
+          <label class="field-label" for="p-budget">Amount ($)</label>
+          <input class="field-input" type="number" id="p-budget" placeholder="0" min="0">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="ARK.closeModal('modal-new-project')">Cancel</button>
+      <button class="btn-primary" id="save-project-btn" onclick="saveProject()">
+        <span id="save-project-label">Create project</span>
+        <div style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;display:none;" id="save-project-spinner"></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<style>@keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@keyframes spin{to{transform:rotate(360deg)}}</style>
+<script src="../assets/ark.js"></script>
+<script>
+// ── State ──────────────────────────────────────────────────
+let allProjects    = [];
+let allClients     = [];
+let currentFilter  = "all";
+let currentView    = "card";
+let selectedProject = null;
+let milestonesDirty = false;
+
+// ── Boot ───────────────────────────────────────────────────
+ARK.requireAuth(async function(user) {
+  ARK.bootSidebar(user);
+  document.getElementById("auth-gate").classList.add("hidden");
+  document.getElementById("app").classList.add("ready");
+  await Promise.all([loadProjects(), loadClients()]);
+});
+
+// ── Load ───────────────────────────────────────────────────
+async function loadProjects() {
+  try {
+    const res = await ARK.api({ action: "get_projects", token: ARK.getToken() });
+    if (!res.success) { ARK.showToast(res.error || "Failed to load", "error"); return; }
+    allProjects = res.projects || [];
+    renderProjects();
+  } catch(e) { ARK.showToast("Connection error.", "error"); }
+  finally { document.getElementById("projects-loading").style.display = "none"; }
+}
+
+async function loadClients() {
+  try {
+    const res = await ARK.api({ action: "get_clients", token: ARK.getToken() });
+    if (res.success) allClients = res.clients || [];
+    populateClientDropdown();
+  } catch(e) {}
+}
+
+function populateClientDropdown() {
+  const sel = document.getElementById("p-client");
+  sel.innerHTML = '<option value="">Select client…</option>';
+  allClients.filter(c => c.status === "active").forEach(c => {
+    sel.innerHTML += `<option value="${c.id}">${ARK.escHtml(c.name)}${c.company ? " · " + ARK.escHtml(c.company) : ""}</option>`;
+  });
+}
+
+// ── Render ─────────────────────────────────────────────────
+function renderProjects() {
+  const q = document.getElementById("search-input").value.toLowerCase();
+  const filtered = allProjects.filter(p => {
+    if (p.status === "deleted") return false;
+    if (currentFilter !== "all" && p.status !== currentFilter) return false;
+    if (q && !p.title.toLowerCase().includes(q) && !(p.clientName||"").toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  const count = allProjects.filter(p => p.status !== "deleted").length;
+  document.getElementById("projects-count-label").textContent = count === 0
+    ? "Create your first project to get started."
+    : count + " project" + (count !== 1 ? "s" : "") + " in your workspace.";
+
+  const container = document.getElementById("projects-container");
+  const empty     = document.getElementById("projects-empty");
+
+  if (!filtered.length) { container.innerHTML = ""; empty.style.display = ""; return; }
+  empty.style.display = "none";
+
+  if (currentView === "card")   container.innerHTML = renderCardView(filtered);
+  else if (currentView === "list")   container.innerHTML = renderListView(filtered);
+  else if (currentView === "kanban") container.innerHTML = renderKanbanView(filtered);
+}
+
+// ── Card view ──────────────────────────────────────────────
+function renderCardView(projects) {
+  return `<div class="projects-grid">${projects.map((p, i) => {
+    const due    = p.dueDate ? new Date(p.dueDate) : null;
+    const isOver = due && due < new Date() && p.status !== "completed";
+    const doneM  = (p.milestones||[]).filter(m => m.status === "done").length;
+    const totalM = (p.milestones||[]).length;
+    return `<div class="project-card" onclick="openDetail('${p.id}')" style="animation-delay:${Math.min(i*40,300)}ms">
+      <div class="project-card-header">
+        <div class="project-card-title">${ARK.escHtml(p.title)}</div>
+        ${badgeHtml(p.status)}
+      </div>
+      <div class="project-card-client">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        ${ARK.escHtml(p.clientName||"No client")}
+      </div>
+      <div class="project-card-meta">
+        <span class="project-type-pill">${ARK.escHtml(p.type)}</span>
+        ${p.budgetAmount > 0 ? `<span class="project-budget">${ARK.fmtCurrency(p.budgetAmount, p.currency)}</span>` : ""}
+        ${due ? `<span class="project-due ${isOver?"overdue":""}">${isOver?"Overdue":"Due"} ${due.toLocaleDateString(undefined,{month:"short",day:"numeric"})}</span>` : ""}
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${p.progress||0}%"></div></div>
+        <div class="progress-label"><span>${totalM > 0 ? doneM+"/"+totalM+" milestones" : "No milestones"}</span><span>${p.progress||0}%</span></div>
+      </div>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+// ── List view ──────────────────────────────────────────────
+function renderListView(projects) {
+  return `<div class="projects-list">
+    <div style="display:flex;align-items:center;gap:14px;padding:9px 18px;border-bottom:1px solid var(--line2);background:var(--bg2);">
+      <div style="flex:1;font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;">Project</div>
+      <div style="width:130px;font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;">Client</div>
+      <div style="width:70px;font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;">Type</div>
+      <div style="width:80px;font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;">Status</div>
+      <div style="width:90px;font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;text-align:right;">Budget</div>
+      <div style="width:80px;font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;text-align:right;">Due</div>
+      <div style="width:80px;font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;">Progress</div>
+    </div>
+    ${projects.map(p => {
+      const due    = p.dueDate ? new Date(p.dueDate) : null;
+      const isOver = due && due < new Date() && p.status !== "completed";
+      return `<div class="project-row" onclick="openDetail('${p.id}')">
+        <div class="project-row-title">${ARK.escHtml(p.title)}</div>
+        <div class="project-row-client">${ARK.escHtml(p.clientName||"—")}</div>
+        <div class="project-row-type">${ARK.escHtml(p.type)}</div>
+        <div>${badgeHtml(p.status)}</div>
+        <div class="project-row-budget">${p.budgetAmount > 0 ? ARK.fmtCurrency(p.budgetAmount, p.currency) : "—"}</div>
+        <div class="project-row-due ${isOver?"overdue":""}">${due ? due.toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "—"}</div>
+        <div class="project-row-progress">
+          <div class="progress-bar" style="height:5px;"><div class="progress-fill" style="width:${p.progress||0}%"></div></div>
+          <div style="font-size:.65rem;color:var(--ink4);margin-top:2px;">${p.progress||0}%</div>
+        </div>
+      </div>`;
+    }).join("")}
+  </div>`;
+}
+
+// ── Kanban view ────────────────────────────────────────────
+function renderKanbanView(projects) {
+  const cols = [
+    { key:"draft",     label:"Draft" },
+    { key:"active",    label:"Active" },
+    { key:"paused",    label:"Paused" },
+    { key:"completed", label:"Completed" }
+  ];
+  return `<div class="kanban-board">${cols.map(col => {
+    const colProjects = projects.filter(p => p.status === col.key);
+    return `<div class="kanban-col">
+      <div class="kanban-col-header">
+        <span class="kanban-col-title">${col.label}</span>
+        <span class="kanban-col-count">${colProjects.length}</span>
+      </div>
+      <div class="kanban-col-body">
+        ${colProjects.map(p => `
+          <div class="kanban-card" onclick="openDetail('${p.id}')">
+            <div class="kanban-card-title">${ARK.escHtml(p.title)}</div>
+            <div class="kanban-card-client">${ARK.escHtml(p.clientName||"No client")}</div>
+            <div class="kanban-card-footer">
+              ${p.budgetAmount > 0 ? `<span style="font-size:.7rem;font-weight:600;color:var(--ink3);">${ARK.fmtCurrency(p.budgetAmount, p.currency)}</span>` : '<span></span>'}
+              <span style="font-size:.7rem;color:var(--ink4);">${p.progress||0}%</span>
+            </div>
+          </div>`).join("")}
+        ${!colProjects.length ? `<div style="border:1.5px dashed var(--line2);border-radius:var(--r);padding:20px;text-align:center;font-size:.76rem;color:var(--ink4);">No projects</div>` : ""}
+      </div>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+// ── Detail panel ───────────────────────────────────────────
+function openDetail(id) {
+  if (milestonesDirty) saveMilestones();
+  selectedProject = allProjects.find(p => p.id === id);
+  if (!selectedProject) return;
+  const p = selectedProject;
+
+  document.getElementById("detail-title").textContent = p.title;
+  document.getElementById("detail-client").textContent  = p.clientName || "—";
+  document.getElementById("detail-type").textContent    = p.type === "one-off" ? "One-off" : "Retainer";
+  document.getElementById("detail-budget").textContent  = p.budgetAmount > 0 ? ARK.fmtCurrency(p.budgetAmount, p.currency) + (p.budgetType === "hourly" ? "/hr" : "") : "—";
+  document.getElementById("detail-due").textContent     = p.dueDate ? ARK.fmtDate(p.dueDate) : "—";
+  document.getElementById("detail-start").textContent   = p.startDate ? ARK.fmtDate(p.startDate) : "—";
+  document.getElementById("detail-created").textContent = ARK.fmtDate(p.createdAt);
+
+  const descWrap = document.getElementById("detail-desc-wrap");
+  if (p.description) { descWrap.style.display = ""; document.getElementById("detail-desc").textContent = p.description; }
+  else descWrap.style.display = "none";
+
+  // Progress
+  document.getElementById("detail-progress-num").textContent = (p.progress || 0) + "%";
+  document.getElementById("detail-progress-fill").style.width = (p.progress || 0) + "%";
+
+  // Status selector
+  renderStatusSelector(p.status);
+
+  // Milestones
+  renderMilestones(p.milestones || []);
+  milestonesDirty = false;
+
+  document.getElementById("project-detail").classList.add("open");
+  document.getElementById("detail-overlay").classList.add("open");
+}
+
+function closeDetail() {
+  if (milestonesDirty) saveMilestones();
+  document.getElementById("project-detail").classList.remove("open");
+  document.getElementById("detail-overlay").classList.remove("open");
+  selectedProject = null;
+}
+
+// ── Status selector ────────────────────────────────────────
+function renderStatusSelector(current) {
+  const statuses = ["draft","active","paused","completed","cancelled"];
+  document.getElementById("detail-status-wrap").innerHTML = statuses.map(s => `
+    <div class="status-opt ${s === current ? "active" : ""}" data-s="${s}" onclick="changeStatus('${s}')">
+      ${s.charAt(0).toUpperCase() + s.slice(1)}
+    </div>`).join("");
+}
+
+async function changeStatus(status) {
+  if (!selectedProject) return;
+  const old = selectedProject.status;
+  selectedProject.status = status;
+  renderStatusSelector(status);
+  const idx = allProjects.findIndex(p => p.id === selectedProject.id);
+  if (idx > -1) allProjects[idx].status = status;
+  renderProjects();
+  try {
+    const res = await ARK.api({ action:"update_project", token:ARK.getToken(), projectId:selectedProject.id, status });
+    if (!res.success) { selectedProject.status = old; ARK.showToast(res.error || "Failed to update", "error"); }
+    else ARK.showToast("Status updated", "success");
+  } catch(e) { ARK.showToast("Connection error.", "error"); }
+}
+
+// ── Milestones ─────────────────────────────────────────────
+function renderMilestones(milestones) {
+  const list = document.getElementById("milestone-list");
+  if (!milestones.length) {
+    list.innerHTML = `<div style="text-align:center;padding:16px;font-size:.78rem;color:var(--ink4);">No milestones yet. Add your first one.</div>`;
+    return;
+  }
+  list.innerHTML = milestones.map((m, mi) => {
+    const isDone = m.status === "done";
+    const subtasks = m.subtasks || [];
+    return `
+    <div class="milestone-item ${isDone ? "done" : ""}" id="ms-${mi}">
+      <div class="milestone-header" onclick="toggleMilestoneOpen(${mi})">
+        <button class="milestone-check ${isDone ? "done" : ""}" onclick="toggleMilestone(event,${mi})" title="${isDone ? "Mark incomplete" : "Mark done"}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+        <span class="milestone-title ${isDone ? "done" : ""}">${ARK.escHtml(m.title)}</span>
+        ${m.dueDate ? `<span class="milestone-due">${ARK.fmtDate(m.dueDate)}</span>` : ""}
+        <div class="milestone-chevron" id="mschev-${mi}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div class="subtask-list" id="mssub-${mi}" style="display:none;">
+        ${subtasks.map((s, si) => `
+          <div class="subtask-item">
+            <button class="subtask-check ${s.status === "done" ? "done" : ""}" onclick="toggleSubtask(${mi},${si})">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
+            <span class="subtask-title ${s.status === "done" ? "done" : ""}">${ARK.escHtml(s.title)}</span>
+          </div>`).join("")}
+        <button onclick="addSubtask(${mi})" style="display:flex;align-items:center;gap:5px;padding:4px 0;font-size:.73rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);margin-top:2px;transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add subtask
+        </button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function toggleMilestoneOpen(mi) {
+  const sub   = document.getElementById("mssub-" + mi);
+  const chev  = document.getElementById("mschev-" + mi);
+  const isOpen = sub.style.display !== "none";
+  sub.style.display  = isOpen ? "none" : "flex";
+  sub.style.flexDirection = "column";
+  chev.classList.toggle("open", !isOpen);
+}
+
+function toggleMilestone(e, mi) {
+  e.stopPropagation();
+  if (!selectedProject) return;
+  const milestones = selectedProject.milestones;
+  const m = milestones[mi];
+  m.status = m.status === "done" ? "pending" : "done";
+  if (m.status === "done") m.completedAt = new Date().toISOString();
+  else m.completedAt = "";
+  milestonesDirty = true;
+  renderMilestones(milestones);
+  updateProgressFromMilestones();
+}
+
+function toggleSubtask(mi, si) {
+  if (!selectedProject) return;
+  const s = selectedProject.milestones[mi].subtasks[si];
+  s.status = s.status === "done" ? "pending" : "done";
+  if (s.status === "done") s.completedAt = new Date().toISOString();
+  milestonesDirty = true;
+  renderMilestones(selectedProject.milestones);
+}
+
+function addMilestone() {
+  if (!selectedProject) return;
+  const title = prompt("Milestone title:");
+  if (!title?.trim()) return;
+  selectedProject.milestones.push({ id: "tmp-" + Date.now(), title: title.trim(), status: "pending", subtasks: [], dueDate: "", completedAt: "", order: selectedProject.milestones.length });
+  milestonesDirty = true;
+  renderMilestones(selectedProject.milestones);
+}
+
+function addSubtask(mi) {
+  if (!selectedProject) return;
+  const title = prompt("Subtask title:");
+  if (!title?.trim()) return;
+  selectedProject.milestones[mi].subtasks.push({ id: "tmp-" + Date.now(), title: title.trim(), status: "pending", completedAt: "" });
+  milestonesDirty = true;
+  renderMilestones(selectedProject.milestones);
+}
+
+function updateProgressFromMilestones() {
+  if (!selectedProject) return;
+  const milestones = selectedProject.milestones;
+  const total    = milestones.length;
+  const done     = milestones.filter(m => m.status === "done").length;
+  const progress = total > 0 ? Math.round((done / total) * 100) : 0;
+  selectedProject.progress = progress;
+  document.getElementById("detail-progress-num").textContent = progress + "%";
+  document.getElementById("detail-progress-fill").style.width = progress + "%";
+  const idx = allProjects.findIndex(p => p.id === selectedProject.id);
+  if (idx > -1) allProjects[idx].progress = progress;
+  renderProjects();
+}
+
+async function saveMilestones() {
+  if (!selectedProject || !milestonesDirty) return;
+  milestonesDirty = false;
+  try {
+    const res = await ARK.api({ action: "save_milestones", token: ARK.getToken(), projectId: selectedProject.id, milestones: selectedProject.milestones });
+    if (res.success) {
+      selectedProject.progress = res.progress;
+      document.getElementById("detail-progress-num").textContent = res.progress + "%";
+      document.getElementById("detail-progress-fill").style.width = res.progress + "%";
+      const idx = allProjects.findIndex(p => p.id === selectedProject.id);
+      if (idx > -1) allProjects[idx].progress = res.progress;
+      renderProjects();
+    }
+  } catch(e) {}
+}
+
+// ── Save milestones on close / tab change ──────────────────
+window.addEventListener("beforeunload", () => { if (milestonesDirty) saveMilestones(); });
+
+// ── Edit project ───────────────────────────────────────────
+function editProject() {
+  if (!selectedProject) return;
+  const p = selectedProject;
+  document.getElementById("modal-project-title").textContent = "Edit project";
+  document.getElementById("edit-project-id").value  = p.id;
+  document.getElementById("p-title").value          = p.title;
+  document.getElementById("p-client").value         = p.clientId;
+  document.getElementById("p-desc").value           = p.description || "";
+  document.getElementById("p-type").value           = p.type;
+  document.getElementById("p-due").value            = p.dueDate ? p.dueDate.slice(0,10) : "";
+  document.getElementById("p-budget-type").value    = p.budgetType;
+  document.getElementById("p-budget").value         = p.budgetAmount || "";
+  document.getElementById("save-project-label").textContent = "Save changes";
+  ARK.openModal("modal-new-project");
+}
+
+// ── Save project (create or update) ───────────────────────
+async function saveProject() {
+  const id      = document.getElementById("edit-project-id").value;
+  const title   = document.getElementById("p-title").value.trim();
+  const clientId = document.getElementById("p-client").value;
+  let ok = true;
+  if (!title)    { document.getElementById("err-p-title").style.display = "block"; ok = false; }
+  else             document.getElementById("err-p-title").style.display = "none";
+  if (!clientId) { document.getElementById("err-p-client").style.display = "block"; ok = false; }
+  else             document.getElementById("err-p-client").style.display = "none";
+  if (!ok) return;
+
+  const btn = document.getElementById("save-project-btn");
+  btn.disabled = true;
+  document.getElementById("save-project-label").style.display = "none";
+  document.getElementById("save-project-spinner").style.display = "block";
+
+  const payload = {
+    token: ARK.getToken(),
+    title,
+    clientId,
+    description: document.getElementById("p-desc").value.trim(),
+    type:        document.getElementById("p-type").value,
+    dueDate:     document.getElementById("p-due").value,
+    budgetType:  document.getElementById("p-budget-type").value,
+    budgetAmount: parseFloat(document.getElementById("p-budget").value) || 0,
+    currency:    "USD"
+  };
+
+  try {
+    let res;
+    if (id) {
+      res = await ARK.api({ action: "update_project", projectId: id, ...payload });
+      if (res.success) {
+        const idx = allProjects.findIndex(p => p.id === id);
+        if (idx > -1) Object.assign(allProjects[idx], { title, clientId, description: payload.description, type: payload.type, dueDate: payload.dueDate, budgetType: payload.budgetType, budgetAmount: payload.budgetAmount });
+        const client = allClients.find(c => c.id === clientId);
+        if (idx > -1 && client) allProjects[idx].clientName = client.name;
+        ARK.showToast("Project updated", "success");
+      }
+    } else {
+      res = await ARK.api({ action: "create_project", ...payload });
+      if (res.success) {
+        const client = allClients.find(c => c.id === clientId);
+        res.project.clientName = client?.name || "";
+        res.project.milestones = [];
+        allProjects.unshift(res.project);
+        ARK.showToast("Project created!", "success");
+      }
+    }
+    if (res.success) {
+      renderProjects();
+      ARK.closeModal("modal-new-project");
+      clearProjectForm();
+    } else {
+      ARK.showToast(res.error || "Failed to save", "error");
+    }
+  } catch(e) { ARK.showToast("Connection error.", "error"); }
+  finally {
+    btn.disabled = false;
+    document.getElementById("save-project-label").style.display = "";
+    document.getElementById("save-project-spinner").style.display = "none";
+    document.getElementById("modal-project-title").textContent = "New project";
+    document.getElementById("save-project-label").textContent = "Create project";
+  }
+}
+
+function clearProjectForm() {
+  ["p-title","p-client","p-desc","p-due","p-budget","edit-project-id"].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = "";
+  });
+  document.getElementById("p-type").value = "one-off";
+  document.getElementById("p-budget-type").value = "fixed";
+}
+
+function toggleBudget() {
+  const t = document.getElementById("p-budget-type").value;
+  document.getElementById("budget-amount-field").style.display = t === "none" ? "none" : "";
+}
+
+// ── View toggle ────────────────────────────────────────────
+function setView(v, el) {
+  currentView = v;
+  document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+  el.classList.add("active");
+  renderProjects();
+}
+
+// ── Filter ─────────────────────────────────────────────────
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  el.classList.add("active");
+  renderProjects();
+}
+
+// ── Badge helper ───────────────────────────────────────────
+function badgeHtml(status) {
+  const map = { active:"badge-active", draft:"badge-draft", paused:"badge-paused", completed:"badge-completed", cancelled:"badge-overdue" };
+  return `<span class="badge ${map[status]||"badge-draft"}"><span class="badge-dot"></span>${status}</span>`;
+}
+
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
+</script>
+</body>
+</html>
