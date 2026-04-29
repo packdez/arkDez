@@ -760,16 +760,52 @@ function renderMilestones(milestones) {
         ${(m.attachments||[]).length > 0 ? `
         <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line2);display:flex;flex-direction:column;gap:5px;">
           ${(m.attachments||[]).map(a => `
-          <div style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);border:1px solid var(--line2);border-radius:6px;">
-            <span style="font-size:.85rem;flex-shrink:0;">${getFileIcon(a.type)}</span>
-            <span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ARK.escHtml(a.name)}</span>
-            <button onclick="openAttachment('${ARK.escHtml(a.url)}','${ARK.escHtml(a.type)}')" style="font-size:.68rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:none;border-radius:4px;padding:2px 7px;cursor:pointer;flex-shrink:0;">Open</button>
-          </div>`).join("")}
+          ${a.type === "note"
+            ? `<div style="border:1px solid var(--line2);border-radius:6px;overflow:hidden;">
+                <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.note-chev').classList.toggle('open')"
+                  style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);cursor:pointer;user-select:none;">
+                  <span style="font-size:.82rem;flex-shrink:0;">📝</span>
+                  <span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;">Note</span>
+                  <span class="note-chev" style="font-size:.65rem;color:var(--ink4);transition:transform .15s;display:inline-block;">▶</span>
+                </div>
+                <div style="display:none;padding:7px 10px 8px;font-size:.75rem;color:var(--ink3);line-height:1.6;background:var(--bg2);border-top:1px solid var(--line2);white-space:pre-wrap;">${ARK.escHtml(a.content||"")}</div>
+              </div>`
+            : `<div style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);border:1px solid var(--line2);border-radius:6px;">
+                <span style="font-size:.85rem;flex-shrink:0;">${getFileIcon(a.type)}</span>
+                <span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${ARK.escHtml(a.name)}">${ARK.escHtml(a.name)}</span>
+                <button onclick="openAttachment('${ARK.escHtml(a.url)}','${ARK.escHtml(a.type)}')" style="font-size:.68rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:none;border-radius:4px;padding:2px 7px;cursor:pointer;flex-shrink:0;">Open</button>
+              </div>`
+          }`).join("")}
         </div>` : ""}
-        <button data-attach-mi="${mi}" onclick="triggerMilestoneUpload(${mi})" style="display:flex;align-items:center;gap:5px;padding:5px 0 2px;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;margin-top:2px;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          + Attach file
-        </button>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:4px;flex-wrap:wrap;">
+          <button data-attach-mi="${mi}" onclick="triggerMilestoneUpload(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            + Attach file
+          </button>
+          <button onclick="toggleLinkInput(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            + Add link
+          </button>
+          <button onclick="toggleNoteInput(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            + Add note
+          </button>
+        </div>
+        <div id="link-input-${mi}" style="display:none;margin-top:6px;display:none;flex-direction:column;gap:6px;">
+          <input id="link-url-${mi}" type="url" placeholder="https://…" style="height:34px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveMilestoneLink(${mi})">
+          <input id="link-label-${mi}" type="text" placeholder="Label (e.g. Figma file, Live preview…)" style="height:34px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveMilestoneLink(${mi})">
+          <div style="display:flex;gap:6px;">
+            <button onclick="saveMilestoneLink(${mi})" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save link</button>
+            <button onclick="toggleLinkInput(${mi})" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button>
+          </div>
+        </div>
+        <div id="note-input-${mi}" style="display:none;flex-direction:column;gap:6px;margin-top:6px;">
+          <textarea id="note-text-${mi}" placeholder="Add a note about this milestone — context, decisions, blockers…" rows="3" style="background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:9px 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;resize:vertical;min-height:72px;width:100%;line-height:1.5;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'"></textarea>
+          <div style="display:flex;gap:6px;">
+            <button onclick="saveMilestoneNote(${mi})" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save note</button>
+            <button onclick="toggleNoteInput(${mi})" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button>
+          </div>
+        </div>
       </div>
     </div>`;
   }).join("");
@@ -1050,6 +1086,89 @@ function badgeHtml(status) {
   return `<span class="badge ${map[status]||"badge-draft"}"><span class="badge-dot"></span>${status}</span>`;
 }
 
+// ── Milestone link attachments ─────────────────────────────
+function toggleLinkInput(mi) {
+  const wrap = document.getElementById("link-input-" + mi);
+  if (!wrap) return;
+  const isVisible = wrap.style.display === "flex";
+  wrap.style.display = isVisible ? "none" : "flex";
+  wrap.style.flexDirection = "column";
+  if (!isVisible) {
+    setTimeout(() => document.getElementById("link-url-" + mi)?.focus(), 50);
+  }
+}
+
+function saveMilestoneLink(mi) {
+  if (!selectedProject) return;
+  const urlEl   = document.getElementById("link-url-" + mi);
+  const labelEl = document.getElementById("link-label-" + mi);
+  const url     = urlEl?.value.trim();
+  const label   = labelEl?.value.trim();
+  if (!url) { urlEl?.focus(); ARK.showToast("Please enter a URL", "warn"); return; }
+
+  // Basic URL validation
+  try { new URL(url); } catch(e) { ARK.showToast("Please enter a valid URL", "warn"); urlEl?.focus(); return; }
+
+  const m = selectedProject.milestones[mi];
+  if (!m.attachments) m.attachments = [];
+  m.attachments.push({
+    name:       label || url,
+    url:        url,
+    type:       "link",
+    uploadedAt: new Date().toISOString()
+  });
+
+  milestonesDirty = true;
+  renderMilestones(selectedProject.milestones);
+  scheduleSave();
+  ARK.showToast("Link saved!", "success");
+}
+
+// ── Note toggle + save ────────────────────────────────────
+function toggleNoteInput(mi) {
+  const wrap = document.getElementById("note-input-" + mi);
+  if (!wrap) return;
+  const isVisible = wrap.style.display === "flex";
+  // Close link form if open
+  const linkWrap = document.getElementById("link-input-" + mi);
+  if (linkWrap) linkWrap.style.display = "none";
+  wrap.style.display = isVisible ? "none" : "flex";
+  wrap.style.flexDirection = "column";
+  if (!isVisible) {
+    setTimeout(() => document.getElementById("note-text-" + mi)?.focus(), 50);
+  }
+}
+
+function saveMilestoneNote(mi) {
+  if (!selectedProject) return;
+  const textEl  = document.getElementById("note-text-" + mi);
+  const content = textEl?.value.trim();
+  if (!content) { textEl?.focus(); ARK.showToast("Please write something first", "warn"); return; }
+
+  const m = selectedProject.milestones[mi];
+  if (!m.attachments) m.attachments = [];
+  m.attachments.push({
+    type:      "note",
+    name:      "Note",
+    content:   content,
+    url:       "",
+    uploadedAt: new Date().toISOString()
+  });
+
+  milestonesDirty = true;
+  renderMilestones(selectedProject.milestones);
+  scheduleSave();
+  ARK.showToast("Note saved!", "success");
+}
+
+// Also close note input when link input opens
+const _origToggleLinkInput = toggleLinkInput;
+toggleLinkInput = function(mi) {
+  const noteWrap = document.getElementById("note-input-" + mi);
+  if (noteWrap) noteWrap.style.display = "none";
+  _origToggleLinkInput(mi);
+};
+
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
 
 
@@ -1121,6 +1240,7 @@ function fileToBase64(file) {
 
 function getFileIcon(type) {
   if (!type) return "📎";
+  if (type === "link") return "🔗";
   if (type.includes("pdf"))   return "📄";
   if (type.includes("image")) return "🖼️";
   if (type.includes("video")) return "🎥";
