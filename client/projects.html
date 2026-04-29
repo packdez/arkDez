@@ -29,13 +29,13 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
 /* ── Auth gate ── */
 #auth-gate{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;transition:opacity .4s,visibility .4s;}
 #auth-gate.hidden{opacity:0;visibility:hidden;pointer-events:none;}
-.gate-logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.3rem;color:#fff;animation:gatePulse 1.4s ease infinite;}
-@keyframes gatePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.gate-logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.3rem;color:#fff;}
+
 .gate-text{font-size:.78rem;color:var(--ink4);}
 
 /* ── App shell ── */
-#app{display:flex;min-height:100svh;opacity:0;transform:translateY(5px);transition:opacity .4s var(--ease),transform .4s var(--ease);}
-#app.ready{opacity:1;transform:none;}
+#app{display:flex;min-height:100svh;opacity:0;transition:opacity .3s;}
+#app.ready{opacity:1;}
 
 /* ── Client sidebar — LIGHT THEME ── */
 #sidebar{
@@ -71,7 +71,6 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
 /* Red notification badge on nav item */
 .nav-dot{width:8px;height:8px;border-radius:50%;background:var(--red);margin-left:auto;flex-shrink:0;}
 
-.sidebar-footer{padding:10px 8px 14px;border-top:1px solid var(--line2);}
 .sidebar-footer{padding:10px 8px 14px;border-top:1px solid var(--line2);}
 .user-pill{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;transition:background .15s;user-select:none;}
 .user-pill:hover{background:var(--bg2);}
@@ -134,7 +133,7 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
 .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
 .project-card{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);padding:18px;cursor:pointer;transition:all .2s var(--ease);animation:cardIn .3s var(--ease) both;position:relative;}
 .project-card:hover{border-color:var(--accent-ln);box-shadow:var(--sh-md);transform:translateY(-2px);}
-@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
 .project-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px;}
 .project-card-title{font-size:.88rem;font-weight:700;color:var(--ink);line-height:1.3;flex:1;}
 .project-card-fl{font-size:.72rem;color:var(--ink4);margin-bottom:10px;display:flex;align-items:center;gap:5px;}
@@ -161,8 +160,8 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
 .project-row:hover{background:var(--bg2);}
 
 /* ── Kanban ── */
-.kanban-board{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;}
-.kanban-col{flex-shrink:0;width:260px;}
+.kanban-board{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.kanban-col{min-width:0;}
 .kanban-col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 4px;}
 .kanban-col-title{font-size:.73rem;font-weight:700;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase;}
 .kanban-col-count{font-size:.67rem;color:var(--ink4);background:var(--bg3);padding:1px 7px;border-radius:999px;}
@@ -284,35 +283,10 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 
 /* ── Skeleton ── */
-.skeleton{background:linear-gradient(90deg,var(--bg3) 25%,var(--line2) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.3s infinite;border-radius:6px;}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skeleton{background:var(--bg3);border-radius:6px;}
 .skeleton-card{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);padding:18px;}
 
-/* ── Change notification banner ── */
-#change-banner{
-  display:none;align-items:center;gap:10px;
-  padding:10px 14px;margin-bottom:16px;
-  background:var(--red-bg);border:1.5px solid var(--red-ln);
-  border-radius:var(--r);font-size:.8rem;color:var(--red);font-weight:600;
-  animation:bannerIn .3s var(--ease);
-}
-#change-banner.show{display:flex;}
-@keyframes bannerIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-#change-banner .dismiss-btn{margin-left:auto;font-size:.72rem;cursor:pointer;opacity:.7;background:none;border:none;color:inherit;font-family:var(--sans);}
-#change-banner .dismiss-btn:hover{opacity:1;}
-.detail-change-banner{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--red-bg);border:1px solid var(--red-ln);border-radius:var(--r);font-size:.75rem;color:var(--red);font-weight:600;margin-bottom:12px;}
-.detail-change-banner svg{width:13px;height:13px;flex-shrink:0;}
 
-/* Red ribbon on cards */
-.project-card.has-changes{border-color:var(--red-ln);}
-.project-card.has-changes::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--red);}
-.project-row.has-changes{border-left:3px solid var(--red);}
-.kanban-card.has-changes{border-color:var(--red-ln);}
-.card-notice{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:7px;font-size:.7rem;font-weight:600;margin-top:10px;}
-.card-notice.pending{background:var(--amber-bg);border:1px solid var(--amber-ln);color:#92400e;}
-.card-notice.ready{background:var(--accent-bg);border:1px solid var(--accent-ln);color:#166534;}
-.card-notice.changed{background:var(--red-bg);border:1px solid var(--red-ln);color:var(--red);}
-.card-notice svg{width:11px;height:11px;flex-shrink:0;}
 
 /* ── Empty state ── */
 .empty-state{display:flex;flex-direction:column;align-items:center;padding:60px 20px;text-align:center;}
@@ -323,12 +297,12 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
 
 /* ── Toast ── */
 #toast-container{position:fixed;bottom:20px;right:20px;z-index:9000;display:flex;flex-direction:column;gap:8px;}
-.toast{background:var(--ink);color:#fff;padding:10px 16px;border-radius:9px;font-size:.8rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.15);display:flex;align-items:center;gap:8px;animation:toastIn .3s var(--ease);transition:opacity .3s,transform .3s;}
+.toast{background:var(--ink);color:#fff;padding:10px 16px;border-radius:9px;font-size:.8rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.15);display:flex;align-items:center;gap:8px;transition:opacity .3s,transform .3s;}
 .toast.out{opacity:0;transform:translateX(12px);}
 .toast.success{background:var(--accent);}
 .toast.error{background:var(--red);}
 .toast.warn{background:var(--amber);}
-@keyframes toastIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+
 
 /* ── Sidebar overlay (mobile) ── */
 #sidebar-overlay{position:fixed;inset:0;z-index:199;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .25s;}
@@ -521,14 +495,6 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
         <h1>Projects</h1>
         <p id="count-label">Track your projects and approve milestones.</p>
       </div>
-
-      <!-- Real-time change banner -->
-      <div id="change-banner">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:15px;height:15px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span id="change-banner-text">Your freelancer made updates to a project.</span>
-        <button class="dismiss-btn" onclick="dismissChangeBanner()">Dismiss ×</button>
-      </div>
-
       <!-- Freelancer filter tabs -->
       <div class="freelancer-tabs" id="freelancer-tabs" style="display:none;"></div>
 
@@ -536,7 +502,7 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
       <div class="toolbar">
         <div class="search-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input class="search-input" type="text" id="search-input" placeholder="Search projects…" oninput="renderProjects()">
+          <input class="search-input" type="text" id="search-input" placeholder="Search projects…" oninput="handleSearch()" onkeyup="handleSearch()">
         </div>
         <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
         <button class="filter-btn" onclick="setFilter('active',this)">Active</button>
@@ -585,13 +551,6 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
     <button class="detail-close" onclick="closeDetail()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
   </div>
   <div class="detail-scroll">
-
-    <!-- Change notice -->
-    <div id="detail-change-section" style="display:none;padding:12px 18px 0;">
-      <div class="detail-change-banner">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:13px;height:13px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span id="detail-change-text">New updates from your freelancer.</span>
-      </div>
     </div>
 
     <div class="detail-section">
@@ -879,14 +838,14 @@ async function boot(){
 function startPolling(){
   pollTimer=setInterval(async()=>{
     try{const res=await api({action:"get_client_projects",token:getToken()});
-    if(res.success){const before=countChangedProjects();detectChanges(res.projects||[]);allProjects=res.projects||[];allFreelancers=res.freelancers||[];saveToCache();renderAll();updateChangeBadges();const after=countChangedProjects();if(after>before)showChangeBanner(after);}}catch(e){}
+    if(res.success){const before=countChangedProjects();detectChanges(res.projects||[]);allProjects=res.projects||[];allFreelancers=res.freelancers||[];saveToCache();renderAll();updateChangeBadges();}}catch(e){}
   },30000);
 }
 
 function detectChanges(incoming){const seen=getSeenMap();incoming.forEach(p=>{if(!seen[p.id])markProjectSeen(p.id,p.updatedAt);});}
 function updateChangeBadges(){const count=countChangedProjects();const b=document.getElementById("nav-projects-badge");if(b){b.style.display=count>0?"inline-block":"none";}}
-function showChangeBanner(count){const banner=document.getElementById("change-banner");document.getElementById("change-banner-text").textContent=`Your freelancer made updates to ${count} project${count>1?"s":""}.`;banner.classList.add("show");}
-function dismissChangeBanner(){document.getElementById("change-banner").classList.remove("show");}
+function showChangeBanner(count){ /* dot only — no banner */ }
+
 
 function bootUI(){
   if(!currentAccount){try{const s=localStorage.getItem("ark_client")||sessionStorage.getItem("ark_client");if(s)currentAccount=JSON.parse(s);}catch(e){}}
@@ -919,13 +878,28 @@ function renderFreelancerTabs(){
 }
 function setFreelancer(id,el){activeFreelancer=id;document.querySelectorAll(".fl-tab").forEach(t=>t.classList.remove("active"));el.classList.add("active");renderProjects();}
 
+function fuzzyMatch(str, pattern) {
+  if (!pattern) return true;
+  str = str.toLowerCase(); pattern = pattern.toLowerCase();
+  if (str.includes(pattern)) return true;
+  let si = 0, pi = 0;
+  while (si < str.length && pi < pattern.length) { if (str[si] === pattern[pi]) pi++; si++; }
+  return pi === pattern.length;
+}
+
+let _searchTimer = null;
+function handleSearch() {
+  clearTimeout(_searchTimer);
+  _searchTimer = setTimeout(() => renderProjects(), 150);
+}
+
 function renderProjects(){
   const q=document.getElementById("search-input").value.toLowerCase();
   const filtered=allProjects.filter(p=>{
     if(p.status==="deleted")return false;
     if(currentFilter!=="all"&&p.status!==currentFilter)return false;
     if(activeFreelancer!=="all"&&p.freelancerId!==activeFreelancer)return false;
-    if(q&&!p.title.toLowerCase().includes(q)&&!(p.freelancerName||"").toLowerCase().includes(q))return false;
+    if(q&&!fuzzyMatch(p.title,q)&&!fuzzyMatch(p.freelancerName||"",q)&&!fuzzyMatch(p.type||"",q))return false;
     return true;
   });
   const total=allProjects.filter(p=>p.status!=="deleted").length;
@@ -944,15 +918,15 @@ function renderCards(projects){
     const totalM=(p.milestones||[]).length;
     const awaitApproval=(p.milestones||[]).some(m=>m.status==="done"&&m.approvalStatus==="pending");
     const hasChanges=projectHasChanges(p);
-    return `<div class="project-card ${hasChanges?"has-changes":""}" onclick="openDetail('${p.id}')" style="animation-delay:${Math.min(i*35,280)}ms">
-      <div class="project-card-header"><div class="project-card-title">${escHtml(p.title)}</div>${badgeHtml(p.status)}</div>
+    return `<div class="project-card" onclick="openDetail('${p.id}')" >
+      <div class="project-card-header"><div class="project-card-title">${escHtml(p.title)}${hasChanges?'<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);margin-left:6px;vertical-align:middle;flex-shrink:0;"></span>':''}</div>${badgeHtml(p.status)}</div>
       <div class="project-card-fl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>${escHtml(p.freelancerName||"Freelancer")}</div>
       <div class="project-card-meta"><span class="type-pill">${escHtml(p.type)}</span>${p.budgetAmount>0?`<span class="budget-lbl">${fmtCurrency(p.budgetAmount,p.currency)}</span>`:""}${due?`<span class="due-lbl ${isOver?"overdue":""}">${isOver?"Overdue":"Due"} ${due.toLocaleDateString(undefined,{month:"short",day:"numeric"})}</span>`:""}</div>
       <div class="progress-bar"><div class="progress-fill" style="width:${p.progress||0}%"></div></div>
       <div class="progress-label"><span>${totalM>0?doneM+"/"+totalM+" milestones":"No milestones"}</span><span>${p.progress||0}%</span></div>
       ${p.requestStatus==="pending"?`<div class="card-notice pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Awaiting freelancer acceptance</div>`:""}
       ${awaitApproval?`<div class="card-notice ready"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;flex-shrink:0;"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Milestone ready for approval</div>`:""}
-      ${hasChanges?`<div class="card-notice changed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;flex-shrink:0;"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>New update from freelancer</div>`:""}
+
     </div>`;
   }).join("")}</div>`;
 }
@@ -966,8 +940,8 @@ function renderList(projects){
     </div>
     ${projects.map(p=>{
       const due=p.dueDate?new Date(p.dueDate):null,isOver=due&&due<new Date()&&p.status!=="completed";
-      return `<div class="project-row ${projectHasChanges(p)?"has-changes":""}" onclick="openDetail('${p.id}')">
-        <div style="flex:1;font-size:.84rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(p.title)}</div>
+      return `<div class="project-row" onclick="openDetail('${p.id}')">
+        <div style="flex:1;font-size:.84rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px;">${escHtml(p.title)}${projectHasChanges(p)?'<span style="width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;display:inline-block;"></span>':''}</div>
         <div style="width:120px;font-size:.74rem;color:var(--ink4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(p.freelancerName||"—")}</div>
         <div style="width:72px;">${badgeHtml(p.status)}</div>
         <div style="width:90px;font-size:.78rem;font-weight:600;text-align:right;">${p.budgetAmount>0?fmtCurrency(p.budgetAmount,p.currency):"—"}</div>
@@ -984,7 +958,7 @@ function renderKanban(projects){
     const cp=projects.filter(p=>p.status===col.key);
     return `<div class="kanban-col"><div class="kanban-col-header"><span class="kanban-col-title">${col.label}</span><span class="kanban-col-count">${cp.length}</span></div>
     <div>${cp.map(p=>`<div class="kanban-card ${projectHasChanges(p)?"has-changes":""}" onclick="openDetail('${p.id}')">
-      <div class="kanban-card-title">${escHtml(p.title)}</div><div class="kanban-card-fl">${escHtml(p.freelancerName||"")}</div>
+      <div class="kanban-card-title">${escHtml(p.title)}${projectHasChanges(p)?'<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red);margin-left:5px;vertical-align:middle;"></span>':''}</div><div class="kanban-card-fl">${escHtml(p.freelancerName||"")}</div>
       <div class="kanban-card-footer">${p.budgetAmount>0?`<span style="font-size:.7rem;font-weight:600;color:var(--ink3);">${fmtCurrency(p.budgetAmount,p.currency)}</span>`:"<span></span>"}<span style="font-size:.7rem;color:var(--ink4);">${p.progress||0}%</span></div>
     </div>`).join("")}${!cp.length?`<div style="border:1.5px dashed var(--line2);border-radius:var(--r);padding:20px;text-align:center;font-size:.76rem;color:var(--ink4);">No projects</div>`:""}</div></div>`;
   }).join("")}</div>`;
@@ -1006,7 +980,7 @@ function openDetail(id){
   renderStatusSelector(p.status);
   const notice=document.getElementById("detail-request-notice");
   if(p.requestStatus==="pending"){notice.style.display="";notice.textContent="⏳ Awaiting freelancer acceptance. You can still add milestones and files below.";}else notice.style.display="none";
-  document.getElementById("detail-change-section").style.display="none";
+  
   renderMilestones(p.milestones||[]);
   // Show/hide "completing locked" hint in milestone section
   const msHint=document.getElementById("milestone-status-hint");
@@ -1042,7 +1016,8 @@ async function changeProjectStatus(status){
   try{
     const res=await api({action:"update_client_project_status",token:getToken(),projectId:selectedProject.id,status});
     if(!res.success){selectedProject.status=old;showToast(res.error||"Failed","error");}
-    else{showToast("Status updated","success");if(status==="completed")promptRating(selectedProject);}
+    else{// Mark seen so client's own status change doesn't show dot
+if(selectedProject)markProjectSeen(selectedProject.id,new Date().toISOString());showToast("Status updated","success");if(status==="completed")promptRating(selectedProject);}
   }catch(e){showToast("Connection error.","error");}
 }
 
@@ -1136,7 +1111,8 @@ function saveProjectNote(){if(!selectedProject)return;const content=document.get
 
 let _projSaveTimer=null;
 function scheduleProjectSave(){clearTimeout(_projSaveTimer);_projSaveTimer=setTimeout(saveProjectMilestones,5000);}
-async function saveProjectMilestones(){if(!selectedProject||!projectsDirty)return;projectsDirty=false;try{const res=await api({action:"save_milestones",token:getToken(),projectId:selectedProject.id,milestones:selectedProject.milestones});if(res.success){selectedProject.progress=res.progress;document.getElementById("detail-progress-num").textContent=res.progress+"%";document.getElementById("detail-progress-fill").style.width=res.progress+"%";const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].progress=res.progress;saveToCache();renderProjects();}}catch(e){projectsDirty=true;}}
+async function saveProjectMilestones(){if(!selectedProject||!projectsDirty)return;projectsDirty=false;try{const res=await api({action:"save_milestones",token:getToken(),projectId:selectedProject.id,milestones:selectedProject.milestones});if(res.success){selectedProject.progress=res.progress;document.getElementById("detail-progress-num").textContent=res.progress+"%";document.getElementById("detail-progress-fill").style.width=res.progress+"%";const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1){allProjects[idx].progress=res.progress;// Mark as seen with new updatedAt so our own saves don't show dot
+markProjectSeen(selectedProject.id,allProjects[idx].updatedAt||selectedProject.updatedAt);}saveToCache();updateChangeBadges();renderProjects();}}catch(e){projectsDirty=true;}}
 window.addEventListener("beforeunload",()=>{if(projectsDirty)saveProjectMilestones();});
 
 async function approveMilestone(milestoneId,mi){
