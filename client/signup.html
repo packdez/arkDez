@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create your account — ArkDez</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#0d0d0d;--ink2:#3d3d3d;--ink3:#737373;--ink4:#a3a3a3;
+  --line:#e5e5e5;--line2:#f0f0f0;--bg:#ffffff;--bg2:#fafafa;--bg3:#f5f5f5;
+  --accent:#1a6b3c;--accent2:#22c55e;--accent-bg:#f0fdf4;--accent-ln:#bbf7d0;
+  --red:#dc2626;--red-bg:#fef2f2;
+  --serif:'Instrument Serif',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
+  --r:10px;--ease:cubic-bezier(.22,1,.36,1);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg2);color:var(--ink);min-height:100svh;display:flex;align-items:center;justify-content:center;-webkit-font-smoothing:antialiased;padding:24px;}
+
+.auth-card{width:100%;max-width:440px;background:var(--bg);border:1.5px solid var(--line2);border-radius:20px;padding:36px 36px 32px;box-shadow:0 8px 40px rgba(0,0,0,.07);}
+
+/* Brand */
+.auth-brand{display:flex;align-items:center;gap:9px;margin-bottom:28px;text-decoration:none;}
+.auth-brand-mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:.9rem;color:#fff;box-shadow:0 2px 8px rgba(34,197,94,.3);}
+.auth-brand-name{font-size:.95rem;font-weight:700;color:var(--ink);}
+
+/* Invite banner */
+.invite-banner{background:var(--accent-bg);border:1.5px solid var(--accent-ln);border-radius:12px;padding:14px 16px;margin-bottom:24px;display:none;}
+.invite-banner.show{display:block;}
+.invite-banner-title{font-size:.8rem;font-weight:700;color:var(--accent);margin-bottom:3px;}
+.invite-banner-sub{font-size:.76rem;color:#4a7060;line-height:1.5;}
+
+.auth-title{font-family:var(--serif);font-size:1.7rem;font-weight:400;color:var(--ink);letter-spacing:-.02em;margin-bottom:6px;}
+.auth-sub{font-size:.83rem;color:var(--ink3);margin-bottom:24px;line-height:1.5;}
+.auth-sub a{color:var(--accent);text-decoration:none;font-weight:600;}
+.auth-sub a:hover{text-decoration:underline;}
+
+/* Tabs */
+.auth-tabs{display:flex;gap:0;border:1.5px solid var(--line2);border-radius:var(--r);padding:3px;margin-bottom:24px;background:var(--bg2);}
+.auth-tab{flex:1;padding:8px;text-align:center;font-size:.78rem;font-weight:600;color:var(--ink3);cursor:pointer;border-radius:8px;transition:all .18s;}
+.auth-tab.active{background:var(--bg);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.08);}
+
+/* Code input panel */
+.code-panel{display:none;}
+.code-panel.show{display:block;}
+.invite-code-wrap{position:relative;}
+.invite-code-input{width:100%;height:52px;background:var(--bg2);border:2px solid var(--line);border-radius:var(--r);padding:0 14px;font-size:1.1rem;font-weight:700;color:var(--ink);font-family:var(--sans);outline:none;text-align:center;letter-spacing:.12em;text-transform:uppercase;transition:border-color .18s,box-shadow .18s;}
+.invite-code-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(34,197,94,.1);}
+.invite-code-input.verified{border-color:var(--accent2);background:var(--accent-bg);}
+.invite-code-input.error{border-color:var(--red);background:var(--red-bg);}
+.code-verify-btn{margin-top:10px;width:100%;height:42px;background:var(--bg3);border:1.5px solid var(--line);border-radius:var(--r);font-size:.84rem;font-weight:600;color:var(--ink2);cursor:pointer;font-family:var(--sans);transition:all .18s;}
+.code-verify-btn:hover{background:var(--accent-bg);border-color:var(--accent-ln);color:var(--accent);}
+
+/* Form */
+.auth-form{display:flex;flex-direction:column;gap:14px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field-label{font-size:.76rem;font-weight:600;color:var(--ink2);letter-spacing:.01em;}
+.field-label-row{display:flex;align-items:center;justify-content:space-between;}
+.field-label-link{font-size:.73rem;color:var(--accent);text-decoration:none;font-weight:500;}
+.field-label-link:hover{text-decoration:underline;}
+.field-input{width:100%;height:44px;background:var(--bg2);border:1.5px solid var(--line);border-radius:var(--r);padding:0 13px;font-size:.875rem;color:var(--ink);font-family:var(--sans);outline:none;transition:border-color .18s,background .18s,box-shadow .18s;-webkit-appearance:none;}
+.field-input::placeholder{color:var(--ink4);}
+.field-input:focus{border-color:var(--accent);background:var(--bg);box-shadow:0 0 0 3px rgba(34,197,94,.1);}
+.field-input.error{border-color:var(--red);background:var(--red-bg);}
+.field-input.has-toggle{padding-right:40px;}
+.field-input-wrap{position:relative;}
+.toggle-pw{position:absolute;right:11px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;padding:4px;transition:color .15s;}
+.toggle-pw:hover{color:var(--ink2);}
+.field-err{font-size:.7rem;color:var(--red);font-weight:500;display:none;margin-top:2px;}
+.field-err.show{display:block;}
+
+.pw-strength{margin-top:5px;}
+.pw-bar{height:3px;border-radius:2px;background:var(--line2);overflow:hidden;margin-bottom:3px;}
+.pw-fill{height:100%;border-radius:2px;transition:width .3s,background .3s;width:0;}
+.pw-lbl{font-size:.67rem;color:var(--ink4);}
+
+.btn-submit{width:100%;height:46px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.88rem;font-weight:700;font-family:var(--sans);cursor:pointer;transition:background .18s,transform .15s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 2px 8px rgba(26,107,60,.22);margin-top:4px;}
+.btn-submit:hover{background:#155c33;}
+.btn-submit:active{transform:scale(.98);}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.btn-submit .spinner{width:17px;height:17px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;display:none;}
+.btn-submit.loading .btn-text{display:none;}
+.btn-submit.loading .spinner{display:block;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.auth-error-banner{background:var(--red-bg);border:1px solid #fecaca;border-radius:var(--r);padding:11px 13px;font-size:.8rem;color:var(--red);display:none;align-items:center;gap:8px;line-height:1.4;margin-bottom:4px;}
+.auth-error-banner.show{display:flex;}
+
+.auth-terms{font-size:.71rem;color:var(--ink4);text-align:center;line-height:1.55;margin-top:4px;}
+.auth-terms a{color:var(--ink3);text-decoration:underline;text-underline-offset:2px;}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:9px;font-size:.8rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.15);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap;z-index:999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.success{background:var(--accent);}
+.toast.error{background:var(--red);}
+
+@media(max-width:480px){.auth-card{padding:28px 22px 24px;border-radius:16px;}.field-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="auth-card">
+  <a href="/" class="auth-brand">
+    <div class="auth-brand-mark">A</div>
+    <span class="auth-brand-name">ArkDez</span>
+  </a>
+
+  <!-- Invite context banner -->
+  <div class="invite-banner" id="invite-banner">
+    <div class="invite-banner-title" id="invite-banner-title">You've been invited</div>
+    <div class="invite-banner-sub" id="invite-banner-sub">Create your account to get started.</div>
+  </div>
+
+  <h1 class="auth-title" id="page-title">Create your account</h1>
+  <p class="auth-sub">Already have an account? <a href="login.html">Sign in</a></p>
+
+  <!-- Tabs: invite link already resolved vs enter code -->
+  <div class="auth-tabs" id="auth-tabs">
+    <div class="auth-tab active" id="tab-signup" onclick="setTab('signup')">Sign up</div>
+    <div class="auth-tab" id="tab-code" onclick="setTab('code')">Use invite code</div>
+  </div>
+
+  <!-- Invite code panel -->
+  <div class="code-panel" id="code-panel">
+    <div class="field" style="margin-bottom:16px;">
+      <label class="field-label">Enter your invite code</label>
+      <input class="invite-code-input" type="text" id="invite-code-input" placeholder="ABC-123" maxlength="7" oninput="formatCode(this)">
+      <button class="code-verify-btn" id="verify-code-btn" onclick="verifyCode()">Verify code</button>
+    </div>
+  </div>
+
+  <div class="auth-error-banner" id="auth-error">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span id="auth-error-text">Something went wrong.</span>
+  </div>
+
+  <form class="auth-form" id="signup-form" novalidate>
+    <input type="hidden" id="resolved-invite-token">
+    <input type="hidden" id="resolved-invite-code">
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label" for="first-name">First name</label>
+        <input class="field-input" type="text" id="first-name" placeholder="Jane" autocomplete="given-name" required>
+        <span class="field-err" id="err-first-name">Required</span>
+      </div>
+      <div class="field">
+        <label class="field-label" for="last-name">Last name</label>
+        <input class="field-input" type="text" id="last-name" placeholder="Smith" autocomplete="family-name" required>
+        <span class="field-err" id="err-last-name">Required</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="email">Email address</label>
+      <input class="field-input" type="email" id="email" placeholder="jane@company.com" autocomplete="email" required>
+      <span class="field-err" id="err-email">Enter a valid email</span>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="password">Password</label>
+      <div class="field-input-wrap">
+        <input class="field-input has-toggle" type="password" id="password" placeholder="Min. 8 characters" autocomplete="new-password" required>
+        <button type="button" class="toggle-pw" id="toggle-pw">
+          <svg id="eye-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="pw-strength" id="pw-strength" style="display:none">
+        <div class="pw-bar"><div class="pw-fill" id="pw-fill"></div></div>
+        <span class="pw-lbl" id="pw-lbl">Too short</span>
+      </div>
+      <span class="field-err" id="err-password">Min. 8 characters</span>
+    </div>
+
+    <label style="display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;">
+      <input type="checkbox" id="remember" style="width:15px;height:15px;border-radius:4px;accent-color:var(--accent);">
+      <span style="font-size:.78rem;color:var(--ink3);">Keep me signed in for 30 days</span>
+    </label>
+
+    <button type="submit" class="btn-submit" id="submit-btn">
+      <span class="btn-text">Create account</span>
+      <div class="spinner"></div>
+    </button>
+    <p class="auth-terms">By signing up you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</p>
+  </form>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const SCRIPT_URL = ""; // Set by ark.js — leave empty, handled below
+const API_KEY    = "d29bb7407783daa176e5f6cf8dfc6677940df38fda145b06";
+
+async function api(payload) {
+  const body = new Blob([JSON.stringify({ ...payload, apiKey: API_KEY })], { type: "text/plain" });
+  const res  = await fetch("https://script.google.com/macros/s/AKfycbzsjcZmIhwJF5DslXrFTPZJENckjKB_3re9qK73dewpLCCUNBcEi4-_iHBr6UvhVCSQpA/exec", { method: "POST", body });
+  return res.json();
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.className = "toast " + (type||"") + " show";
+  setTimeout(() => t.className = "toast " + (type||""), 3200);
+}
+function showErr(id, msg) {
+  const e = document.getElementById("err-" + id);
+  if (msg) e.textContent = msg;
+  e.classList.add("show");
+  document.getElementById(id)?.classList.add("error");
+}
+function clearErr(id) {
+  document.getElementById("err-" + id)?.classList.remove("show");
+  document.getElementById(id)?.classList.remove("error");
+}
+function showAuthErr(msg) {
+  document.getElementById("auth-error-text").textContent = msg;
+  document.getElementById("auth-error").classList.add("show");
+}
+function hideAuthErr() { document.getElementById("auth-error").classList.remove("show"); }
+function validEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e); }
+
+// ── Password toggle ──
+const pwInput = document.getElementById("password");
+const eyeIcon = document.getElementById("eye-icon");
+let pwVisible = false;
+document.getElementById("toggle-pw").addEventListener("click", () => {
+  pwVisible = !pwVisible;
+  pwInput.type = pwVisible ? "text" : "password";
+  eyeIcon.innerHTML = pwVisible
+    ? '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+    : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+});
+
+// ── Password strength ──
+pwInput.addEventListener("input", () => {
+  const v = pwInput.value;
+  const el = document.getElementById("pw-strength");
+  if (!v.length) { el.style.display = "none"; return; }
+  el.style.display = "";
+  let score = v.length;
+  if (/[A-Z]/.test(v)) score += 2;
+  if (/[0-9]/.test(v)) score += 2;
+  if (/[^A-Za-z0-9]/.test(v)) score += 3;
+  const levels = [{max:6,w:"20%",bg:"#ef4444",l:"Too short"},{max:9,w:"50%",bg:"#f59e0b",l:"Weak"},{max:12,w:"75%",bg:"#3b82f6",l:"Good"},{max:99,w:"100%",bg:"#22c55e",l:"Strong"}];
+  const lvl = levels.find(l => score <= l.max) || levels[3];
+  document.getElementById("pw-fill").style.cssText = `width:${lvl.w};background:${lvl.bg}`;
+  const lbl = document.getElementById("pw-lbl");
+  lbl.textContent = lvl.l; lbl.style.color = lvl.bg;
+});
+
+["first-name","last-name","email","password"].forEach(id => {
+  document.getElementById(id)?.addEventListener("input", () => { clearErr(id); hideAuthErr(); });
+});
+
+// ── Tabs ──
+let activeTab = "signup";
+function setTab(tab) {
+  activeTab = tab;
+  document.getElementById("tab-signup").classList.toggle("active", tab === "signup");
+  document.getElementById("tab-code").classList.toggle("active", tab === "code");
+  document.getElementById("code-panel").classList.toggle("show", tab === "code");
+}
+
+// ── Invite code formatting ──
+function formatCode(el) {
+  let v = el.value.replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 6);
+  if (v.length > 3) v = v.slice(0, 3) + "-" + v.slice(3);
+  el.value = v;
+  el.classList.remove("verified", "error");
+}
+
+// ── Verify code ──
+async function verifyCode() {
+  const code = document.getElementById("invite-code-input").value.trim();
+  if (code.length < 7) { showToast("Enter a complete 6-character code", "error"); return; }
+  const btn = document.getElementById("verify-code-btn");
+  btn.textContent = "Verifying…"; btn.disabled = true;
+  try {
+    const res = await api({ action: "validate_invite", inviteCode: code });
+    if (res.success) {
+      document.getElementById("invite-code-input").classList.add("verified");
+      document.getElementById("resolved-invite-code").value = code;
+      showInviteBanner(res);
+      // Switch to form
+      setTab("signup");
+      document.getElementById("auth-tabs").style.display = "none";
+      if (res.clientEmail) document.getElementById("email").value = res.clientEmail;
+      showToast("Code verified! Fill in your details below.", "success");
+    } else {
+      document.getElementById("invite-code-input").classList.add("error");
+      showToast(res.error || "Invalid code", "error");
+    }
+  } catch(e) {
+    showToast("Connection error. Try again.", "error");
+  } finally {
+    btn.textContent = "Verify code"; btn.disabled = false;
+  }
+}
+
+// ── Show invite context banner ──
+function showInviteBanner(data) {
+  const banner = document.getElementById("invite-banner");
+  const title  = document.getElementById("invite-banner-title");
+  const sub    = document.getElementById("invite-banner-sub");
+  title.textContent = "Invited by " + (data.freelancerName || "a freelancer");
+  sub.textContent   = "You're joining " + (data.workspaceName || "their workspace") + ". Create your account to get started.";
+  banner.classList.add("show");
+  document.getElementById("page-title").textContent = "Create your account";
+}
+
+// ── Check for invite token in URL ──
+(async function checkInviteURL() {
+  const params = new URLSearchParams(window.location.search);
+  const token  = params.get("invite");
+  if (!token) return;
+
+  try {
+    const res = await api({ action: "validate_invite", inviteToken: token });
+    if (res.success) {
+      document.getElementById("resolved-invite-token").value = token;
+      document.getElementById("auth-tabs").style.display = "none";
+      showInviteBanner(res);
+      if (res.clientEmail) document.getElementById("email").value = res.clientEmail;
+      if (res.clientName) {
+        const parts = res.clientName.split(" ");
+        document.getElementById("first-name").value = parts[0] || "";
+        document.getElementById("last-name").value  = parts.slice(1).join(" ") || "";
+      }
+    } else {
+      showAuthErr(res.error || "This invite link is invalid or expired.");
+    }
+  } catch(e) { /* network issue — let user proceed normally */ }
+})();
+
+// ── Submit ──
+document.getElementById("signup-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  hideAuthErr();
+  let ok = true;
+  const fn  = document.getElementById("first-name").value.trim();
+  const ln  = document.getElementById("last-name").value.trim();
+  const em  = document.getElementById("email").value.trim();
+  const pw  = document.getElementById("password").value;
+  const rem = document.getElementById("remember").checked;
+  const invToken = document.getElementById("resolved-invite-token").value;
+  const invCode  = document.getElementById("resolved-invite-code").value;
+
+  if (!fn) { showErr("first-name", "Required"); ok = false; }
+  if (!ln) { showErr("last-name",  "Required"); ok = false; }
+  if (!validEmail(em)) { showErr("email", "Enter a valid email"); ok = false; }
+  if (pw.length < 8)   { showErr("password", "Min. 8 characters"); ok = false; }
+  if (!ok) return;
+
+  const btn = document.getElementById("submit-btn");
+  btn.classList.add("loading"); btn.disabled = true;
+
+  try {
+    const res = await api({
+      action: "client_signup",
+      firstName: fn, lastName: ln, email: em, password: pw, remember: rem,
+      inviteToken: invToken, inviteCode: invCode
+    });
+    if (res.success) {
+      localStorage.setItem("ark_client_token", res.token);
+      localStorage.setItem("ark_client", JSON.stringify(res.account));
+      showToast(res.message || "Account created! Loading your workspace…", "success");
+      setTimeout(() => { window.location.href = "dashboard.html"; }, 1200);
+    } else {
+      showAuthErr(res.error || "Something went wrong.");
+    }
+  } catch(err) {
+    showToast("Connection error. Try again.", "error");
+  } finally {
+    btn.classList.remove("loading"); btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
