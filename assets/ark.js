@@ -6,7 +6,7 @@
 const ARK = (function () {
 
   // ── Config ─────────────────────────────────────────────────
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsjcZmIhwJF5DslXrFTPZJENckjKB_3re9qK73dewpLCCUNBcEi4-_iHBr6UvhVCSQpA/exec"; // ← Paste Apps Script deployment URL
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsjcZmIhwJF5DslXrFTPZJENckjKB_3re9qK73dewpLCCUNBcEi4-_iHBr6UvhVCSQpA/exec";
   const LOGIN_URL  = "/freelancer/login.html";
 
   // ── API ────────────────────────────────────────────────────
