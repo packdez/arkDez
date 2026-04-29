@@ -213,51 +213,7 @@
 .ms-action-btn:hover { background: var(--bg3); color: var(--red); }
 .ms-action-btn svg { width: 11px; height: 11px; }
 
-/* ── Work submission ── */
-.submission-section { padding: 16px 18px; border-top: 1px solid var(--line2); }
-.submission-title { font-size: .68rem; font-weight: 700; color: var(--ink4); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 12px; }
-.submission-type-tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
-.sub-tab { padding: 5px 12px; border-radius: 999px; font-size: .73rem; font-weight: 600; cursor: pointer; border: 1.5px solid var(--line2); background: var(--bg); color: var(--ink3); transition: all .15s; }
-.sub-tab:hover { border-color: var(--line); color: var(--ink2); }
-.sub-tab.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
-.sub-input-wrap { display: none; flex-direction: column; gap: 10px; }
-.sub-input-wrap.show { display: flex; }
-.sub-input { width: 100%; height: 40px; background: var(--bg2); border: 1.5px solid var(--line2); border-radius: var(--r); padding: 0 12px; font-size: .83rem; color: var(--ink); font-family: var(--sans); outline: none; transition: border-color .18s; }
-.sub-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,197,94,.08); }
-.sub-textarea { height: auto; padding: 9px 12px; resize: vertical; min-height: 64px; }
-.sub-file-label {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  height: 80px; border: 2px dashed var(--line2); border-radius: var(--r);
-  cursor: pointer; font-size: .8rem; color: var(--ink4);
-  transition: all .18s; font-family: var(--sans);
-}
-.sub-file-label:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
-.sub-file-label svg { width: 18px; height: 18px; }
-.sub-file-input { display: none; }
-.sub-file-chosen { font-size: .75rem; color: var(--accent); font-weight: 600; margin-top: -4px; }
-.sub-btn { height: 38px; padding: 0 18px; background: var(--accent); color: #fff; border: none; border-radius: var(--r); font-size: .8rem; font-weight: 700; cursor: pointer; font-family: var(--sans); transition: background .15s; display: flex; align-items: center; gap: 7px; align-self: flex-start; }
-.sub-btn:hover { background: #155c33; }
-.sub-btn:disabled { opacity: .6; cursor: not-allowed; }
 
-/* Submissions list */
-.submissions-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
-.submission-item {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 10px 12px; background: var(--bg2);
-  border: 1px solid var(--line2); border-radius: var(--r);
-}
-.sub-icon { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.sub-icon svg { width: 14px; height: 14px; }
-.sub-icon.link    { background: #dbeafe; color: #2563eb; }
-.sub-icon.file    { background: #fef9c3; color: #854d0e; }
-.sub-icon.video   { background: #fce7f3; color: #9d174d; }
-.sub-icon.note    { background: var(--bg3); color: var(--ink3); }
-.sub-info { flex: 1; min-width: 0; }
-.sub-info-title { font-size: .78rem; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sub-info-meta { font-size: .68rem; color: var(--ink4); margin-top: 2px; }
-.sub-info-note { font-size: .75rem; color: var(--ink3); margin-top: 3px; line-height: 1.4; }
-.sub-open-btn { font-size: .72rem; color: var(--accent); font-weight: 600; text-decoration: none; flex-shrink: 0; padding: 3px 8px; border-radius: 5px; background: var(--accent-bg); transition: background .12s; }
-.sub-open-btn:hover { background: var(--accent-ln); }
 
 /* ── Skeleton ── */
 .skeleton { background: linear-gradient(90deg,var(--bg3) 25%,var(--line2) 50%,var(--bg3) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; }
@@ -446,65 +402,6 @@
       <div class="milestone-list" id="milestone-list"></div>
     </div>
 
-    <!-- Work submissions -->
-    <div class="submission-section" id="submission-section">
-      <div class="submission-title">Submit work</div>
-      <div class="submission-type-tabs">
-        <div class="sub-tab active" onclick="setSubTab('link',this)">🔗 Link</div>
-        <div class="sub-tab" onclick="setSubTab('file',this)">📄 File / PDF</div>
-        <div class="sub-tab" onclick="setSubTab('video',this)">🎥 Video</div>
-        <div class="sub-tab" onclick="setSubTab('note',this)">📝 Note</div>
-      </div>
-
-      <!-- Link -->
-      <div class="sub-input-wrap show" id="sub-link">
-        <input class="sub-input" type="url" id="sub-link-url" placeholder="https://…">
-        <input class="sub-input" type="text" id="sub-link-title" placeholder="Label (e.g. Figma prototype, Live site…)">
-        <input class="sub-input" type="text" id="sub-link-note" placeholder="Note for client (optional)">
-        <button class="sub-btn" onclick="submitWork('link')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          Submit link
-        </button>
-      </div>
-
-      <!-- File -->
-      <div class="sub-input-wrap" id="sub-file">
-        <label class="sub-file-label" for="sub-file-input">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          Click to upload file, PDF or image
-        </label>
-        <input class="sub-file-input" type="file" id="sub-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.zip,.mp4,.mov" onchange="handleFileChosen(this)">
-        <div class="sub-file-chosen" id="sub-file-chosen" style="display:none;"></div>
-        <input class="sub-input" type="text" id="sub-file-note" placeholder="Note for client (optional)">
-        <button class="sub-btn" onclick="submitWork('file')" id="sub-file-btn">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          Upload to Drive
-        </button>
-      </div>
-
-      <!-- Video -->
-      <div class="sub-input-wrap" id="sub-video">
-        <input class="sub-input" type="url" id="sub-video-url" placeholder="YouTube, Vimeo, Loom link…">
-        <input class="sub-input" type="text" id="sub-video-title" placeholder="Video title">
-        <input class="sub-input" type="text" id="sub-video-note" placeholder="Note for client (optional)">
-        <button class="sub-btn" onclick="submitWork('video')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-          Submit video
-        </button>
-      </div>
-
-      <!-- Note -->
-      <div class="sub-input-wrap" id="sub-note">
-        <textarea class="sub-input sub-textarea" id="sub-note-text" placeholder="Write a note or update for your client…"></textarea>
-        <button class="sub-btn" onclick="submitWork('note')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          Send note
-        </button>
-      </div>
-
-      <!-- Submissions list -->
-      <div class="submissions-list" id="submissions-list"></div>
-    </div>
 
   </div>
 </div>
@@ -860,6 +757,19 @@ function renderMilestones(milestones) {
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Add subtask
         </button>
+        ${(m.attachments||[]).length > 0 ? `
+        <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line2);display:flex;flex-direction:column;gap:5px;">
+          ${(m.attachments||[]).map(a => `
+          <div style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);border:1px solid var(--line2);border-radius:6px;">
+            <span style="font-size:.85rem;flex-shrink:0;">${getFileIcon(a.type)}</span>
+            <span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ARK.escHtml(a.name)}</span>
+            <button onclick="openAttachment('${ARK.escHtml(a.url)}','${ARK.escHtml(a.type)}')" style="font-size:.68rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:none;border-radius:4px;padding:2px 7px;cursor:pointer;flex-shrink:0;">Open</button>
+          </div>`).join("")}
+        </div>` : ""}
+        <button data-attach-mi="${mi}" onclick="triggerMilestoneUpload(${mi})" style="display:flex;align-items:center;gap:5px;padding:5px 0 2px;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;margin-top:2px;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          + Attach file
+        </button>
       </div>
     </div>`;
   }).join("");
@@ -1142,129 +1052,92 @@ function badgeHtml(status) {
 
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
 
-// ── Work submission ────────────────────────────────────────
-let currentSubTab = "link";
-let chosenFile    = null;
 
-function setSubTab(tab, el) {
-  currentSubTab = tab;
-  document.querySelectorAll(".sub-tab").forEach(t => t.classList.remove("active"));
-  el.classList.add("active");
-  ["link","file","video","note"].forEach(t => {
-    document.getElementById("sub-" + t).classList.toggle("show", t === tab);
-  });
+// ── Milestone file attachments ────────────────────────────
+const DRIVE_FOLDER_ID = "1oaLlUJrnD0uzPtM6CmL4NFWRwbULnxz7";
+
+function triggerMilestoneUpload(mi) {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.webp,.zip,.mp4,.mov,.avi,.fig,.sketch";
+  input.onchange = (e) => handleMilestoneFile(mi, e.target.files[0]);
+  input.click();
 }
 
-function handleFileChosen(input) {
-  chosenFile = input.files[0];
-  const label = document.getElementById("sub-file-chosen");
-  if (chosenFile) {
-    label.textContent = chosenFile.name + " (" + (chosenFile.size / 1024 / 1024).toFixed(2) + " MB)";
-    label.style.display = "block";
-  }
-}
+async function handleMilestoneFile(mi, file) {
+  if (!file || !selectedProject) return;
+  const m = selectedProject.milestones[mi];
 
-async function submitWork(type) {
-  if (!selectedProject) return;
-
-  let submission = { type, projectId: selectedProject.id, clientId: selectedProject.clientId, timestamp: new Date().toISOString() };
-
-  if (type === "link") {
-    const url   = document.getElementById("sub-link-url").value.trim();
-    const title = document.getElementById("sub-link-title").value.trim();
-    const note  = document.getElementById("sub-link-note").value.trim();
-    if (!url) { ARK.showToast("Please enter a URL", "warn"); return; }
-    submission = { ...submission, url, title: title || url, note };
-  } else if (type === "file") {
-    if (!chosenFile) { ARK.showToast("Please choose a file first", "warn"); return; }
-    const note = document.getElementById("sub-file-note").value.trim();
-    // For now store as a data URL — in production this would upload to Google Drive
-    const reader = new FileReader();
-    const dataUrl = await new Promise(resolve => { reader.onload = e => resolve(e.target.result); reader.readAsDataURL(chosenFile); });
-    submission = { ...submission, title: chosenFile.name, note, fileSize: chosenFile.size, fileType: chosenFile.type, url: dataUrl };
-  } else if (type === "video") {
-    const url   = document.getElementById("sub-video-url").value.trim();
-    const title = document.getElementById("sub-video-title").value.trim();
-    const note  = document.getElementById("sub-video-note").value.trim();
-    if (!url) { ARK.showToast("Please enter a video URL", "warn"); return; }
-    submission = { ...submission, url, title: title || url, note };
-  } else if (type === "note") {
-    const text = document.getElementById("sub-note-text").value.trim();
-    if (!text) { ARK.showToast("Please write a note first", "warn"); return; }
-    submission = { ...submission, title: text.slice(0, 60) + (text.length > 60 ? "…" : ""), note: text };
-  }
-
-  // Store in Documents tab via API
-  const btn = document.querySelector(`#sub-${type} .sub-btn`);
-  if (btn) { btn.disabled = true; btn.textContent = "Submitting…"; }
+  // Show uploading state on the attachment btn
+  const btn = document.querySelector(`[data-attach-mi="${mi}"]`);
+  if (btn) { btn.textContent = "Uploading…"; btn.disabled = true; }
 
   try {
+    // Convert file to base64
+    const base64 = await fileToBase64(file);
+
+    // Build prefixed filename: "FreelancerName - ClientName - originalname"
+    const user   = ARK.getUser();
+    const fname  = user ? (user.firstName + " " + user.lastName) : "Freelancer";
+    const cname  = selectedProject.clientName || "Client";
+    const prefixed = `${fname} - ${cname} - ${file.name}`;
+
     const res = await ARK.api({
-      action:     "submit_work",
-      token:      ARK.getToken(),
-      projectId:  selectedProject.id,
-      clientId:   selectedProject.clientId,
-      type:       submission.type,
-      title:      submission.title || "",
-      note:       submission.note  || "",
-      url:        submission.url   || "",
-      fileType:   submission.fileType || "",
-      timestamp:  submission.timestamp
+      action:      "upload_to_drive",
+      token:       ARK.getToken(),
+      fileName:    prefixed,
+      mimeType:    file.type || "application/octet-stream",
+      base64Data:  base64,
+      folderId:    DRIVE_FOLDER_ID,
+      projectId:   selectedProject.id,
+      milestoneId: m.id || ("ms-" + mi)
     });
 
     if (res.success) {
-      ARK.showToast("Work submitted!", "success");
-      clearSubForm(type);
-      // Add to local submissions list
-      if (!selectedProject.submissions) selectedProject.submissions = [];
-      selectedProject.submissions.unshift(submission);
-      renderSubmissions(selectedProject.submissions);
+      if (!m.attachments) m.attachments = [];
+      m.attachments.push({ name: file.name, url: res.viewUrl, fileId: res.fileId, type: file.type, uploadedAt: new Date().toISOString() });
+      milestonesDirty = true;
+      renderMilestones(selectedProject.milestones);
+      scheduleSave();
+      ARK.showToast("File uploaded!", "success");
     } else {
-      ARK.showToast(res.error || "Failed to submit", "error");
+      ARK.showToast(res.error || "Upload failed", "error");
     }
   } catch(e) {
-    ARK.showToast("Connection error.", "error");
+    ARK.showToast("Upload error: " + e.message, "error");
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = type === "link" ? "Submit link" : type === "file" ? "Upload to Drive" : type === "video" ? "Submit video" : "Send note"; }
+    if (btn) { btn.textContent = "+ Attach"; btn.disabled = false; }
   }
 }
 
-function clearSubForm(type) {
-  if (type === "link")  { document.getElementById("sub-link-url").value = ""; document.getElementById("sub-link-title").value = ""; document.getElementById("sub-link-note").value = ""; }
-  if (type === "file")  { document.getElementById("sub-file-input").value = ""; document.getElementById("sub-file-note").value = ""; document.getElementById("sub-file-chosen").style.display = "none"; chosenFile = null; }
-  if (type === "video") { document.getElementById("sub-video-url").value = ""; document.getElementById("sub-video-title").value = ""; document.getElementById("sub-video-note").value = ""; }
-  if (type === "note")  { document.getElementById("sub-note-text").value = ""; }
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload  = () => resolve(reader.result.split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 
-function renderSubmissions(submissions) {
-  const list = document.getElementById("submissions-list");
-  if (!submissions?.length) { list.innerHTML = ""; return; }
-  const icons = {
-    link:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>`,
-    file:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>`,
-    video: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>`,
-    note:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>`
-  };
-  list.innerHTML = submissions.slice(0, 10).map(s => `
-    <div class="submission-item">
-      <div class="sub-icon ${s.type}">${icons[s.type] || icons.link}</div>
-      <div class="sub-info">
-        <div class="sub-info-title">${ARK.escHtml(s.title || "Untitled")}</div>
-        <div class="sub-info-meta">${s.type} · ${ARK.timeAgo(s.timestamp)}</div>
-        ${s.note && s.type === "note" ? `<div class="sub-info-note">${ARK.escHtml(s.note)}</div>` : ""}
-      </div>
-      ${s.url && s.type !== "note" ? `<a href="${ARK.escHtml(s.url)}" target="_blank" rel="noopener" class="sub-open-btn">Open →</a>` : ""}
-    </div>`).join("");
+function getFileIcon(type) {
+  if (!type) return "📎";
+  if (type.includes("pdf"))   return "📄";
+  if (type.includes("image")) return "🖼️";
+  if (type.includes("video")) return "🎥";
+  if (type.includes("sheet") || type.includes("excel") || type.includes("csv")) return "📊";
+  if (type.includes("word")  || type.includes("document")) return "📝";
+  if (type.includes("presentation") || type.includes("powerpoint")) return "📑";
+  if (type.includes("zip")   || type.includes("archive")) return "🗜️";
+  return "📎";
 }
 
-// Load submissions when opening detail panel
-const _origOpenDetail = openDetail;
-openDetail = function(id) {
-  _origOpenDetail(id);
-  if (selectedProject) {
-    renderSubmissions(selectedProject.submissions || []);
-  }
-};
+function openAttachment(url, type) {
+  // All files open in new tab — Drive handles preview for PDFs, images, docs
+  // Zip/unknown files will prompt download from Drive
+  window.open(url, "_blank", "noopener");
+}
+
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
 </script>
 </body>
 </html>
