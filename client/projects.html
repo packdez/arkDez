@@ -13,7 +13,9 @@
   --ink:#0d0d0d;--ink2:#3d3d3d;--ink3:#737373;--ink4:#a3a3a3;
   --line:#e5e5e5;--line2:#f0f0f0;--bg:#fff;--bg2:#fafafa;--bg3:#f5f5f5;
   --accent:#1a6b3c;--accent2:#22c55e;--accent-bg:#f0fdf4;--accent-ln:#bbf7d0;
-  --red:#dc2626;--amber:#d97706;--blue:#2563eb;--blue-bg:#eff6ff;--blue-ln:#bfdbfe;
+  --red:#dc2626;--red-bg:#fef2f2;--red-ln:#fecaca;
+  --amber:#d97706;--amber-bg:#fffbeb;--amber-ln:#fde68a;
+  --blue:#2563eb;--blue-bg:#eff6ff;--blue-ln:#bfdbfe;
   --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-ln:#ddd6fe;
   --serif:'Instrument Serif',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
   --r:10px;--r-lg:14px;--r-xl:18px;
@@ -35,41 +37,50 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
 #app{display:flex;min-height:100svh;opacity:0;transform:translateY(5px);transition:opacity .4s var(--ease),transform .4s var(--ease);}
 #app.ready{opacity:1;transform:none;}
 
-/* ── Client sidebar ── */
+/* ── Client sidebar — LIGHT THEME ── */
 #sidebar{
   width:var(--sidebar-w);flex-shrink:0;
-  background:#0c1a14;
+  background:var(--bg);border-right:1px solid var(--line2);
   display:flex;flex-direction:column;
   position:fixed;top:0;left:0;bottom:0;z-index:200;
   transition:transform .3s var(--ease);
 }
-.sidebar-header{padding:20px 18px 14px;border-bottom:1px solid rgba(255,255,255,.06);}
+.sidebar-header{padding:18px 16px 14px;border-bottom:1px solid var(--line2);}
 .sidebar-brand{display:flex;align-items:center;gap:9px;text-decoration:none;}
-.sidebar-brand-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:.85rem;color:#fff;}
-.sidebar-brand-name{font-size:.9rem;font-weight:700;color:#fff;letter-spacing:-.01em;}
-.sidebar-brand-tag{font-size:.62rem;color:rgba(255,255,255,.35);letter-spacing:.04em;margin-top:1px;}
+.sidebar-brand-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:.85rem;color:#fff;box-shadow:0 2px 8px rgba(34,197,94,.25);}
+.sidebar-brand-name{font-size:.9rem;font-weight:700;color:var(--ink);}
+.sidebar-brand-tag{font-size:.58rem;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;margin-top:1px;}
 
 /* User pill */
-.client-pill{display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;transition:background .15s;}
-.client-pill:hover{background:rgba(255,255,255,.04);}
-.client-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1a4a2e,#22c55e);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0;}
+.client-pill{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line2);}
+.client-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#0a1a0f,#22c55e);display:flex;align-items:center;justify-content:center;font-size:.74rem;font-weight:700;color:#fff;flex-shrink:0;}
 .client-info{flex:1;min-width:0;}
-.client-name{font-size:.78rem;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.client-role{font-size:.65rem;color:rgba(255,255,255,.35);}
+.client-name{font-size:.8rem;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.client-role{font-size:.64rem;color:var(--ink4);margin-top:1px;}
 
 /* Nav */
-.sidebar-nav{flex:1;padding:10px 10px;overflow-y:auto;}
-.nav-section-label{font-size:.6rem;font-weight:700;color:rgba(255,255,255,.25);letter-spacing:.1em;text-transform:uppercase;padding:10px 8px 4px;}
-.nav-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;text-decoration:none;font-size:.82rem;font-weight:500;color:rgba(255,255,255,.5);transition:all .15s;margin-bottom:1px;}
-.nav-item svg{width:15px;height:15px;flex-shrink:0;opacity:.6;}
-.nav-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8);}
-.nav-item:hover svg{opacity:.8;}
-.nav-item.active{background:rgba(34,197,94,.15);color:#4ade80;}
-.nav-item.active svg{opacity:1;color:#4ade80;}
+.sidebar-nav{flex:1;padding:8px 8px;overflow-y:auto;}
+.nav-section-label{font-size:.6rem;font-weight:700;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase;padding:10px 8px 4px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;text-decoration:none;font-size:.82rem;font-weight:500;color:var(--ink3);transition:all .15s;margin-bottom:1px;position:relative;}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;color:var(--ink4);transition:color .15s;}
+.nav-item:hover{background:var(--bg2);color:var(--ink2);}
+.nav-item:hover svg{color:var(--ink3);}
+.nav-item.active{background:var(--accent-bg);color:var(--accent);font-weight:600;}
+.nav-item.active svg{color:var(--accent);}
 
-.sidebar-footer{padding:12px 10px;border-top:1px solid rgba(255,255,255,.06);}
-.signout-btn{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:.78rem;color:rgba(255,255,255,.35);cursor:pointer;transition:all .15s;background:none;border:none;font-family:var(--sans);width:100%;}
-.signout-btn:hover{background:rgba(220,38,38,.1);color:#f87171;}
+/* Red notification badge on nav item */
+.nav-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:18px;height:18px;padding:0 5px;
+  background:var(--red);color:#fff;border-radius:999px;
+  font-size:.6rem;font-weight:700;margin-left:auto;
+  animation:badgePop .3s var(--ease);
+}
+@keyframes badgePop{from{transform:scale(0)}to{transform:scale(1)}}
+
+.sidebar-footer{padding:10px 8px 14px;border-top:1px solid var(--line2);}
+.signout-btn{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:.8rem;color:var(--ink3);cursor:pointer;transition:all .15s;background:none;border:none;font-family:var(--sans);width:100%;font-weight:500;}
+.signout-btn:hover{background:var(--red-bg);color:var(--red);}
 .signout-btn svg{width:13px;height:13px;}
 
 /* ── Main area ── */
@@ -273,6 +284,32 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .skeleton-card{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);padding:18px;}
 
+/* ── Change notification banner ── */
+#change-banner{
+  display:none;align-items:center;gap:10px;
+  padding:10px 14px;margin-bottom:16px;
+  background:var(--red-bg);border:1.5px solid var(--red-ln);
+  border-radius:var(--r);font-size:.8rem;color:var(--red);font-weight:600;
+  animation:bannerIn .3s var(--ease);
+}
+#change-banner.show{display:flex;}
+@keyframes bannerIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+#change-banner .dismiss-btn{margin-left:auto;font-size:.72rem;cursor:pointer;opacity:.7;background:none;border:none;color:inherit;font-family:var(--sans);}
+#change-banner .dismiss-btn:hover{opacity:1;}
+.detail-change-banner{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--red-bg);border:1px solid var(--red-ln);border-radius:var(--r);font-size:.75rem;color:var(--red);font-weight:600;margin-bottom:12px;}
+.detail-change-banner svg{width:13px;height:13px;flex-shrink:0;}
+
+/* Red ribbon on cards */
+.project-card.has-changes{border-color:var(--red-ln);}
+.project-card.has-changes::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--red);}
+.project-row.has-changes{border-left:3px solid var(--red);}
+.kanban-card.has-changes{border-color:var(--red-ln);}
+.card-notice{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:7px;font-size:.7rem;font-weight:600;margin-top:10px;}
+.card-notice.pending{background:var(--amber-bg);border:1px solid var(--amber-ln);color:#92400e;}
+.card-notice.ready{background:var(--accent-bg);border:1px solid var(--accent-ln);color:#166534;}
+.card-notice.changed{background:var(--red-bg);border:1px solid var(--red-ln);color:var(--red);}
+.card-notice svg{width:11px;height:11px;flex-shrink:0;}
+
 /* ── Empty state ── */
 .empty-state{display:flex;flex-direction:column;align-items:center;padding:60px 20px;text-align:center;}
 .empty-state-icon{width:52px;height:52px;border-radius:14px;background:var(--bg3);display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
@@ -302,6 +339,95 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
   #project-detail{width:100vw;}
   .field-row{grid-template-columns:1fr;}
 }
+
+/* ── Status selector ── */
+.status-select-wrap{display:flex;gap:6px;flex-wrap:wrap;}
+.status-opt{padding:5px 12px;border-radius:999px;font-size:.74rem;font-weight:700;cursor:pointer;border:1.5px solid transparent;transition:all .15s;}
+.status-opt.active{border-color:currentColor;}
+.status-opt[data-s="draft"]{background:var(--bg3);color:var(--ink3);}
+.status-opt[data-s="active"]{background:#dcfce7;color:#166534;}
+.status-opt[data-s="paused"]{background:#f3f4f6;color:#374151;}
+.status-opt[data-s="completed"]{background:#dbeafe;color:#1e40af;}
+.status-opt[data-s="cancelled"]{background:var(--red-bg);color:#991b1b;}
+
+/* ── Milestone interactive styles ── */
+.milestone-add-btn{display:flex;align-items:center;gap:6px;padding:6px 0;font-size:.78rem;color:var(--accent);font-weight:600;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:opacity .15s;}
+.milestone-add-btn:hover{opacity:.7;}
+.milestone-add-btn svg{width:12px;height:12px;}
+.add-milestone-form{display:none;flex-direction:column;gap:8px;margin-bottom:10px;padding:12px;background:var(--bg2);border-radius:var(--r);border:1px solid var(--line2);}
+.add-milestone-form.show{display:flex;}
+.ms-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;cursor:pointer;background:none;}
+.ms-check.done,.ms-check.approved{background:var(--accent);border-color:var(--accent);}
+.ms-check.done svg,.ms-check.approved svg{display:block;}
+.ms-check svg{display:none;width:10px;height:10px;}
+.ms-title{font-size:.82rem;font-weight:600;color:var(--ink);flex:1;text-align:left;}
+.ms-title.done{text-decoration:line-through;color:var(--ink4);}
+.ms-chevron{color:var(--ink4);flex-shrink:0;transition:transform .2s;}
+.ms-chevron.open{transform:rotate(90deg);}
+.ms-chevron svg{width:12px;height:12px;}
+.milestone-header{display:flex;align-items:center;gap:9px;padding:11px 12px;cursor:pointer;transition:background .12s;width:100%;text-align:left;background:none;font-family:var(--sans);}
+.milestone-header:hover{background:var(--bg2);}
+.milestone-body{padding:0 12px 12px 40px;display:none;flex-direction:column;gap:10px;}
+.milestone-body.open{display:flex;}
+
+/* Subtasks */
+.subtask-row{display:flex;align-items:center;gap:8px;}
+.subtask-check{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;background:none;}
+.subtask-check.done{background:var(--accent);border-color:var(--accent);}
+.subtask-check.done svg{display:block;}
+.subtask-check svg{display:none;width:8px;height:8px;}
+.subtask-lbl{font-size:.76rem;color:var(--ink3);flex:1;}
+.subtask-lbl.done{text-decoration:line-through;color:var(--ink4);}
+.add-subtask-row{display:flex;align-items:center;gap:6px;margin-top:2px;}
+.add-subtask-input{flex:1;height:30px;background:var(--bg2);border:1px solid var(--line2);border-radius:6px;padding:0 9px;font-size:.75rem;color:var(--ink);font-family:var(--sans);outline:none;transition:border-color .15s;}
+.add-subtask-input:focus{border-color:var(--accent);}
+.add-subtask-btn{height:28px;padding:0 10px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:var(--sans);}
+
+/* Inline forms */
+.inline-form{display:none;flex-direction:column;gap:6px;}
+.inline-form.show{display:flex;}
+.inline-input{height:34px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;transition:border-color .15s;}
+.inline-input:focus{border-color:var(--accent);}
+.inline-form-btns{display:flex;gap:6px;}
+.inline-save{height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.73rem;font-weight:700;cursor:pointer;font-family:var(--sans);}
+.inline-cancel{height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.73rem;cursor:pointer;font-family:var(--sans);}
+
+/* Attachments */
+.attach-add-btn{display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;}
+.attach-add-btn:hover{color:var(--accent);}
+.attach-add-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.attach-row{display:flex;align-items:center;gap:7px;padding:5px 7px;background:var(--bg2);border:1px solid var(--line2);border-radius:6px;margin-bottom:5px;}
+.attach-icon{font-size:.82rem;flex-shrink:0;}
+.attach-name{font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.attach-open{font-size:.67rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:none;border-radius:4px;padding:2px 7px;cursor:pointer;flex-shrink:0;}
+.note-item{border:1px solid var(--line2);border-radius:6px;overflow:hidden;margin-bottom:5px;}
+.note-header{display:flex;align-items:center;gap:7px;padding:5px 7px;background:var(--bg);cursor:pointer;user-select:none;}
+.note-body{display:none;padding:7px 10px;font-size:.75rem;color:var(--ink3);line-height:1.6;background:var(--bg2);border-top:1px solid var(--line2);white-space:pre-wrap;}
+.note-body.open{display:block;}
+
+/* Approval actions */
+.approval-actions{display:flex;gap:8px;margin-top:4px;}
+.btn-approve{flex:1;height:36px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.78rem;font-weight:700;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;justify-content:center;gap:5px;transition:background .15s;}
+.btn-approve:hover{background:#155c33;}
+.btn-approve:disabled{opacity:.6;cursor:not-allowed;}
+.btn-revision{flex:1;height:36px;background:var(--purple-bg);color:var(--purple);border:1.5px solid var(--purple-ln);border-radius:var(--r);font-size:.78rem;font-weight:700;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;justify-content:center;gap:5px;transition:all .15s;}
+.btn-revision:hover{background:#ede9fe;}
+.approved-stamp{display:flex;align-items:center;gap:6px;padding:8px 10px;background:var(--accent-bg);border:1px solid var(--accent-ln);border-radius:var(--r);font-size:.76rem;color:var(--accent);font-weight:600;}
+.revision-stamp{display:flex;align-items:center;gap:6px;padding:8px 10px;background:var(--purple-bg);border:1px solid var(--purple-ln);border-radius:var(--r);font-size:.76rem;color:var(--purple);font-weight:600;}
+.revision-notes-box{margin-top:6px;padding:8px 10px;background:var(--bg2);border-radius:var(--r);font-size:.74rem;color:var(--ink3);line-height:1.5;}
+
+/* ── Rating modal ── */
+.star-row{display:flex;gap:6px;margin-bottom:16px;}
+.star-btn{width:36px;height:36px;font-size:1.4rem;background:none;border:none;cursor:pointer;transition:transform .15s;line-height:1;filter:grayscale(1);opacity:.4;}
+.star-btn.lit{filter:saturate(1);opacity:1;transform:scale(1.15);}
+
+/* ── Revision checklist ── */
+.revision-checklist{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}
+.rev-check-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--line2);border-radius:var(--r);cursor:pointer;transition:all .15s;user-select:none;}
+.rev-check-item:hover{border-color:var(--purple-ln);background:var(--purple-bg);}
+.rev-check-item.selected{border-color:var(--purple);background:var(--purple-bg);}
+.rev-check-item input{width:15px;height:15px;accent-color:var(--purple);flex-shrink:0;}
+.rev-check-item label{font-size:.8rem;color:var(--ink2);cursor:pointer;flex:1;}
 </style>
 </head>
 <body>
@@ -312,23 +438,23 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
 
 <div id="app">
 
-  <!-- CLIENT SIDEBAR -->
+  <!-- CLIENT SIDEBAR — LIGHT THEME -->
   <nav id="sidebar">
     <div class="sidebar-header">
       <a href="dashboard.html" class="sidebar-brand">
         <div class="sidebar-brand-mark">A</div>
         <div>
           <div class="sidebar-brand-name">ArkDez</div>
-          <div class="sidebar-brand-tag">CLIENT PORTAL</div>
+          <div class="sidebar-brand-tag">Client Portal</div>
         </div>
       </a>
     </div>
 
-    <div class="client-pill" id="client-pill">
+    <div class="client-pill">
       <div class="client-av" id="client-av">C</div>
       <div class="client-info">
         <div class="client-name" id="client-name">Loading…</div>
-        <div class="client-role">Client</div>
+        <div class="client-role">Client account</div>
       </div>
     </div>
 
@@ -338,9 +464,10 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Overview
       </a>
-      <a class="nav-item active" href="projects.html">
+      <a class="nav-item active" href="projects.html" id="nav-projects">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
         Projects
+        <span class="nav-badge" id="nav-projects-badge" style="display:none;"></span>
       </a>
       <a class="nav-item" href="messages.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
@@ -385,6 +512,13 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
       <div class="page-header">
         <h1>Projects</h1>
         <p id="count-label">Track your projects and approve milestones.</p>
+      </div>
+
+      <!-- Real-time change banner -->
+      <div id="change-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:15px;height:15px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="change-banner-text">Your freelancer made updates to a project.</span>
+        <button class="dismiss-btn" onclick="dismissChangeBanner()">Dismiss ×</button>
       </div>
 
       <!-- Freelancer filter tabs -->
@@ -439,14 +573,23 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
 <div id="project-detail">
   <div class="detail-topbar">
     <span class="detail-topbar-title" id="detail-title">Project</span>
+    <button class="btn-secondary" style="height:30px;font-size:.74rem;padding:0 10px;flex-shrink:0;" onclick="openEditProject()">Edit</button>
     <button class="detail-close" onclick="closeDetail()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
   </div>
   <div class="detail-scroll">
 
+    <!-- Change notice -->
+    <div id="detail-change-section" style="display:none;padding:12px 18px 0;">
+      <div class="detail-change-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:13px;height:13px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="detail-change-text">New updates from your freelancer.</span>
+      </div>
+    </div>
+
     <div class="detail-section">
       <div class="detail-section-title">Status</div>
-      <div id="detail-status-badge"></div>
-      <div id="detail-request-notice" style="display:none;margin-top:8px;padding:8px 10px;background:#fef9c3;border:1px solid #fde68a;border-radius:var(--r);font-size:.76rem;color:#92400e;"></div>
+      <div class="status-select-wrap" id="detail-status-wrap"></div>
+      <div id="detail-request-notice" style="display:none;margin-top:10px;padding:8px 10px;background:#fffbeb;border:1px solid #fde68a;border-radius:var(--r);font-size:.76rem;color:#92400e;line-height:1.5;"></div>
     </div>
 
     <div class="detail-section">
@@ -469,8 +612,55 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
     </div>
 
     <div class="detail-section">
-      <div class="detail-section-title">Milestones</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="detail-section-title" style="margin-bottom:0;">Milestones</div>
+        <button class="milestone-add-btn" onclick="toggleAddMilestoneForm()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add milestone
+        </button>
+      </div>
+      <div class="add-milestone-form" id="add-milestone-form">
+        <input class="inline-input" type="text" id="new-ms-title" placeholder="Milestone title…" onkeydown="if(event.key==='Enter')saveNewMilestone()">
+        <div class="inline-form-btns">
+          <button class="inline-save" onclick="saveNewMilestone()">Add</button>
+          <button class="inline-cancel" onclick="toggleAddMilestoneForm()">Cancel</button>
+        </div>
+      </div>
       <div class="milestone-list" id="milestone-list"></div>
+    </div>
+
+    <div class="detail-section" id="project-attachments-section">
+      <div class="detail-section-title">Project files & links</div>
+      <div id="project-attachments-list" style="margin-bottom:8px;"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="attach-add-btn" onclick="triggerProjectUpload()">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          + Attach file
+        </button>
+        <button class="attach-add-btn" onclick="toggleProjectLinkForm()">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+          + Add link
+        </button>
+        <button class="attach-add-btn" onclick="toggleProjectNoteForm()">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          + Add note
+        </button>
+      </div>
+      <div class="inline-form" id="project-link-form" style="margin-top:8px;">
+        <input class="inline-input" type="url" id="proj-link-url" placeholder="https://…" onkeydown="if(event.key==='Enter')saveProjectLink()">
+        <input class="inline-input" type="text" id="proj-link-label" placeholder="Label (optional)">
+        <div class="inline-form-btns">
+          <button class="inline-save" onclick="saveProjectLink()">Save link</button>
+          <button class="inline-cancel" onclick="toggleProjectLinkForm()">Cancel</button>
+        </div>
+      </div>
+      <div class="inline-form" id="project-note-form" style="margin-top:8px;">
+        <textarea class="inline-input" id="proj-note-text" placeholder="Add a project note…" style="height:auto;padding:8px 10px;resize:vertical;min-height:64px;"></textarea>
+        <div class="inline-form-btns">
+          <button class="inline-save" onclick="saveProjectNote()">Save note</button>
+          <button class="inline-cancel" onclick="toggleProjectNoteForm()">Cancel</button>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -484,6 +674,7 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
       <button class="modal-close" onclick="closeModal('modal-new-project')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
+      <input type="hidden" id="edit-project-id">
       <div class="field">
         <label class="field-label">Project title *</label>
         <input class="field-input" type="text" id="p-title" placeholder="e.g. Website redesign" autocomplete="off">
@@ -586,597 +777,411 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
   </div>
 </div>
 
+<!-- ── RATING MODAL ── -->
+<div class="modal-overlay" id="modal-rating">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <span class="modal-title">How did it go? ✨</span>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:.84rem;color:var(--ink3);margin-bottom:18px;line-height:1.6;"><strong id="rating-project-name" style="color:var(--ink);"></strong> is complete! Share your experience with your freelancer.</p>
+      <div class="field">
+        <label class="field-label">Your rating</label>
+        <div class="star-row" id="star-row">
+          <button class="star-btn" data-v="1" onclick="setRating(1)">⭐</button>
+          <button class="star-btn" data-v="2" onclick="setRating(2)">⭐</button>
+          <button class="star-btn" data-v="3" onclick="setRating(3)">⭐</button>
+          <button class="star-btn" data-v="4" onclick="setRating(4)">⭐</button>
+          <button class="star-btn" data-v="5" onclick="setRating(5)">⭐</button>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Your review</label>
+        <textarea class="field-input field-textarea" id="review-text" placeholder="What did you love? What could be better?" style="min-height:90px;"></textarea>
+      </div>
+      <input type="hidden" id="rating-project-id">
+      <input type="hidden" id="rating-freelancer-id">
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-rating')">Skip for now</button>
+      <button class="btn-primary" id="rating-btn" onclick="submitRating()">
+        <span id="rating-lbl">Submit review</span>
+        <div id="rating-spin" style="display:none;width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;"></div>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div id="toast-container"></div>
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 
 <script>
-// ── Config ─────────────────────────────────────────────────
 const API_KEY    = "d29bb7407783daa176e5f6cf8dfc6677940df38fda145b06";
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsjcZmIhwJF5DslXrFTPZJENckjKB_3re9qK73dewpLCCUNBcEi4-_iHBr6UvhVCSQpA/exec";
 const LOGIN_URL  = "/client/login.html";
-const CACHE_KEY  = "ark_client_projects_cache";
+const CACHE_KEY  = "ark_client_projects_v2";
+const SEEN_KEY   = "ark_client_projects_seen";
+const DRIVE_FOLDER_ID = "1oaLlUJrnD0uzPtM6CmL4NFWRwbULnxz7";
 
-// ── State ──────────────────────────────────────────────────
-let allProjects     = [];
-let allFreelancers  = [];
-let currentFilter   = "all";
-let currentView     = "card";
-let activeFreelancer = "all";
-let selectedProject = null;
-let currentAccount  = null;
+let allProjects=[], allFreelancers=[], currentFilter="all", currentView="card";
+let activeFreelancer="all", selectedProject=null, currentAccount=null;
+let currentRating=0, projectsDirty=false, pollTimer=null;
 
-// ── API ────────────────────────────────────────────────────
-async function api(payload) {
-  const body = new Blob([JSON.stringify({ ...payload, apiKey: API_KEY })], { type: "text/plain" });
-  const res  = await fetch(SCRIPT_URL, { method: "POST", body });
-  return res.json();
+async function api(payload){
+  const body=new Blob([JSON.stringify({...payload,apiKey:API_KEY})],{type:"text/plain"});
+  return (await fetch(SCRIPT_URL,{method:"POST",body})).json();
 }
-
-function getToken() {
-  return localStorage.getItem("ark_client_token") || sessionStorage.getItem("ark_client_token");
+function getToken(){return localStorage.getItem("ark_client_token")||sessionStorage.getItem("ark_client_token");}
+function showToast(msg,type=""){
+  const c=document.getElementById("toast-container"),el=document.createElement("div");
+  el.className="toast "+type;el.textContent=msg;c.appendChild(el);
+  setTimeout(()=>{el.classList.add("out");setTimeout(()=>el.remove(),300)},3800);
 }
-
-// ── Toast ──────────────────────────────────────────────────
-function showToast(msg, type = "") {
-  const c = document.getElementById("toast-container");
-  const el = document.createElement("div");
-  el.className = "toast " + type;
-  el.textContent = msg;
-  c.appendChild(el);
-  setTimeout(() => { el.classList.add("out"); setTimeout(() => el.remove(), 300); }, 3500);
+function loadFromCache(){
+  try{const d=JSON.parse(sessionStorage.getItem(CACHE_KEY)||"null");
+  if(!d||Date.now()-d.ts>5*60*1000)return false;
+  allProjects=d.projects||[];allFreelancers=d.freelancers||[];return true;}catch(e){return false;}
 }
-
-// ── Fast loading: cache-first ──────────────────────────────
-function loadFromCache() {
-  try {
-    const cached = sessionStorage.getItem(CACHE_KEY);
-    if (!cached) return false;
-    const { data, ts } = JSON.parse(cached);
-    if (Date.now() - ts > 5 * 60 * 1000) return false; // 5min TTL
-    allProjects    = data.projects || [];
-    allFreelancers = data.freelancers || [];
-    return true;
-  } catch(e) { return false; }
+function saveToCache(){
+  try{sessionStorage.setItem(CACHE_KEY,JSON.stringify({projects:allProjects,freelancers:allFreelancers,ts:Date.now()}));}catch(e){}
 }
+function getSeenMap(){try{return JSON.parse(localStorage.getItem(SEEN_KEY)||"{}");}catch(e){return {};}}
+function markProjectSeen(id,updatedAt){const m=getSeenMap();m[id]=String(updatedAt);localStorage.setItem(SEEN_KEY,JSON.stringify(m));}
+function projectHasChanges(p){const s=getSeenMap();return s[p.id]&&s[p.id]!==String(p.updatedAt);}
+function countChangedProjects(){return allProjects.filter(p=>projectHasChanges(p)).length;}
 
-function saveToCache(data) {
-  try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data, ts: Date.now() })); } catch(e) {}
-}
-
-// ── Boot ──────────────────────────────────────────────────
-async function boot() {
-  const token = getToken();
-  if (!token) return window.location.href = LOGIN_URL;
-
-  // Show cached data instantly if available
-  const hasCached = loadFromCache();
-  if (hasCached) {
-    bootUI();
-    renderAll();
-    document.getElementById("projects-loading").style.display = "none";
-    document.getElementById("projects-container").style.display = "";
-  }
-
-  // Validate token + fetch fresh data in parallel
-  try {
-    const [authRes, dataRes] = await Promise.all([
-      api({ action: "client_validate_token", token }),
-      api({ action: "get_client_projects",   token })
-    ]);
-
-    if (!authRes.success) return window.location.href = LOGIN_URL;
-    currentAccount = authRes.account;
-    bootUI();
-
-    if (dataRes.success) {
-      allProjects    = dataRes.projects    || [];
-      allFreelancers = dataRes.freelancers || [];
-      saveToCache({ projects: allProjects, freelancers: allFreelancers });
-      renderAll();
-    }
-  } catch(e) {
-    if (!hasCached) showToast("Connection error. Please refresh.", "error");
-  } finally {
-    document.getElementById("auth-gate").classList.add("hidden");
-    document.getElementById("app").classList.add("ready");
-    document.getElementById("projects-loading").style.display = "none";
-    document.getElementById("projects-container").style.display = "";
-    populateFreelancerDropdown();
+async function boot(){
+  const token=getToken();if(!token)return window.location.href=LOGIN_URL;
+  const hasCached=loadFromCache();
+  if(hasCached){bootUI();renderAll();document.getElementById("projects-loading").style.display="none";document.getElementById("projects-container").style.display="";}
+  try{
+    const[authRes,dataRes]=await Promise.all([api({action:"client_validate_token",token}),api({action:"get_client_projects",token})]);
+    if(!authRes.success)return window.location.href=LOGIN_URL;
+    currentAccount=authRes.account;
+    if(dataRes.success){detectChanges(dataRes.projects||[]);allProjects=dataRes.projects||[];allFreelancers=dataRes.freelancers||[];saveToCache();renderAll();updateChangeBadges();}
+  }catch(e){if(!hasCached)showToast("Connection error. Refresh.","error");}
+  finally{
+    document.getElementById("auth-gate").classList.add("hidden");document.getElementById("app").classList.add("ready");
+    document.getElementById("projects-loading").style.display="none";document.getElementById("projects-container").style.display="";
+    bootUI();populateFreelancerDropdown();startPolling();
   }
 }
 
-function bootUI() {
-  if (!currentAccount) {
-    const stored = localStorage.getItem("ark_client") || sessionStorage.getItem("ark_client");
-    try { if (stored) currentAccount = JSON.parse(stored); } catch(e) {}
-  }
-  if (!currentAccount) return;
-  const { firstName, lastName } = currentAccount;
-  const initials = ((firstName||"?")[0] + (lastName||"")[0]).toUpperCase();
-  document.getElementById("client-av").textContent   = initials;
-  document.getElementById("client-name").textContent = firstName + " " + lastName;
+function startPolling(){
+  pollTimer=setInterval(async()=>{
+    try{const res=await api({action:"get_client_projects",token:getToken()});
+    if(res.success){const before=countChangedProjects();detectChanges(res.projects||[]);allProjects=res.projects||[];allFreelancers=res.freelancers||[];saveToCache();renderAll();updateChangeBadges();const after=countChangedProjects();if(after>before)showChangeBanner(after);}}catch(e){}
+  },30000);
 }
 
-// ── Render all ─────────────────────────────────────────────
-function renderAll() {
-  renderFreelancerTabs();
-  renderProjects();
+function detectChanges(incoming){const seen=getSeenMap();incoming.forEach(p=>{if(!seen[p.id])markProjectSeen(p.id,p.updatedAt);});}
+function updateChangeBadges(){const count=countChangedProjects();const b=document.getElementById("nav-projects-badge");if(b){b.textContent=count;b.style.display=count>0?"inline-flex":"none";}}
+function showChangeBanner(count){const banner=document.getElementById("change-banner");document.getElementById("change-banner-text").textContent=`Your freelancer made updates to ${count} project${count>1?"s":""}.`;banner.classList.add("show");}
+function dismissChangeBanner(){document.getElementById("change-banner").classList.remove("show");}
+
+function bootUI(){
+  if(!currentAccount){try{const s=localStorage.getItem("ark_client")||sessionStorage.getItem("ark_client");if(s)currentAccount=JSON.parse(s);}catch(e){}}
+  if(!currentAccount)return;
+  const{firstName,lastName}=currentAccount,init=((firstName||"?")[0]+(lastName||"")[0]).toUpperCase();
+  const av=document.getElementById("client-av");if(av)av.textContent=init;
+  const nm=document.getElementById("client-name");if(nm)nm.textContent=firstName+" "+lastName;
 }
 
-// ── Freelancer tabs ────────────────────────────────────────
-function renderFreelancerTabs() {
-  const tabs = document.getElementById("freelancer-tabs");
-  if (!allFreelancers.length) { tabs.style.display = "none"; return; }
-  tabs.style.display = "flex";
-  const colors = ["linear-gradient(135deg,#0a1a0f,#22c55e)","linear-gradient(135deg,#1e3a5f,#3b82f6)","linear-gradient(135deg,#4a0f2e,#ec4899)","linear-gradient(135deg,#2d1b00,#f59e0b)"];
-  tabs.innerHTML = `<div class="fl-tab active" onclick="setFreelancer('all',this)">All</div>` +
-    allFreelancers.map((f, i) => {
-      const init = f.name.split(" ").map(w=>w[0]).join("").toUpperCase().slice(0,2);
-      return `<div class="fl-tab" onclick="setFreelancer('${f.id}',this)">
-        <div class="fl-av" style="background:${colors[i%colors.length]}">${init}</div>
-        ${escHtml(f.workspaceName || f.name)}
-      </div>`;
-    }).join("");
-}
+function renderAll(){renderFreelancerTabs();renderProjects();}
 
-function setFreelancer(id, el) {
-  activeFreelancer = id;
-  document.querySelectorAll(".fl-tab").forEach(t => t.classList.remove("active"));
-  el.classList.add("active");
-  renderProjects();
+function renderFreelancerTabs(){
+  const tabs=document.getElementById("freelancer-tabs");
+  if(!allFreelancers.length){tabs.style.display="none";return;}tabs.style.display="flex";
+  const colors=["linear-gradient(135deg,#0a1a0f,#22c55e)","linear-gradient(135deg,#1e3a5f,#3b82f6)","linear-gradient(135deg,#4a0f2e,#ec4899)","linear-gradient(135deg,#2d1b00,#f59e0b)"];
+  tabs.innerHTML=`<div class="fl-tab active" onclick="setFreelancer('all',this)">All</div>`+allFreelancers.map((f,i)=>{
+    const init=f.name.split(" ").map(w=>w[0]).join("").toUpperCase().slice(0,2);
+    return `<div class="fl-tab" onclick="setFreelancer('${f.id}',this)"><div class="fl-av" style="background:${colors[i%colors.length]}">${init}</div>${escHtml(f.workspaceName||f.name)}</div>`;
+  }).join("");
 }
+function setFreelancer(id,el){activeFreelancer=id;document.querySelectorAll(".fl-tab").forEach(t=>t.classList.remove("active"));el.classList.add("active");renderProjects();}
 
-// ── Render projects ─────────────────────────────────────────
-function renderProjects() {
-  const q = document.getElementById("search-input").value.toLowerCase();
-  const filtered = allProjects.filter(p => {
-    if (p.status === "deleted") return false;
-    if (currentFilter !== "all" && p.status !== currentFilter) return false;
-    if (activeFreelancer !== "all" && p.freelancerId !== activeFreelancer) return false;
-    if (q && !p.title.toLowerCase().includes(q) && !(p.freelancerName||"").toLowerCase().includes(q)) return false;
+function renderProjects(){
+  const q=document.getElementById("search-input").value.toLowerCase();
+  const filtered=allProjects.filter(p=>{
+    if(p.status==="deleted")return false;
+    if(currentFilter!=="all"&&p.status!==currentFilter)return false;
+    if(activeFreelancer!=="all"&&p.freelancerId!==activeFreelancer)return false;
+    if(q&&!p.title.toLowerCase().includes(q)&&!(p.freelancerName||"").toLowerCase().includes(q))return false;
     return true;
   });
-
-  const total = allProjects.filter(p => p.status !== "deleted").length;
-  document.getElementById("count-label").textContent = total === 0
-    ? "Create your first project to get started."
-    : total + " project" + (total !== 1 ? "s" : "") + " across your freelancers.";
-
-  const container = document.getElementById("projects-container");
-  const empty     = document.getElementById("projects-empty");
-
-  if (!filtered.length) { container.innerHTML = ""; empty.style.display = ""; return; }
-  empty.style.display = "none";
-
-  if (currentView === "card")   container.innerHTML = renderCards(filtered);
-  else if (currentView === "list")   container.innerHTML = renderList(filtered);
-  else if (currentView === "kanban") container.innerHTML = renderKanban(filtered);
+  const total=allProjects.filter(p=>p.status!=="deleted").length;
+  document.getElementById("count-label").textContent=total===0?"Create your first project.":total+" project"+(total!==1?"s":"")+" across your freelancers.";
+  const container=document.getElementById("projects-container"),empty=document.getElementById("projects-empty");
+  if(!filtered.length){container.innerHTML="";empty.style.display="";return;}empty.style.display="none";
+  if(currentView==="card")container.innerHTML=renderCards(filtered);
+  else if(currentView==="list")container.innerHTML=renderList(filtered);
+  else container.innerHTML=renderKanban(filtered);
 }
 
-// ── Card view ──────────────────────────────────────────────
-function renderCards(projects) {
-  return `<div class="projects-grid">${projects.map((p,i) => {
-    const due    = p.dueDate ? new Date(p.dueDate) : null;
-    const isOver = due && due < new Date() && p.status !== "completed";
-    const doneM  = (p.milestones||[]).filter(m => m.approvalStatus === "approved").length;
-    const totalM = (p.milestones||[]).length;
-    const awaitingApproval = (p.milestones||[]).some(m => m.status === "done" && m.approvalStatus === "pending");
-    return `<div class="project-card" onclick="openDetail('${p.id}')" style="animation-delay:${Math.min(i*35,280)}ms">
-      <div class="project-card-header">
-        <div class="project-card-title">${escHtml(p.title)}</div>
-        ${badgeHtml(p.status)}
-      </div>
-      <div class="project-card-fl">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-        ${escHtml(p.freelancerName || "Freelancer")}
-      </div>
-      <div class="project-card-meta">
-        <span class="type-pill">${escHtml(p.type)}</span>
-        ${p.budgetAmount > 0 ? `<span class="budget-lbl">${fmtCurrency(p.budgetAmount, p.currency)}</span>` : ""}
-        ${due ? `<span class="due-lbl ${isOver?"overdue":""}">${isOver?"Overdue":"Due"} ${due.toLocaleDateString(undefined,{month:"short",day:"numeric"})}</span>` : ""}
-      </div>
+function renderCards(projects){
+  return `<div class="projects-grid">${projects.map((p,i)=>{
+    const due=p.dueDate?new Date(p.dueDate):null,isOver=due&&due<new Date()&&p.status!=="completed";
+    const doneM=(p.milestones||[]).filter(m=>m.approvalStatus==="approved"||m.status==="done").length;
+    const totalM=(p.milestones||[]).length;
+    const awaitApproval=(p.milestones||[]).some(m=>m.status==="done"&&m.approvalStatus==="pending");
+    const hasChanges=projectHasChanges(p);
+    return `<div class="project-card ${hasChanges?"has-changes":""}" onclick="openDetail('${p.id}')" style="animation-delay:${Math.min(i*35,280)}ms">
+      <div class="project-card-header"><div class="project-card-title">${escHtml(p.title)}</div>${badgeHtml(p.status)}</div>
+      <div class="project-card-fl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>${escHtml(p.freelancerName||"Freelancer")}</div>
+      <div class="project-card-meta"><span class="type-pill">${escHtml(p.type)}</span>${p.budgetAmount>0?`<span class="budget-lbl">${fmtCurrency(p.budgetAmount,p.currency)}</span>`:""}${due?`<span class="due-lbl ${isOver?"overdue":""}">${isOver?"Overdue":"Due"} ${due.toLocaleDateString(undefined,{month:"short",day:"numeric"})}</span>`:""}</div>
       <div class="progress-bar"><div class="progress-fill" style="width:${p.progress||0}%"></div></div>
-      <div class="progress-label">
-        <span>${totalM > 0 ? doneM+"/"+totalM+" approved" : "No milestones"}</span>
-        <span>${p.progress||0}%</span>
-      </div>
-      ${p.requestStatus === "pending" ? `<div class="request-banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Awaiting freelancer acceptance</div>` : ""}
-      ${awaitingApproval ? `<div class="request-banner" style="background:#f0fdf4;border-color:#bbf7d0;color:#166534;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Milestone ready for your approval</div>` : ""}
+      <div class="progress-label"><span>${totalM>0?doneM+"/"+totalM+" milestones":"No milestones"}</span><span>${p.progress||0}%</span></div>
+      ${p.requestStatus==="pending"?`<div class="card-notice pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Awaiting freelancer acceptance</div>`:""}
+      ${awaitApproval?`<div class="card-notice ready"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;flex-shrink:0;"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Milestone ready for approval</div>`:""}
+      ${hasChanges?`<div class="card-notice changed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;flex-shrink:0;"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>New update from freelancer</div>`:""}
     </div>`;
   }).join("")}</div>`;
 }
 
-// ── List view ──────────────────────────────────────────────
-function renderList(projects) {
+function renderList(projects){
   return `<div class="projects-list">
     <div class="list-header">
-      <div class="list-col" style="flex:1;">Project</div>
-      <div class="list-col" style="width:120px;">Freelancer</div>
-      <div class="list-col" style="width:70px;">Status</div>
-      <div class="list-col" style="width:90px;text-align:right;">Budget</div>
-      <div class="list-col" style="width:80px;text-align:right;">Due</div>
-      <div class="list-col" style="width:80px;">Progress</div>
+      <div class="list-col" style="flex:1;">Project</div><div class="list-col" style="width:120px;">Freelancer</div>
+      <div class="list-col" style="width:72px;">Status</div><div class="list-col" style="width:90px;text-align:right;">Budget</div>
+      <div class="list-col" style="width:80px;text-align:right;">Due</div><div class="list-col" style="width:80px;">Progress</div>
     </div>
-    ${projects.map(p => {
-      const due = p.dueDate ? new Date(p.dueDate) : null;
-      const isOver = due && due < new Date() && p.status !== "completed";
-      return `<div class="project-row" onclick="openDetail('${p.id}')">
-        <div style="flex:1;font-size:.84rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(p.title)}</div>
+    ${projects.map(p=>{
+      const due=p.dueDate?new Date(p.dueDate):null,isOver=due&&due<new Date()&&p.status!=="completed";
+      return `<div class="project-row ${projectHasChanges(p)?"has-changes":""}" onclick="openDetail('${p.id}')">
+        <div style="flex:1;font-size:.84rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(p.title)}</div>
         <div style="width:120px;font-size:.74rem;color:var(--ink4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(p.freelancerName||"—")}</div>
-        <div style="width:70px;">${badgeHtml(p.status)}</div>
-        <div style="width:90px;font-size:.78rem;font-weight:600;color:var(--ink2);text-align:right;">${p.budgetAmount > 0 ? fmtCurrency(p.budgetAmount,p.currency) : "—"}</div>
-        <div style="width:80px;font-size:.72rem;text-align:right;" class="${isOver?"due-lbl overdue":"due-lbl"}">${due ? due.toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "—"}</div>
-        <div style="width:80px;">
-          <div class="progress-bar" style="height:5px;"><div class="progress-fill" style="width:${p.progress||0}%"></div></div>
-          <div style="font-size:.65rem;color:var(--ink4);margin-top:2px;">${p.progress||0}%</div>
-        </div>
+        <div style="width:72px;">${badgeHtml(p.status)}</div>
+        <div style="width:90px;font-size:.78rem;font-weight:600;text-align:right;">${p.budgetAmount>0?fmtCurrency(p.budgetAmount,p.currency):"—"}</div>
+        <div style="width:80px;font-size:.72rem;text-align:right;color:${isOver?"var(--red)":"var(--ink4)"};">${due?due.toLocaleDateString(undefined,{month:"short",day:"numeric"}):"—"}</div>
+        <div style="width:80px;"><div class="progress-bar" style="height:5px;"><div class="progress-fill" style="width:${p.progress||0}%"></div></div><div style="font-size:.65rem;color:var(--ink4);margin-top:2px;">${p.progress||0}%</div></div>
       </div>`;
     }).join("")}
   </div>`;
 }
 
-// ── Kanban view ────────────────────────────────────────────
-function renderKanban(projects) {
-  const cols = [
-    {key:"draft",label:"Draft"},{key:"active",label:"Active"},
-    {key:"paused",label:"Paused"},{key:"completed",label:"Completed"}
-  ];
-  return `<div class="kanban-board">${cols.map(col => {
-    const cp = projects.filter(p => p.status === col.key);
-    return `<div class="kanban-col">
-      <div class="kanban-col-header"><span class="kanban-col-title">${col.label}</span><span class="kanban-col-count">${cp.length}</span></div>
-      <div>${cp.map(p => `
-        <div class="kanban-card" onclick="openDetail('${p.id}')">
-          <div class="kanban-card-title">${escHtml(p.title)}</div>
-          <div class="kanban-card-fl">${escHtml(p.freelancerName||"")}</div>
-          <div class="kanban-card-footer">
-            ${p.budgetAmount > 0 ? `<span style="font-size:.7rem;font-weight:600;color:var(--ink3);">${fmtCurrency(p.budgetAmount,p.currency)}</span>` : "<span></span>"}
-            <span style="font-size:.7rem;color:var(--ink4);">${p.progress||0}%</span>
-          </div>
-        </div>`).join("")}
-        ${!cp.length ? `<div style="border:1.5px dashed var(--line2);border-radius:var(--r);padding:20px;text-align:center;font-size:.76rem;color:var(--ink4);">No projects</div>` : ""}
-      </div>
-    </div>`;
+function renderKanban(projects){
+  const cols=[{key:"draft",label:"Draft"},{key:"active",label:"Active"},{key:"paused",label:"Paused"},{key:"completed",label:"Completed"}];
+  return `<div class="kanban-board">${cols.map(col=>{
+    const cp=projects.filter(p=>p.status===col.key);
+    return `<div class="kanban-col"><div class="kanban-col-header"><span class="kanban-col-title">${col.label}</span><span class="kanban-col-count">${cp.length}</span></div>
+    <div>${cp.map(p=>`<div class="kanban-card ${projectHasChanges(p)?"has-changes":""}" onclick="openDetail('${p.id}')">
+      <div class="kanban-card-title">${escHtml(p.title)}</div><div class="kanban-card-fl">${escHtml(p.freelancerName||"")}</div>
+      <div class="kanban-card-footer">${p.budgetAmount>0?`<span style="font-size:.7rem;font-weight:600;color:var(--ink3);">${fmtCurrency(p.budgetAmount,p.currency)}</span>`:"<span></span>"}<span style="font-size:.7rem;color:var(--ink4);">${p.progress||0}%</span></div>
+    </div>`).join("")}${!cp.length?`<div style="border:1.5px dashed var(--line2);border-radius:var(--r);padding:20px;text-align:center;font-size:.76rem;color:var(--ink4);">No projects</div>`:""}</div></div>`;
   }).join("")}</div>`;
 }
 
-// ── Detail panel ───────────────────────────────────────────
-function openDetail(id) {
-  selectedProject = allProjects.find(p => p.id === id);
-  if (!selectedProject) return;
-  const p = selectedProject;
-
-  document.getElementById("detail-title").textContent = p.title;
-  document.getElementById("detail-fl").textContent     = p.freelancerName || "—";
-  document.getElementById("detail-type").textContent   = p.type === "one-off" ? "One-off" : "Retainer";
-  document.getElementById("detail-budget").textContent = p.budgetAmount > 0 ? fmtCurrency(p.budgetAmount, p.currency) + (p.budgetType === "hourly" ? "/hr" : "") : "—";
-  document.getElementById("detail-due").textContent    = p.dueDate ? fmtDate(p.dueDate) : "—";
-
-  const descWrap = document.getElementById("detail-desc-wrap");
-  if (p.description) { descWrap.style.display = ""; document.getElementById("detail-desc").textContent = p.description; }
-  else descWrap.style.display = "none";
-
-  document.getElementById("detail-status-badge").innerHTML = badgeHtml(p.status);
-  const notice = document.getElementById("detail-request-notice");
-  if (p.requestStatus === "pending") {
-    notice.style.display = "";
-    notice.textContent = "⏳ This project is awaiting acceptance from your freelancer.";
-  } else { notice.style.display = "none"; }
-
-  document.getElementById("detail-progress-num").textContent = (p.progress||0) + "%";
-  document.getElementById("detail-progress-fill").style.width = (p.progress||0) + "%";
-
-  renderMilestones(p.milestones || []);
-
+function openDetail(id){
+  selectedProject=allProjects.find(p=>p.id===id);if(!selectedProject)return;
+  const p=selectedProject;
+  markProjectSeen(p.id,p.updatedAt);updateChangeBadges();renderProjects();
+  document.getElementById("detail-title").textContent=p.title;
+  document.getElementById("detail-fl").textContent=p.freelancerName||"—";
+  document.getElementById("detail-type").textContent=p.type==="one-off"?"One-off":"Retainer";
+  document.getElementById("detail-budget").textContent=p.budgetAmount>0?fmtCurrency(p.budgetAmount,p.currency)+(p.budgetType==="hourly"?"/hr":""):"—";
+  document.getElementById("detail-due").textContent=p.dueDate?fmtDate(p.dueDate):"—";
+  const dw=document.getElementById("detail-desc-wrap");
+  if(p.description){dw.style.display="";document.getElementById("detail-desc").textContent=p.description;}else dw.style.display="none";
+  document.getElementById("detail-progress-num").textContent=(p.progress||0)+"%";
+  document.getElementById("detail-progress-fill").style.width=(p.progress||0)+"%";
+  renderStatusSelector(p.status);
+  const notice=document.getElementById("detail-request-notice");
+  if(p.requestStatus==="pending"){notice.style.display="";notice.textContent="⏳ Awaiting freelancer acceptance. You can still add milestones and files below.";}else notice.style.display="none";
+  document.getElementById("detail-change-section").style.display="none";
+  renderMilestones(p.milestones||[]);
+  renderProjectAttachments(p.attachments||[]);
+  document.getElementById("add-milestone-form").classList.remove("show");
+  document.getElementById("project-link-form").classList.remove("show");
+  document.getElementById("project-note-form").classList.remove("show");
   document.getElementById("project-detail").classList.add("open");
   document.getElementById("detail-overlay").classList.add("open");
 }
 
-function closeDetail() {
+function closeDetail(){
+  if(projectsDirty)saveProjectMilestones();
   document.getElementById("project-detail").classList.remove("open");
   document.getElementById("detail-overlay").classList.remove("open");
-  selectedProject = null;
+  selectedProject=null;
 }
 
-// ── Render milestones (client view) ───────────────────────
-function renderMilestones(milestones) {
-  const list = document.getElementById("milestone-list");
-  if (!milestones.length) {
-    list.innerHTML = `<div style="text-align:center;padding:16px 0;font-size:.78rem;color:var(--ink4);">No milestones set yet.</div>`;
-    return;
-  }
-  list.innerHTML = milestones.map((m, mi) => {
-    const approvalStatus = m.approvalStatus || "pending";
-    const isDone = m.status === "done" || approvalStatus === "approved";
-    const subtasks = m.subtasks || [];
-    const attachments = m.attachments || [];
-    const revNotes = m.revisionNotes || {};
+function renderStatusSelector(current){
+  document.getElementById("detail-status-wrap").innerHTML=["draft","active","paused","completed","cancelled"].map(s=>
+    `<div class="status-opt ${s===current?"active":""}" data-s="${s}" onclick="changeProjectStatus('${s}')">${s.charAt(0).toUpperCase()+s.slice(1)}</div>`
+  ).join("");
+}
+async function changeProjectStatus(status){
+  if(!selectedProject)return;
+  const old=selectedProject.status;selectedProject.status=status;renderStatusSelector(status);
+  const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].status=status;renderProjects();
+  try{
+    const res=await api({action:"update_client_project_status",token:getToken(),projectId:selectedProject.id,status});
+    if(!res.success){selectedProject.status=old;showToast(res.error||"Failed","error");}
+    else{showToast("Status updated","success");if(status==="completed")promptRating(selectedProject);}
+  }catch(e){showToast("Connection error.","error");}
+}
 
-    let itemClass = "";
-    if (approvalStatus === "approved") itemClass = "approved";
-    if (approvalStatus === "revision_requested") itemClass = "revision";
-
-    let statusDotClass = "";
-    if (approvalStatus === "approved") statusDotClass = "approved";
-    else if (m.status === "done") statusDotClass = "done";
-    else if (approvalStatus === "revision_requested") statusDotClass = "revision";
-
+function renderMilestones(milestones){
+  const list=document.getElementById("milestone-list");
+  if(!milestones.length){list.innerHTML=`<div style="text-align:center;padding:16px 0;font-size:.78rem;color:var(--ink4);">No milestones yet — add one above.</div>`;return;}
+  const openStates={};
+  list.querySelectorAll(".milestone-body").forEach((el,i)=>{openStates[i]=el.classList.contains("open");});
+  list.innerHTML=milestones.map((m,mi)=>{
+    const ap=m.approvalStatus||"pending",isDone=m.status==="done"||ap==="approved";
+    const subtasks=m.subtasks||[],attachments=m.attachments||[],revNotes=m.revisionNotes||{},isOpen=openStates[mi]||false;
+    let bcolor="var(--line2)";if(ap==="approved")bcolor="var(--accent-ln)";if(ap==="revision_requested")bcolor="var(--purple-ln)";
     return `
-    <div class="milestone-item ${itemClass}">
-      <div class="milestone-header" onclick="toggleMs(this)">
-        <div class="ms-status-dot ${statusDotClass}"></div>
-        <span class="ms-title">${escHtml(m.title)}</span>
-        ${approvalStatus === "approved" ? `<span class="badge badge-approved" style="font-size:.6rem;">✓ Approved</span>` : ""}
-        ${approvalStatus === "revision_requested" ? `<span class="badge badge-revision" style="font-size:.6rem;">↩ Revision</span>` : ""}
-        ${m.status === "done" && approvalStatus === "pending" ? `<span class="badge badge-awaiting" style="font-size:.6rem;">Awaiting approval</span>` : ""}
-        <div class="ms-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
-      </div>
-      <div class="milestone-body">
-        ${subtasks.length ? `<div style="display:flex;flex-direction:column;gap:5px;">
-          ${subtasks.map(s => `<div class="subtask-row">
-            <div class="subtask-dot ${s.status==="done"?"done":""}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-            <span class="subtask-lbl ${s.status==="done"?"done":""}">${escHtml(s.title)}</span>
-          </div>`).join("")}
-        </div>` : ""}
-
-        ${attachments.length ? `<div style="display:flex;flex-direction:column;gap:5px;">
-          ${attachments.filter(a => a.type !== "note").map(a => `
-          <div class="attach-row">
-            <span class="attach-icon">${getFileIcon(a.type)}</span>
-            <span class="attach-name" title="${escHtml(a.name)}">${escHtml(a.name)}</span>
-            ${a.url ? `<button class="attach-open" onclick="window.open('${escHtml(a.url)}','_blank','noopener')">Open</button>` : ""}
-          </div>`).join("")}
-          ${attachments.filter(a => a.type === "note").map(a => `
-          <div style="border:1px solid var(--line2);border-radius:6px;overflow:hidden;">
-            <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="display:flex;align-items:center;gap:7px;padding:5px 7px;background:var(--bg);cursor:pointer;">
-              <span style="font-size:.82rem;">📝</span>
-              <span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;">Note from freelancer</span>
-              <span style="font-size:.65rem;color:var(--ink4);">▶</span>
-            </div>
-            <div style="display:none;padding:7px 10px;font-size:.75rem;color:var(--ink3);line-height:1.6;background:var(--bg2);border-top:1px solid var(--line2);white-space:pre-wrap;">${escHtml(a.content||"")}</div>
-          </div>`).join("")}
-        </div>` : ""}
-
-        ${approvalStatus === "approved" ? `
-        <div class="approved-stamp">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-          Approved${m.approvedAt ? " · " + fmtDate(m.approvedAt) : ""}
-        </div>` : ""}
-
-        ${approvalStatus === "revision_requested" ? `
-        <div class="revision-stamp">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-          Revision requested${revNotes.requestedAt ? " · " + fmtDate(revNotes.requestedAt) : ""}
+    <div style="border:1.5px solid ${bcolor};border-radius:var(--r);overflow:hidden;margin-bottom:6px;">
+      <button class="milestone-header" onclick="toggleMs(this,${mi})">
+        <button class="ms-check ${isDone||ap==="approved"?"done":""}" onclick="toggleMilestoneComplete(event,${mi})" style="cursor:${ap==="approved"?"not-allowed":"pointer"}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+        <span class="ms-title ${isDone?"done":""}">${escHtml(m.title)}</span>
+        ${ap==="approved"?`<span style="background:#dcfce7;color:#166534;font-size:.6rem;flex-shrink:0;padding:2px 7px;border-radius:999px;font-weight:700;">✓ Approved</span>`:""}
+        ${ap==="revision_requested"?`<span style="background:var(--purple-bg);color:var(--purple);font-size:.6rem;flex-shrink:0;padding:2px 7px;border-radius:999px;font-weight:700;">↩ Revision</span>`:""}
+        ${m.status==="done"&&ap==="pending"?`<span style="background:#fffbeb;color:#92400e;font-size:.6rem;flex-shrink:0;padding:2px 7px;border-radius:999px;font-weight:700;">Review</span>`:""}
+        <div class="ms-chevron ${isOpen?"open":""}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </button>
+      <div class="milestone-body ${isOpen?"open":""}">
+        ${subtasks.length?`<div style="display:flex;flex-direction:column;gap:5px;">${subtasks.map((s,si)=>`<div class="subtask-row">
+          <button class="subtask-check ${s.status==="done"?"done":""}" onclick="toggleSubtaskComplete(${mi},${si})">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </button><span class="subtask-lbl ${s.status==="done"?"done":""}">${escHtml(s.title)}</span>
+        </div>`).join("")}</div>`:""}
+        <div class="add-subtask-row">
+          <input class="add-subtask-input" type="text" id="new-sub-${mi}" placeholder="+ Add subtask…" onkeydown="if(event.key==='Enter')addSubtaskInline(${mi})">
+          <button class="add-subtask-btn" onclick="addSubtaskInline(${mi})">Add</button>
         </div>
-        ${(revNotes.checklist?.length || revNotes.notes) ? `<div class="revision-notes">
-          ${(revNotes.checklist||[]).map(c => `• ${c.replace(/_/g," ")}`).join("<br>")}
-          ${revNotes.notes ? `<br>${escHtml(revNotes.notes)}` : ""}
-        </div>` : ""}` : ""}
-
-        ${m.status === "done" && approvalStatus === "pending" ? `
-        <div class="approval-actions">
-          <button class="btn-approve" onclick="approveMilestone('${m.id}', ${mi})">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-            Approve
+        ${attachments.filter(a=>a.type!=="note").length?`<div style="display:flex;flex-direction:column;gap:0;margin-top:4px;">${attachments.filter(a=>a.type!=="note").map(a=>`<div class="attach-row"><span class="attach-icon">${getFileIcon(a.type)}</span><span class="attach-name" title="${escHtml(a.name)}">${escHtml(a.name)}</span>${a.url?`<button class="attach-open" onclick="window.open('${escHtml(a.url)}','_blank','noopener')">Open</button>`:""}</div>`).join("")}</div>`:""}
+        ${attachments.filter(a=>a.type==="note").map(a=>`<div class="note-item"><div class="note-header" onclick="this.nextElementSibling.classList.toggle('open')"><span style="font-size:.82rem;">📝</span><span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;">Note</span><span style="font-size:.65rem;color:var(--ink4);">▶</span></div><div class="note-body">${escHtml(a.content||"")}</div></div>`).join("")}
+        <div class="attach-add-row" style="margin-top:6px;">
+          <button class="attach-add-btn" data-ms="${mi}" onclick="triggerMilestoneUpload(${mi})">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>+ Attach file
           </button>
-          <button class="btn-revision" onclick="openRevisionModal('${m.id}')">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-            Request revision
+          <button class="attach-add-btn" onclick="toggleMsLinkForm(${mi})">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>+ Add link
           </button>
-        </div>` : ""}
+          <button class="attach-add-btn" onclick="toggleMsNoteForm(${mi})">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>+ Add note
+          </button>
+        </div>
+        <div class="inline-form" id="ms-link-form-${mi}">
+          <input class="inline-input" type="url" id="ms-link-url-${mi}" placeholder="https://…" onkeydown="if(event.key==='Enter')saveMsLink(${mi})">
+          <input class="inline-input" type="text" id="ms-link-label-${mi}" placeholder="Label (optional)">
+          <div class="inline-form-btns"><button class="inline-save" onclick="saveMsLink(${mi})">Save link</button><button class="inline-cancel" onclick="toggleMsLinkForm(${mi})">Cancel</button></div>
+        </div>
+        <div class="inline-form" id="ms-note-form-${mi}">
+          <textarea class="inline-input" id="ms-note-text-${mi}" placeholder="Add a note…" style="height:auto;padding:8px 10px;resize:vertical;min-height:60px;"></textarea>
+          <div class="inline-form-btns"><button class="inline-save" onclick="saveMsNote(${mi})">Save note</button><button class="inline-cancel" onclick="toggleMsNoteForm(${mi})">Cancel</button></div>
+        </div>
+        ${ap==="approved"?`<div class="approved-stamp"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Approved${m.approvedAt?" · "+fmtDate(m.approvedAt):""}</div>`:""}
+        ${ap==="revision_requested"?`<div class="revision-stamp"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Revision requested</div>${(revNotes.checklist?.length||revNotes.notes)?`<div class="revision-notes-box">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}${revNotes.notes?"<br>"+escHtml(revNotes.notes):""}</div>`:""}`:""}
+        ${m.status==="done"&&ap==="pending"?`<div class="approval-actions">
+          <button class="btn-approve" onclick="approveMilestone('${m.id}',${mi})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Approve</button>
+          <button class="btn-revision" onclick="openRevisionModal('${m.id}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Request revision</button>
+        </div>`:""}
       </div>
     </div>`;
   }).join("");
 }
 
-function toggleMs(headerEl) {
-  const body = headerEl.nextElementSibling;
-  const chev = headerEl.querySelector(".ms-chevron");
-  if (!body) return;
-  const isOpen = body.classList.contains("open");
-  body.classList.toggle("open", !isOpen);
-  chev?.classList.toggle("open", !isOpen);
+function toggleMs(headerEl,mi){const body=headerEl.nextElementSibling,chev=headerEl.querySelector(".ms-chevron");if(!body)return;body.classList.toggle("open");chev?.classList.toggle("open",body.classList.contains("open"));}
+function toggleMilestoneComplete(e,mi){e.stopPropagation();if(!selectedProject)return;const m=selectedProject.milestones[mi];if(m.approvalStatus==="approved")return;m.status=m.status==="done"?"pending":"done";m.completedAt=m.status==="done"?new Date().toISOString():"";projectsDirty=true;updateLocalProgress();renderMilestones(selectedProject.milestones);scheduleProjectSave();}
+function toggleSubtaskComplete(mi,si){if(!selectedProject)return;const s=selectedProject.milestones[mi].subtasks[si];s.status=s.status==="done"?"pending":"done";s.completedAt=s.status==="done"?new Date().toISOString():"";projectsDirty=true;renderMilestones(selectedProject.milestones);scheduleProjectSave();}
+function addSubtaskInline(mi){if(!selectedProject)return;const input=document.getElementById("new-sub-"+mi);const title=input?.value.trim();if(!title)return;selectedProject.milestones[mi].subtasks.push({id:"tmp-"+Date.now(),title,status:"pending",completedAt:""});projectsDirty=true;renderMilestones(selectedProject.milestones);scheduleProjectSave();}
+function updateLocalProgress(){if(!selectedProject)return;const ms=selectedProject.milestones,done=ms.filter(m=>m.status==="done"||m.approvalStatus==="approved").length,prog=ms.length>0?Math.round((done/ms.length)*100):0;selectedProject.progress=prog;document.getElementById("detail-progress-num").textContent=prog+"%";document.getElementById("detail-progress-fill").style.width=prog+"%";const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].progress=prog;renderProjects();}
+
+function toggleAddMilestoneForm(){const f=document.getElementById("add-milestone-form"),isOpen=f.classList.contains("show");f.classList.toggle("show",!isOpen);if(!isOpen)setTimeout(()=>document.getElementById("new-ms-title")?.focus(),50);}
+function saveNewMilestone(){if(!selectedProject)return;const input=document.getElementById("new-ms-title"),title=input?.value.trim();if(!title){input?.focus();return;}selectedProject.milestones.push({id:"tmp-"+Date.now(),title,status:"pending",subtasks:[],attachments:[],approvalStatus:"pending",revisionNotes:{},dueDate:"",completedAt:""});projectsDirty=true;renderMilestones(selectedProject.milestones);document.getElementById("add-milestone-form").classList.remove("show");if(input)input.value="";scheduleProjectSave();}
+
+function toggleMsLinkForm(mi){const f=document.getElementById("ms-link-form-"+mi),isOpen=f.classList.contains("show");document.getElementById("ms-note-form-"+mi)?.classList.remove("show");f.classList.toggle("show",!isOpen);if(!isOpen)setTimeout(()=>document.getElementById("ms-link-url-"+mi)?.focus(),50);}
+function toggleMsNoteForm(mi){const f=document.getElementById("ms-note-form-"+mi),isOpen=f.classList.contains("show");document.getElementById("ms-link-form-"+mi)?.classList.remove("show");f.classList.toggle("show",!isOpen);if(!isOpen)setTimeout(()=>document.getElementById("ms-note-text-"+mi)?.focus(),50);}
+function saveMsLink(mi){if(!selectedProject)return;const url=document.getElementById("ms-link-url-"+mi)?.value.trim(),label=document.getElementById("ms-link-label-"+mi)?.value.trim();if(!url)return;try{new URL(url);}catch(e){showToast("Invalid URL","warn");return;}const m=selectedProject.milestones[mi];if(!m.attachments)m.attachments=[];m.attachments.push({type:"link",name:label||url,url,uploadedAt:new Date().toISOString()});projectsDirty=true;renderMilestones(selectedProject.milestones);scheduleProjectSave();showToast("Link saved!","success");}
+function saveMsNote(mi){if(!selectedProject)return;const content=document.getElementById("ms-note-text-"+mi)?.value.trim();if(!content)return;const m=selectedProject.milestones[mi];if(!m.attachments)m.attachments=[];m.attachments.push({type:"note",name:"Note",content,url:"",uploadedAt:new Date().toISOString()});projectsDirty=true;renderMilestones(selectedProject.milestones);scheduleProjectSave();showToast("Note saved!","success");}
+function triggerMilestoneUpload(mi){if(!selectedProject)return;const input=document.createElement("input");input.type="file";input.accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.webp,.zip,.mp4,.mov";input.onchange=e=>handleMilestoneFile(mi,e.target.files[0]);input.click();}
+async function handleMilestoneFile(mi,file){if(!file||!selectedProject)return;const btn=document.querySelector(`[data-ms="${mi}"]`);if(btn){btn.textContent="Uploading…";btn.disabled=true;}try{const base64=await fileToBase64(file),fname=currentAccount?(currentAccount.firstName+" "+currentAccount.lastName):"Client",cname=selectedProject.freelancerName||"Freelancer";const res=await api({action:"upload_to_drive",token:getToken(),fileName:`${fname} - ${cname} - ${file.name}`,mimeType:file.type||"application/octet-stream",base64Data:base64,folderId:DRIVE_FOLDER_ID,projectId:selectedProject.id,milestoneId:selectedProject.milestones[mi]?.id||"ms-"+mi});if(res.success){if(!selectedProject.milestones[mi].attachments)selectedProject.milestones[mi].attachments=[];selectedProject.milestones[mi].attachments.push({name:file.name,url:res.viewUrl,type:file.type,uploadedAt:new Date().toISOString()});projectsDirty=true;renderMilestones(selectedProject.milestones);scheduleProjectSave();showToast("File uploaded!","success");}else showToast(res.error||"Upload failed","error");}catch(e){showToast("Upload error","error");}finally{if(btn){btn.textContent="+ Attach file";btn.disabled=false;}}}
+
+function renderProjectAttachments(attachments){const list=document.getElementById("project-attachments-list");if(!attachments.length){list.innerHTML=`<div style="font-size:.76rem;color:var(--ink4);padding:2px 0 6px;">No files added yet.</div>`;return;}list.innerHTML=attachments.map(a=>a.type==="note"?`<div class="note-item"><div class="note-header" onclick="this.nextElementSibling.classList.toggle('open')"><span style="font-size:.82rem;">📝</span><span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;">Note</span><span style="font-size:.65rem;color:var(--ink4);">▶</span></div><div class="note-body">${escHtml(a.content||"")}</div></div>`:`<div class="attach-row"><span class="attach-icon">${getFileIcon(a.type)}</span><span class="attach-name" title="${escHtml(a.name)}">${escHtml(a.name)}</span>${a.url?`<button class="attach-open" onclick="window.open('${escHtml(a.url)}','_blank','noopener')">Open</button>`:""}</div>`).join("");}
+function triggerProjectUpload(){if(!selectedProject)return;const input=document.createElement("input");input.type="file";input.accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.webp,.zip,.mp4,.mov";input.onchange=e=>handleProjectFile(e.target.files[0]);input.click();}
+async function handleProjectFile(file){if(!file||!selectedProject)return;try{const base64=await fileToBase64(file),fname=currentAccount?(currentAccount.firstName+" "+currentAccount.lastName):"Client";const res=await api({action:"upload_to_drive",token:getToken(),fileName:`${fname} - ${selectedProject.freelancerName||"Project"} - ${file.name}`,mimeType:file.type||"application/octet-stream",base64Data:base64,folderId:DRIVE_FOLDER_ID,projectId:selectedProject.id});if(res.success){if(!selectedProject.attachments)selectedProject.attachments=[];selectedProject.attachments.push({name:file.name,url:res.viewUrl,type:file.type,uploadedAt:new Date().toISOString()});renderProjectAttachments(selectedProject.attachments);showToast("File uploaded!","success");}else showToast(res.error||"Upload failed","error");}catch(e){showToast("Upload error","error");}}
+function toggleProjectLinkForm(){const f=document.getElementById("project-link-form"),isOpen=f.classList.contains("show");document.getElementById("project-note-form").classList.remove("show");f.classList.toggle("show",!isOpen);if(!isOpen)setTimeout(()=>document.getElementById("proj-link-url")?.focus(),50);}
+function toggleProjectNoteForm(){const f=document.getElementById("project-note-form"),isOpen=f.classList.contains("show");document.getElementById("project-link-form").classList.remove("show");f.classList.toggle("show",!isOpen);if(!isOpen)setTimeout(()=>document.getElementById("proj-note-text")?.focus(),50);}
+function saveProjectLink(){if(!selectedProject)return;const url=document.getElementById("proj-link-url")?.value.trim(),label=document.getElementById("proj-link-label")?.value.trim();if(!url)return;try{new URL(url);}catch(e){showToast("Invalid URL","warn");return;}if(!selectedProject.attachments)selectedProject.attachments=[];selectedProject.attachments.push({type:"link",name:label||url,url,uploadedAt:new Date().toISOString()});renderProjectAttachments(selectedProject.attachments);document.getElementById("project-link-form").classList.remove("show");document.getElementById("proj-link-url").value="";document.getElementById("proj-link-label").value="";showToast("Link saved!","success");}
+function saveProjectNote(){if(!selectedProject)return;const content=document.getElementById("proj-note-text")?.value.trim();if(!content)return;if(!selectedProject.attachments)selectedProject.attachments=[];selectedProject.attachments.push({type:"note",name:"Note",content,url:"",uploadedAt:new Date().toISOString()});renderProjectAttachments(selectedProject.attachments);document.getElementById("project-note-form").classList.remove("show");document.getElementById("proj-note-text").value="";showToast("Note saved!","success");}
+
+let _projSaveTimer=null;
+function scheduleProjectSave(){clearTimeout(_projSaveTimer);_projSaveTimer=setTimeout(saveProjectMilestones,5000);}
+async function saveProjectMilestones(){if(!selectedProject||!projectsDirty)return;projectsDirty=false;try{const res=await api({action:"save_milestones",token:getToken(),projectId:selectedProject.id,milestones:selectedProject.milestones});if(res.success){selectedProject.progress=res.progress;document.getElementById("detail-progress-num").textContent=res.progress+"%";document.getElementById("detail-progress-fill").style.width=res.progress+"%";const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].progress=res.progress;saveToCache();renderProjects();}}catch(e){projectsDirty=true;}}
+window.addEventListener("beforeunload",()=>{if(projectsDirty)saveProjectMilestones();});
+
+async function approveMilestone(milestoneId,mi){
+  const btns=document.querySelectorAll(".btn-approve");btns.forEach(b=>{b.disabled=true;b.textContent="Approving…";});
+  try{const res=await api({action:"approve_milestone",token:getToken(),milestoneId});
+  if(res.success){if(selectedProject){const m=selectedProject.milestones[mi];if(m){m.approvalStatus="approved";m.approvedAt=new Date().toISOString();m.status="done";}updateLocalProgress();renderMilestones(selectedProject.milestones);if(res.projectCompleted){selectedProject.status="completed";const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].status="completed";renderStatusSelector("completed");renderProjects();promptRating(selectedProject);}saveToCache();}showToast(res.projectCompleted?"🎉 All milestones approved! Project complete.":"Milestone approved!","success");}else showToast(res.error||"Failed","error");}catch(e){showToast("Connection error.","error");}
 }
 
-// ── Approve milestone ──────────────────────────────────────
-async function approveMilestone(milestoneId, mi) {
-  const btn = document.querySelector(`.approval-actions .btn-approve`);
-  if (btn) { btn.disabled = true; btn.textContent = "Approving…"; }
-
-  try {
-    const res = await api({ action: "approve_milestone", token: getToken(), milestoneId });
-    if (res.success) {
-      // Update local state
-      if (selectedProject) {
-        const m = selectedProject.milestones[mi];
-        if (m) { m.approvalStatus = "approved"; m.approvedAt = new Date().toISOString(); }
-        if (res.projectCompleted) {
-          selectedProject.status = "completed";
-          const idx = allProjects.findIndex(p => p.id === selectedProject.id);
-          if (idx > -1) allProjects[idx].status = "completed";
-        }
-        const idx = allProjects.findIndex(p => p.id === selectedProject.id);
-        if (idx > -1) allProjects[idx].milestones = selectedProject.milestones;
-        renderMilestones(selectedProject.milestones);
-        renderProjects();
-      }
-      showToast(res.projectCompleted ? "🎉 All milestones approved! Project completed." : "Milestone approved!", "success");
-      saveToCache({ projects: allProjects, freelancers: allFreelancers });
-    } else {
-      showToast(res.error || "Failed to approve", "error");
-    }
-  } catch(e) { showToast("Connection error.", "error"); }
+function openRevisionModal(milestoneId){document.getElementById("revision-milestone-id").value=milestoneId;document.getElementById("revision-notes").value="";document.querySelectorAll(".rev-check-item").forEach(el=>{el.classList.remove("selected");el.querySelector("input").checked=false;});openModal("modal-revision");}
+function toggleRevCheck(el){const input=el.querySelector("input");input.checked=!input.checked;el.classList.toggle("selected",input.checked);}
+async function submitRevision(){
+  const milestoneId=document.getElementById("revision-milestone-id").value,notes=document.getElementById("revision-notes").value.trim();
+  const checklist=Array.from(document.querySelectorAll(".rev-check-item input:checked")).map(i=>i.value);
+  if(!checklist.length&&!notes){showToast("Select at least one issue or add a note","warn");return;}
+  const btn=document.getElementById("revision-btn"),lbl=document.getElementById("revision-lbl"),spin=document.getElementById("revision-spin");
+  btn.disabled=true;lbl.style.display="none";spin.style.display="block";
+  try{const res=await api({action:"request_revision",token:getToken(),milestoneId,checklist,notes});
+  if(res.success){if(selectedProject){const m=selectedProject.milestones.find(ms=>ms.id===milestoneId);if(m){m.approvalStatus="revision_requested";m.revisionNotes={checklist,notes,requestedAt:new Date().toISOString()};}renderMilestones(selectedProject.milestones);}closeModal("modal-revision");showToast("Revision request sent!","success");saveToCache();}else showToast(res.error||"Failed","error");}catch(e){showToast("Connection error.","error");}
+  finally{btn.disabled=false;lbl.style.display="";spin.style.display="none";}
 }
 
-// ── Revision modal ─────────────────────────────────────────
-function openRevisionModal(milestoneId) {
-  document.getElementById("revision-milestone-id").value = milestoneId;
-  document.getElementById("revision-notes").value = "";
-  document.querySelectorAll(".revision-check-item").forEach(el => {
-    el.classList.remove("selected");
-    el.querySelector("input").checked = false;
-  });
-  openModal("modal-revision");
+function promptRating(project){setTimeout(()=>{document.getElementById("rating-project-name").textContent=project.title;document.getElementById("rating-project-id").value=project.id;document.getElementById("rating-freelancer-id").value=project.freelancerId||"";document.getElementById("review-text").value="";setRating(0);openModal("modal-rating");},1000);}
+function setRating(val){currentRating=val;document.querySelectorAll(".star-btn").forEach(btn=>{btn.classList.toggle("lit",parseInt(btn.dataset.v)<=val);});}
+async function submitRating(){
+  const projectId=document.getElementById("rating-project-id").value,freelancerId=document.getElementById("rating-freelancer-id").value,review=document.getElementById("review-text").value.trim();
+  if(!currentRating){showToast("Please select a rating","warn");return;}
+  const btn=document.getElementById("rating-btn"),lbl=document.getElementById("rating-lbl"),spin=document.getElementById("rating-spin");
+  btn.disabled=true;lbl.style.display="none";spin.style.display="block";
+  try{await api({action:"submit_rating",token:getToken(),projectId,freelancerId,rating:currentRating,review});}catch(e){}
+  finally{btn.disabled=false;lbl.style.display="";spin.style.display="none";}
+  closeModal("modal-rating");showToast("Thank you for your review! 🙏","success");
 }
 
-function toggleRevCheck(el) {
-  const input = el.querySelector("input");
-  input.checked = !input.checked;
-  el.classList.toggle("selected", input.checked);
+function populateFreelancerDropdown(){const sel=document.getElementById("p-freelancer");sel.innerHTML='<option value="">Select freelancer…</option>';allFreelancers.forEach(f=>{sel.innerHTML+=`<option value="${f.id}">${escHtml(f.name)} — ${escHtml(f.workspaceName)}</option>`;});}
+function openEditProject(){if(!selectedProject)return;const p=selectedProject;document.getElementById("modal-project-title").textContent="Edit project";document.getElementById("edit-project-id").value=p.id;document.getElementById("p-title").value=p.title;document.getElementById("p-desc").value=p.description||"";document.getElementById("p-type").value=p.type;document.getElementById("p-due").value=p.dueDate?p.dueDate.slice(0,10):"";document.getElementById("p-budget-type").value=p.budgetType||"fixed";document.getElementById("p-budget").value=p.budgetAmount||"";document.getElementById("freelancer-field").style.display="none";document.getElementById("save-project-lbl").textContent="Save changes";openModal("modal-new-project");}
+
+async function saveProject(){
+  const id=document.getElementById("edit-project-id").value,title=document.getElementById("p-title").value.trim(),flId=document.getElementById("p-freelancer").value;
+  let ok=true;
+  if(!title){document.getElementById("err-p-title").style.display="block";ok=false;}else document.getElementById("err-p-title").style.display="none";
+  if(!id&&!flId){document.getElementById("err-p-fl").style.display="block";ok=false;}else document.getElementById("err-p-fl").style.display="none";
+  if(!ok)return;
+  const btn=document.getElementById("save-project-btn"),lbl=document.getElementById("save-project-lbl"),spin=document.getElementById("save-project-spin");
+  btn.disabled=true;lbl.style.display="none";spin.style.display="block";
+  const payload={token:getToken(),title,description:document.getElementById("p-desc").value.trim(),type:document.getElementById("p-type").value,dueDate:document.getElementById("p-due").value,budgetType:document.getElementById("p-budget-type").value,budgetAmount:parseFloat(document.getElementById("p-budget").value)||0,currency:"USD"};
+  try{
+    let res;
+    if(id){res=await api({action:"update_project",projectId:id,...payload});if(res.success){const idx=allProjects.findIndex(p=>p.id===id);if(idx>-1)Object.assign(allProjects[idx],{title,description:payload.description,type:payload.type,dueDate:payload.dueDate,budgetType:payload.budgetType,budgetAmount:payload.budgetAmount});showToast("Project updated","success");if(selectedProject?.id===id)openDetail(id);}}
+    else{res=await api({action:"client_create_project",freelancerId:flId,...payload});if(res.success){const dataRes=await api({action:"get_client_projects",token:getToken()});if(dataRes.success){allProjects=dataRes.projects||[];allFreelancers=dataRes.freelancers||[];saveToCache();renderAll();}showToast("Project request sent!","success");}}
+    if(res.success){closeModal("modal-new-project");clearProjectForm();}else showToast(res.error||"Failed","error");
+  }catch(e){showToast("Connection error.","error");}
+  finally{btn.disabled=false;lbl.style.display="";spin.style.display="none";document.getElementById("modal-project-title").textContent="New project request";document.getElementById("save-project-lbl").textContent="Send request";document.getElementById("freelancer-field").style.display="";document.getElementById("edit-project-id").value="";}
 }
+function clearProjectForm(){["p-title","p-desc","p-due","p-budget","edit-project-id"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});document.getElementById("p-freelancer").value="";document.getElementById("p-type").value="one-off";document.getElementById("p-budget-type").value="fixed";}
 
-async function submitRevision() {
-  const milestoneId = document.getElementById("revision-milestone-id").value;
-  const notes = document.getElementById("revision-notes").value.trim();
-  const checklist = Array.from(document.querySelectorAll(".revision-check-item input:checked")).map(i => i.value);
+function setView(v,el){currentView=v;document.querySelectorAll(".view-btn").forEach(b=>b.classList.remove("active"));el.classList.add("active");renderProjects();}
+function setFilter(f,el){currentFilter=f;document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));el.classList.add("active");renderProjects();}
+function openSidebar(){document.getElementById("sidebar").classList.add("open");document.getElementById("sidebar-overlay").classList.add("open");}
+function closeSidebar(){document.getElementById("sidebar").classList.remove("open");document.getElementById("sidebar-overlay").classList.remove("open");}
+function openModal(id){document.getElementById(id)?.classList.add("open");document.body.style.overflow="hidden";}
+function closeModal(id){document.getElementById(id)?.classList.remove("open");document.body.style.overflow="";}
+async function logout(){const token=getToken();["ark_client_token","ark_client"].forEach(k=>{localStorage.removeItem(k);sessionStorage.removeItem(k);});sessionStorage.removeItem(CACHE_KEY);clearInterval(pollTimer);try{await api({action:"client_logout",token});}catch(e){}window.location.href=LOGIN_URL;}
 
-  if (!checklist.length && !notes) {
-    showToast("Please select at least one issue or add a note", "warn"); return;
-  }
+function escHtml(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function fmtDate(iso){if(!iso)return "—";try{return new Date(iso).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});}catch(e){return iso;}}
+function fmtCurrency(amt,cur="USD"){try{return new Intl.NumberFormat(undefined,{style:"currency",currency:cur}).format(amt||0);}catch(e){return "$"+(amt||0);}}
+function fileToBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(",")[1]);r.onerror=rej;r.readAsDataURL(file);});}
+function getFileIcon(t){if(!t)return "📎";if(t==="link")return "🔗";if(t.includes("pdf"))return "📄";if(t.includes("image"))return "🖼️";if(t.includes("video"))return "🎥";if(t.includes("sheet")||t.includes("excel"))return "📊";if(t.includes("word")||t.includes("document"))return "📝";if(t.includes("presentation")||t.includes("powerpoint"))return "📑";if(t.includes("zip"))return "🗜️";return "📎";}
+function badgeHtml(s){const m={active:"badge-active",draft:"badge-draft",paused:"badge-paused",completed:"badge-completed",cancelled:"badge-cancelled",pending:"badge-pending"};return `<span class="badge ${m[s]||"badge-draft"}"><span class="badge-dot"></span>${escHtml(s)}</span>`;}
 
-  const btn  = document.getElementById("revision-submit-btn");
-  const lbl  = document.getElementById("revision-submit-lbl");
-  const spin = document.getElementById("revision-submit-spin");
-  btn.disabled = true; lbl.style.display = "none"; spin.style.display = "block";
-
-  try {
-    const res = await api({ action: "request_revision", token: getToken(), milestoneId, checklist, notes });
-    if (res.success) {
-      if (selectedProject) {
-        const m = selectedProject.milestones.find(ms => ms.id === milestoneId);
-        if (m) {
-          m.approvalStatus = "revision_requested";
-          m.revisionNotes  = { checklist, notes, requestedAt: new Date().toISOString() };
-        }
-        renderMilestones(selectedProject.milestones);
-        renderProjects();
-      }
-      closeModal("modal-revision");
-      showToast("Revision request sent to your freelancer", "success");
-      saveToCache({ projects: allProjects, freelancers: allFreelancers });
-    } else {
-      showToast(res.error || "Failed to send revision", "error");
-    }
-  } catch(e) { showToast("Connection error.", "error"); }
-  finally { btn.disabled = false; lbl.style.display = ""; spin.style.display = "none"; }
-}
-
-// ── Create project ─────────────────────────────────────────
-function populateFreelancerDropdown() {
-  const sel = document.getElementById("p-freelancer");
-  sel.innerHTML = '<option value="">Select freelancer…</option>';
-  allFreelancers.forEach(f => {
-    sel.innerHTML += `<option value="${f.id}">${escHtml(f.name)} — ${escHtml(f.workspaceName)}</option>`;
-  });
-}
-
-async function saveProject() {
-  const title      = document.getElementById("p-title").value.trim();
-  const flId       = document.getElementById("p-freelancer").value;
-  let ok = true;
-  if (!title) { document.getElementById("err-p-title").style.display = "block"; ok = false; }
-  else          document.getElementById("err-p-title").style.display = "none";
-  if (!flId)  { document.getElementById("err-p-fl").style.display = "block"; ok = false; }
-  else          document.getElementById("err-p-fl").style.display = "none";
-  if (!ok) return;
-
-  const btn  = document.getElementById("save-project-btn");
-  const lbl  = document.getElementById("save-project-lbl");
-  const spin = document.getElementById("save-project-spin");
-  btn.disabled = true; lbl.style.display = "none"; spin.style.display = "block";
-
-  try {
-    const res = await api({
-      action:       "client_create_project",
-      token:        getToken(),
-      freelancerId: flId,
-      title,
-      description:  document.getElementById("p-desc").value.trim(),
-      type:         document.getElementById("p-type").value,
-      dueDate:      document.getElementById("p-due").value,
-      budgetType:   document.getElementById("p-budget-type").value,
-      budgetAmount: parseFloat(document.getElementById("p-budget").value) || 0,
-      currency:     "USD"
-    });
-    if (res.success) {
-      // Refresh data
-      const dataRes = await api({ action: "get_client_projects", token: getToken() });
-      if (dataRes.success) {
-        allProjects    = dataRes.projects    || [];
-        allFreelancers = dataRes.freelancers || [];
-        saveToCache({ projects: allProjects, freelancers: allFreelancers });
-        renderAll();
-      }
-      closeModal("modal-new-project");
-      clearProjectForm();
-      showToast("Project request sent to your freelancer!", "success");
-    } else {
-      showToast(res.error || "Failed to create project", "error");
-    }
-  } catch(e) { showToast("Connection error.", "error"); }
-  finally { btn.disabled = false; lbl.style.display = ""; spin.style.display = "none"; }
-}
-
-function clearProjectForm() {
-  ["p-title","p-desc","p-due","p-budget"].forEach(id => { const el = document.getElementById(id); if(el) el.value = ""; });
-  document.getElementById("p-freelancer").value = "";
-  document.getElementById("p-type").value = "one-off";
-  document.getElementById("p-budget-type").value = "fixed";
-}
-
-// ── View + filter ──────────────────────────────────────────
-function setView(v, el) {
-  currentView = v;
-  document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
-  el.classList.add("active");
-  renderProjects();
-}
-function setFilter(f, el) {
-  currentFilter = f;
-  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-  el.classList.add("active");
-  renderProjects();
-}
-
-// ── Sidebar ────────────────────────────────────────────────
-function openSidebar()  { document.getElementById("sidebar").classList.add("open"); document.getElementById("sidebar-overlay").classList.add("open"); }
-function closeSidebar() { document.getElementById("sidebar").classList.remove("open"); document.getElementById("sidebar-overlay").classList.remove("open"); }
-
-// ── Modal ──────────────────────────────────────────────────
-function openModal(id)  { document.getElementById(id)?.classList.add("open"); document.body.style.overflow = "hidden"; }
-function closeModal(id) { document.getElementById(id)?.classList.remove("open"); document.body.style.overflow = ""; }
-
-// ── Logout ─────────────────────────────────────────────────
-async function logout() {
-  const token = getToken();
-  localStorage.removeItem("ark_client_token"); localStorage.removeItem("ark_client");
-  sessionStorage.removeItem("ark_client_token"); sessionStorage.removeItem("ark_client");
-  sessionStorage.removeItem(CACHE_KEY);
-  try { await api({ action: "client_logout", token }); } catch(e) {}
-  window.location.href = LOGIN_URL;
-}
-
-// ── Helpers ────────────────────────────────────────────────
-function escHtml(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-function fmtDate(iso) { if (!iso) return "—"; try { return new Date(iso).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}); } catch(e){return iso;} }
-function fmtCurrency(amt, cur="USD") { try { return new Intl.NumberFormat(undefined,{style:"currency",currency:cur}).format(amt||0); } catch(e){return "$"+(amt||0);} }
-function getFileIcon(t) {
-  if (!t) return "📎"; if (t==="link") return "🔗";
-  if (t.includes("pdf")) return "📄"; if (t.includes("image")) return "🖼️";
-  if (t.includes("video")) return "🎥"; if (t.includes("sheet")||t.includes("excel")) return "📊";
-  if (t.includes("word")||t.includes("document")) return "📝";
-  if (t.includes("presentation")||t.includes("powerpoint")) return "📑";
-  if (t.includes("zip")) return "🗜️"; return "📎";
-}
-function badgeHtml(status) {
-  const map = {active:"badge-active",draft:"badge-draft",paused:"badge-paused",completed:"badge-completed",cancelled:"badge-cancelled",pending:"badge-pending"};
-  return `<span class="badge ${map[status]||"badge-draft"}"><span class="badge-dot"></span>${escHtml(status)}</span>`;
-}
-
-document.addEventListener("keydown", e => { if (e.key === "Escape") { closeDetail(); closeModal("modal-new-project"); closeModal("modal-revision"); } });
-
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeDetail();closeModal("modal-new-project");closeModal("modal-revision");closeModal("modal-rating");}});
 boot();
 </script>
 </body>
