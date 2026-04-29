@@ -251,7 +251,7 @@
     </div>
     <div class="sidebar-nav">
       <div class="nav-section-label">Workspace</div>
-      <a class="nav-item" href="dashboard.html" data-page="dashboard">
+      <a class="nav-item" href="dashboard" data-page="dashboard">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Dashboard
       </a>
@@ -578,22 +578,12 @@ ARK.requireAuth(function(user) {
 async function loadClients() {
   try {
     const token = ARK.getToken();
-
-    // Demo mode
-    if (!window._ARK_URL) {
-      await new Promise(r => setTimeout(r, 800));
-      allClients = getDemoClients();
-      renderClients();
-      return;
-    }
-
     const res = await ARK.api({ action: "get_clients", token });
-    if (!res.success) { ARK.showToast(res.error || "Failed to load clients", "error"); return; }
+    if (!res.success) { ARK.showToast(res.error || "Failed to load clients", "error"); renderClients(); return; }
     allClients = res.clients || [];
     renderClients();
   } catch(e) {
-    ARK.showToast("Connection error. Showing demo data.", "warn");
-    allClients = getDemoClients();
+    ARK.showToast("Connection error. Please refresh.", "error");
     renderClients();
   }
 }
@@ -762,27 +752,6 @@ async function saveClient() {
   try {
     const token = ARK.getToken();
 
-    // Demo mode
-    if (!window._ARK_URL) {
-      await new Promise(r => setTimeout(r, 900));
-      const newClient = {
-        id:            "demo-" + Date.now(),
-        name, email, company, phone, notes,
-        status:        "active",
-        portalToken:   "demo-token-" + Math.random().toString(36).slice(2),
-        portalEnabled: true,
-        createdAt:     new Date().toISOString(),
-        projectCount:  0, activeProjects: 0, outstanding: 0
-      };
-      allClients.unshift(newClient);
-      renderClients();
-      ARK.closeModal("modal-add-client");
-      clearAddForm();
-      ARK.showToast(name + " added successfully!", "success");
-      selectClient(newClient.id);
-      return;
-    }
-
     const res = await ARK.api({ action:"create_client", token, name, email, company, phone, notes });
     if (res.success) {
       allClients.unshift(res.client);
@@ -842,16 +811,6 @@ async function updateClient() {
 
   try {
     const token = ARK.getToken();
-    if (!window._ARK_URL) {
-      await new Promise(r => setTimeout(r, 600));
-      const idx = allClients.findIndex(c => c.id === id);
-      if (idx > -1) Object.assign(allClients[idx], { name, company, email, phone, notes });
-      renderClients();
-      if (selectedClient?.id === id) selectClient(id);
-      ARK.closeModal("modal-edit-client");
-      ARK.showToast("Client updated", "success");
-      return;
-    }
     const res = await ARK.api({ action:"update_client", token, clientId:id, name, company, email, phone, notes });
     if (res.success) {
       const idx = allClients.findIndex(c => c.id === id);
@@ -880,14 +839,6 @@ async function archiveClientById(id, name) {
 
   try {
     const token = ARK.getToken();
-    if (!window._ARK_URL) {
-      const idx = allClients.findIndex(c => c.id === id);
-      if (idx > -1) allClients[idx].status = "archived";
-      renderClients();
-      if (selectedClient?.id === id) closeDetail();
-      ARK.showToast(name + " archived", "success");
-      return;
-    }
     const res = await ARK.api({ action:"archive_client", token, clientId:id });
     if (res.success) {
       const idx = allClients.findIndex(c => c.id === id);
@@ -957,14 +908,7 @@ function confirmAction(msg) {
   });
 }
 
-// ── Demo data ──────────────────────────────────────────────
-function getDemoClients() {
-  return [
-    { id:"d1", name:"Moe Airbnb", email:"moe@airglitz.com.au", company:"AirGlitz", phone:"+61 400 000 001", status:"active", portalToken:"demo-abc123", portalEnabled:true, notes:"Airbnb automation system. Prefers async comms.", createdAt:"2025-01-15T10:00:00Z", projectCount:2, activeProjects:1, outstanding:500 },
-    { id:"d2", name:"Sarah Chen", email:"sarah@growthco.io", company:"GrowthCo", phone:"", status:"active", portalToken:"demo-def456", portalEnabled:true, notes:"", createdAt:"2025-02-20T10:00:00Z", projectCount:1, activeProjects:1, outstanding:0 },
-    { id:"d3", name:"James Okafor", email:"james@jamesokafor.com", company:"", phone:"+44 7700 900000", status:"active", portalToken:"demo-ghi789", portalEnabled:true, notes:"Referred by Moe.", createdAt:"2025-03-05T10:00:00Z", projectCount:3, activeProjects:0, outstanding:1200 },
-  ];
-}
+
 </script>
 </body>
 </html>
