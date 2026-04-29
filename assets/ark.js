@@ -7,11 +7,12 @@ const ARK = (function () {
 
   // ── Config ─────────────────────────────────────────────────
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsjcZmIhwJF5DslXrFTPZJENckjKB_3re9qK73dewpLCCUNBcEi4-_iHBr6UvhVCSQpA/exec";
-  const LOGIN_URL  = "/freelancer/login.html";
+  const LOGIN_URL  = "/freelancer/login";
+  const API_KEY    = "d29bb7407783daa176e5f6cf8dfc6677940df38fda145b06";
 
   // ── API ────────────────────────────────────────────────────
   async function api(payload) {
-    const body = new Blob([JSON.stringify(payload)], { type: "text/plain" });
+    const body = new Blob([JSON.stringify({ ...payload, apiKey: API_KEY })], { type: "text/plain" });
     const res  = await fetch(SCRIPT_URL, { method: "POST", body });
     return res.json();
   }
