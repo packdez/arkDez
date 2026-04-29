@@ -184,6 +184,81 @@
 .kanban-card-client { font-size: .7rem; color: var(--ink4); margin-bottom: 8px; }
 .kanban-card-footer { display: flex; align-items: center; justify-content: space-between; }
 
+/* ── Inline milestone editing ── */
+.milestone-title-input {
+  font-size: .82rem; font-weight: 600; color: var(--ink);
+  background: none; border: none; outline: none;
+  font-family: var(--sans); flex: 1; padding: 0;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color .15s;
+}
+.milestone-title-input:focus { border-bottom-color: var(--accent); }
+.subtask-title-input {
+  font-size: .77rem; color: var(--ink2); flex: 1;
+  background: none; border: none; outline: none;
+  font-family: var(--sans); padding: 0;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color .15s;
+}
+.subtask-title-input:focus { border-bottom-color: var(--accent); }
+.milestone-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.ms-action-btn {
+  width: 22px; height: 22px; border-radius: 5px;
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink4); transition: all .12s; opacity: 0;
+}
+.milestone-item:hover .ms-action-btn,
+.subtask-item:hover .ms-action-btn { opacity: 1; }
+.ms-action-btn:hover { background: var(--bg3); color: var(--red); }
+.ms-action-btn svg { width: 11px; height: 11px; }
+
+/* ── Work submission ── */
+.submission-section { padding: 16px 18px; border-top: 1px solid var(--line2); }
+.submission-title { font-size: .68rem; font-weight: 700; color: var(--ink4); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 12px; }
+.submission-type-tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+.sub-tab { padding: 5px 12px; border-radius: 999px; font-size: .73rem; font-weight: 600; cursor: pointer; border: 1.5px solid var(--line2); background: var(--bg); color: var(--ink3); transition: all .15s; }
+.sub-tab:hover { border-color: var(--line); color: var(--ink2); }
+.sub-tab.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+.sub-input-wrap { display: none; flex-direction: column; gap: 10px; }
+.sub-input-wrap.show { display: flex; }
+.sub-input { width: 100%; height: 40px; background: var(--bg2); border: 1.5px solid var(--line2); border-radius: var(--r); padding: 0 12px; font-size: .83rem; color: var(--ink); font-family: var(--sans); outline: none; transition: border-color .18s; }
+.sub-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,197,94,.08); }
+.sub-textarea { height: auto; padding: 9px 12px; resize: vertical; min-height: 64px; }
+.sub-file-label {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  height: 80px; border: 2px dashed var(--line2); border-radius: var(--r);
+  cursor: pointer; font-size: .8rem; color: var(--ink4);
+  transition: all .18s; font-family: var(--sans);
+}
+.sub-file-label:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+.sub-file-label svg { width: 18px; height: 18px; }
+.sub-file-input { display: none; }
+.sub-file-chosen { font-size: .75rem; color: var(--accent); font-weight: 600; margin-top: -4px; }
+.sub-btn { height: 38px; padding: 0 18px; background: var(--accent); color: #fff; border: none; border-radius: var(--r); font-size: .8rem; font-weight: 700; cursor: pointer; font-family: var(--sans); transition: background .15s; display: flex; align-items: center; gap: 7px; align-self: flex-start; }
+.sub-btn:hover { background: #155c33; }
+.sub-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+/* Submissions list */
+.submissions-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.submission-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px; background: var(--bg2);
+  border: 1px solid var(--line2); border-radius: var(--r);
+}
+.sub-icon { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.sub-icon svg { width: 14px; height: 14px; }
+.sub-icon.link    { background: #dbeafe; color: #2563eb; }
+.sub-icon.file    { background: #fef9c3; color: #854d0e; }
+.sub-icon.video   { background: #fce7f3; color: #9d174d; }
+.sub-icon.note    { background: var(--bg3); color: var(--ink3); }
+.sub-info { flex: 1; min-width: 0; }
+.sub-info-title { font-size: .78rem; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sub-info-meta { font-size: .68rem; color: var(--ink4); margin-top: 2px; }
+.sub-info-note { font-size: .75rem; color: var(--ink3); margin-top: 3px; line-height: 1.4; }
+.sub-open-btn { font-size: .72rem; color: var(--accent); font-weight: 600; text-decoration: none; flex-shrink: 0; padding: 3px 8px; border-radius: 5px; background: var(--accent-bg); transition: background .12s; }
+.sub-open-btn:hover { background: var(--accent-ln); }
+
 /* ── Skeleton ── */
 .skeleton { background: linear-gradient(90deg,var(--bg3) 25%,var(--line2) 50%,var(--bg3) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; }
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
@@ -369,6 +444,66 @@
         </button>
       </div>
       <div class="milestone-list" id="milestone-list"></div>
+    </div>
+
+    <!-- Work submissions -->
+    <div class="submission-section" id="submission-section">
+      <div class="submission-title">Submit work</div>
+      <div class="submission-type-tabs">
+        <div class="sub-tab active" onclick="setSubTab('link',this)">🔗 Link</div>
+        <div class="sub-tab" onclick="setSubTab('file',this)">📄 File / PDF</div>
+        <div class="sub-tab" onclick="setSubTab('video',this)">🎥 Video</div>
+        <div class="sub-tab" onclick="setSubTab('note',this)">📝 Note</div>
+      </div>
+
+      <!-- Link -->
+      <div class="sub-input-wrap show" id="sub-link">
+        <input class="sub-input" type="url" id="sub-link-url" placeholder="https://…">
+        <input class="sub-input" type="text" id="sub-link-title" placeholder="Label (e.g. Figma prototype, Live site…)">
+        <input class="sub-input" type="text" id="sub-link-note" placeholder="Note for client (optional)">
+        <button class="sub-btn" onclick="submitWork('link')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Submit link
+        </button>
+      </div>
+
+      <!-- File -->
+      <div class="sub-input-wrap" id="sub-file">
+        <label class="sub-file-label" for="sub-file-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Click to upload file, PDF or image
+        </label>
+        <input class="sub-file-input" type="file" id="sub-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.zip,.mp4,.mov" onchange="handleFileChosen(this)">
+        <div class="sub-file-chosen" id="sub-file-chosen" style="display:none;"></div>
+        <input class="sub-input" type="text" id="sub-file-note" placeholder="Note for client (optional)">
+        <button class="sub-btn" onclick="submitWork('file')" id="sub-file-btn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload to Drive
+        </button>
+      </div>
+
+      <!-- Video -->
+      <div class="sub-input-wrap" id="sub-video">
+        <input class="sub-input" type="url" id="sub-video-url" placeholder="YouTube, Vimeo, Loom link…">
+        <input class="sub-input" type="text" id="sub-video-title" placeholder="Video title">
+        <input class="sub-input" type="text" id="sub-video-note" placeholder="Note for client (optional)">
+        <button class="sub-btn" onclick="submitWork('video')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          Submit video
+        </button>
+      </div>
+
+      <!-- Note -->
+      <div class="sub-input-wrap" id="sub-note">
+        <textarea class="sub-input sub-textarea" id="sub-note-text" placeholder="Write a note or update for your client…"></textarea>
+        <button class="sub-btn" onclick="submitWork('note')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send note
+        </button>
+      </div>
+
+      <!-- Submissions list -->
+      <div class="submissions-list" id="submissions-list"></div>
     </div>
 
   </div>
@@ -670,36 +805,59 @@ async function changeStatus(status) {
   } catch(e) { ARK.showToast("Connection error.", "error"); }
 }
 
-// ── Milestones ─────────────────────────────────────────────
+// ── Milestones — inline editing, no duplicates ────────────
 function renderMilestones(milestones) {
   const list = document.getElementById("milestone-list");
   if (!milestones.length) {
-    list.innerHTML = `<div style="text-align:center;padding:16px;font-size:.78rem;color:var(--ink4);">No milestones yet. Add your first one.</div>`;
+    list.innerHTML = `<div style="text-align:center;padding:20px 0;font-size:.78rem;color:var(--ink4);">No milestones yet — add your first one above.</div>`;
     return;
   }
+
+  // Preserve open/closed state
+  const openStates = {};
+  list.querySelectorAll(".subtask-list").forEach((el, i) => {
+    openStates[i] = el.style.display !== "none";
+  });
+
   list.innerHTML = milestones.map((m, mi) => {
-    const isDone = m.status === "done";
+    const isDone   = m.status === "done";
     const subtasks = m.subtasks || [];
+    const isOpen   = openStates[mi] || false;
     return `
-    <div class="milestone-item ${isDone ? "done" : ""}" id="ms-${mi}">
-      <div class="milestone-header" onclick="toggleMilestoneOpen(${mi})">
+    <div class="milestone-item ${isDone ? "done" : ""}">
+      <div class="milestone-header" onclick="toggleMilestoneOpen(this)">
         <button class="milestone-check ${isDone ? "done" : ""}" onclick="toggleMilestone(event,${mi})" title="${isDone ? "Mark incomplete" : "Mark done"}">
           <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
         </button>
-        <span class="milestone-title ${isDone ? "done" : ""}">${ARK.escHtml(m.title)}</span>
-        ${m.dueDate ? `<span class="milestone-due">${ARK.fmtDate(m.dueDate)}</span>` : ""}
-        <div class="milestone-chevron" id="mschev-${mi}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        <input class="milestone-title-input ${isDone ? "done" : ""}" value="${ARK.escHtml(m.title)}"
+          onclick="event.stopPropagation()"
+          onchange="editMilestoneTitle(${mi}, this.value)"
+          onblur="editMilestoneTitle(${mi}, this.value)"
+          placeholder="Milestone title">
+        <div class="milestone-actions">
+          <button class="ms-action-btn" onclick="event.stopPropagation();deleteMilestone(${mi})" title="Delete milestone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          </button>
+        </div>
+        <div class="milestone-chevron ${isOpen ? "open" : ""}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
       </div>
-      <div class="subtask-list" id="mssub-${mi}" style="display:none;">
+      <div class="subtask-list" style="display:${isOpen ? "flex" : "none"};flex-direction:column;">
         ${subtasks.map((s, si) => `
           <div class="subtask-item">
             <button class="subtask-check ${s.status === "done" ? "done" : ""}" onclick="toggleSubtask(${mi},${si})">
               <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
-            <span class="subtask-title ${s.status === "done" ? "done" : ""}">${ARK.escHtml(s.title)}</span>
+            <input class="subtask-title-input ${s.status === "done" ? "done" : ""}" value="${ARK.escHtml(s.title)}"
+              onchange="editSubtaskTitle(${mi},${si},this.value)"
+              onblur="editSubtaskTitle(${mi},${si},this.value)"
+              placeholder="Subtask title">
+            <button class="ms-action-btn" style="opacity:0;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0"
+              onclick="deleteSubtask(${mi},${si})" title="Delete">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
           </div>`).join("")}
-        <button onclick="addSubtask(${mi})" style="display:flex;align-items:center;gap:5px;padding:4px 0;font-size:.73rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);margin-top:2px;transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <button onclick="addSubtask(${mi})" style="display:flex;align-items:center;gap:5px;padding:5px 0 2px;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Add subtask
         </button>
       </div>
@@ -707,53 +865,121 @@ function renderMilestones(milestones) {
   }).join("");
 }
 
-function toggleMilestoneOpen(mi) {
-  const sub   = document.getElementById("mssub-" + mi);
-  const chev  = document.getElementById("mschev-" + mi);
+function toggleMilestoneOpen(headerEl) {
+  const sub  = headerEl.parentElement.querySelector(".subtask-list");
+  const chev = headerEl.querySelector(".milestone-chevron");
+  if (!sub) return;
   const isOpen = sub.style.display !== "none";
-  sub.style.display  = isOpen ? "none" : "flex";
+  sub.style.display = isOpen ? "none" : "flex";
   sub.style.flexDirection = "column";
-  chev.classList.toggle("open", !isOpen);
+  chev?.classList.toggle("open", !isOpen);
 }
 
 function toggleMilestone(e, mi) {
   e.stopPropagation();
   if (!selectedProject) return;
-  const milestones = selectedProject.milestones;
-  const m = milestones[mi];
+  const m = selectedProject.milestones[mi];
   m.status = m.status === "done" ? "pending" : "done";
-  if (m.status === "done") m.completedAt = new Date().toISOString();
-  else m.completedAt = "";
+  m.completedAt = m.status === "done" ? new Date().toISOString() : "";
   milestonesDirty = true;
-  renderMilestones(milestones);
+  // Update just this milestone's visual — no full re-render to avoid losing open state
+  const item  = document.getElementById("milestone-list").children[mi];
+  const check = item?.querySelector(".milestone-check");
+  const title = item?.querySelector(".milestone-title-input");
+  if (check) check.classList.toggle("done", m.status === "done");
+  if (title) title.classList.toggle("done", m.status === "done");
+  item?.classList.toggle("done", m.status === "done");
   updateProgressFromMilestones();
+  scheduleSave();
 }
 
 function toggleSubtask(mi, si) {
   if (!selectedProject) return;
   const s = selectedProject.milestones[mi].subtasks[si];
   s.status = s.status === "done" ? "pending" : "done";
-  if (s.status === "done") s.completedAt = new Date().toISOString();
+  s.completedAt = s.status === "done" ? new Date().toISOString() : "";
+  milestonesDirty = true;
+  // Update just this subtask visual
+  const list  = document.getElementById("milestone-list");
+  const msEl  = list?.children[mi];
+  const stEl  = msEl?.querySelectorAll(".subtask-item")[si];
+  const check = stEl?.querySelector(".subtask-check");
+  const title = stEl?.querySelector(".subtask-title-input");
+  if (check) check.classList.toggle("done", s.status === "done");
+  if (title) title.classList.toggle("done", s.status === "done");
+  scheduleSave();
+}
+
+function editMilestoneTitle(mi, val) {
+  if (!selectedProject || !val.trim()) return;
+  selectedProject.milestones[mi].title = val.trim();
+  milestonesDirty = true;
+  scheduleSave();
+}
+
+function editSubtaskTitle(mi, si, val) {
+  if (!selectedProject || !val.trim()) return;
+  selectedProject.milestones[mi].subtasks[si].title = val.trim();
+  milestonesDirty = true;
+  scheduleSave();
+}
+
+function deleteMilestone(mi) {
+  if (!selectedProject) return;
+  selectedProject.milestones.splice(mi, 1);
   milestonesDirty = true;
   renderMilestones(selectedProject.milestones);
+  updateProgressFromMilestones();
+  scheduleSave();
+}
+
+function deleteSubtask(mi, si) {
+  if (!selectedProject) return;
+  selectedProject.milestones[mi].subtasks.splice(si, 1);
+  milestonesDirty = true;
+  renderMilestones(selectedProject.milestones);
+  scheduleSave();
 }
 
 function addMilestone() {
   if (!selectedProject) return;
-  const title = prompt("Milestone title:");
-  if (!title?.trim()) return;
-  selectedProject.milestones.push({ id: "tmp-" + Date.now(), title: title.trim(), status: "pending", subtasks: [], dueDate: "", completedAt: "", order: selectedProject.milestones.length });
+  selectedProject.milestones.push({
+    id: "tmp-" + Date.now(),
+    title: "New milestone",
+    status: "pending", subtasks: [],
+    dueDate: "", completedAt: "",
+    order: selectedProject.milestones.length
+  });
   milestonesDirty = true;
   renderMilestones(selectedProject.milestones);
+  // Auto-focus the new milestone title input
+  const list   = document.getElementById("milestone-list");
+  const lastMs = list.lastElementChild;
+  const input  = lastMs?.querySelector(".milestone-title-input");
+  if (input) { input.focus(); input.select(); }
 }
 
 function addSubtask(mi) {
   if (!selectedProject) return;
-  const title = prompt("Subtask title:");
-  if (!title?.trim()) return;
-  selectedProject.milestones[mi].subtasks.push({ id: "tmp-" + Date.now(), title: title.trim(), status: "pending", completedAt: "" });
+  selectedProject.milestones[mi].subtasks.push({
+    id: "tmp-" + Date.now(),
+    title: "New subtask",
+    status: "pending", completedAt: ""
+  });
   milestonesDirty = true;
   renderMilestones(selectedProject.milestones);
+  // Auto-focus
+  const list  = document.getElementById("milestone-list");
+  const msEl  = list?.children[mi];
+  const sub   = msEl?.querySelector(".subtask-list");
+  if (sub) {
+    sub.style.display = "flex";
+    sub.style.flexDirection = "column";
+    msEl.querySelector(".milestone-chevron")?.classList.add("open");
+    const inputs = sub.querySelectorAll(".subtask-title-input");
+    const last   = inputs[inputs.length - 1];
+    if (last) { last.focus(); last.select(); }
+  }
 }
 
 function updateProgressFromMilestones() {
@@ -770,6 +996,13 @@ function updateProgressFromMilestones() {
   renderProjects();
 }
 
+// ── Debounced auto-save ────────────────────────────────────
+let _saveTimer = null;
+function scheduleSave() {
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(saveMilestones, 1500);
+}
+
 async function saveMilestones() {
   if (!selectedProject || !milestonesDirty) return;
   milestonesDirty = false;
@@ -783,10 +1016,9 @@ async function saveMilestones() {
       if (idx > -1) allProjects[idx].progress = res.progress;
       renderProjects();
     }
-  } catch(e) {}
+  } catch(e) { milestonesDirty = true; } // retry on next action
 }
 
-// ── Save milestones on close / tab change ──────────────────
 window.addEventListener("beforeunload", () => { if (milestonesDirty) saveMilestones(); });
 
 // ── Edit project ───────────────────────────────────────────
@@ -909,6 +1141,130 @@ function badgeHtml(status) {
 }
 
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
+
+// ── Work submission ────────────────────────────────────────
+let currentSubTab = "link";
+let chosenFile    = null;
+
+function setSubTab(tab, el) {
+  currentSubTab = tab;
+  document.querySelectorAll(".sub-tab").forEach(t => t.classList.remove("active"));
+  el.classList.add("active");
+  ["link","file","video","note"].forEach(t => {
+    document.getElementById("sub-" + t).classList.toggle("show", t === tab);
+  });
+}
+
+function handleFileChosen(input) {
+  chosenFile = input.files[0];
+  const label = document.getElementById("sub-file-chosen");
+  if (chosenFile) {
+    label.textContent = chosenFile.name + " (" + (chosenFile.size / 1024 / 1024).toFixed(2) + " MB)";
+    label.style.display = "block";
+  }
+}
+
+async function submitWork(type) {
+  if (!selectedProject) return;
+
+  let submission = { type, projectId: selectedProject.id, clientId: selectedProject.clientId, timestamp: new Date().toISOString() };
+
+  if (type === "link") {
+    const url   = document.getElementById("sub-link-url").value.trim();
+    const title = document.getElementById("sub-link-title").value.trim();
+    const note  = document.getElementById("sub-link-note").value.trim();
+    if (!url) { ARK.showToast("Please enter a URL", "warn"); return; }
+    submission = { ...submission, url, title: title || url, note };
+  } else if (type === "file") {
+    if (!chosenFile) { ARK.showToast("Please choose a file first", "warn"); return; }
+    const note = document.getElementById("sub-file-note").value.trim();
+    // For now store as a data URL — in production this would upload to Google Drive
+    const reader = new FileReader();
+    const dataUrl = await new Promise(resolve => { reader.onload = e => resolve(e.target.result); reader.readAsDataURL(chosenFile); });
+    submission = { ...submission, title: chosenFile.name, note, fileSize: chosenFile.size, fileType: chosenFile.type, url: dataUrl };
+  } else if (type === "video") {
+    const url   = document.getElementById("sub-video-url").value.trim();
+    const title = document.getElementById("sub-video-title").value.trim();
+    const note  = document.getElementById("sub-video-note").value.trim();
+    if (!url) { ARK.showToast("Please enter a video URL", "warn"); return; }
+    submission = { ...submission, url, title: title || url, note };
+  } else if (type === "note") {
+    const text = document.getElementById("sub-note-text").value.trim();
+    if (!text) { ARK.showToast("Please write a note first", "warn"); return; }
+    submission = { ...submission, title: text.slice(0, 60) + (text.length > 60 ? "…" : ""), note: text };
+  }
+
+  // Store in Documents tab via API
+  const btn = document.querySelector(`#sub-${type} .sub-btn`);
+  if (btn) { btn.disabled = true; btn.textContent = "Submitting…"; }
+
+  try {
+    const res = await ARK.api({
+      action:     "submit_work",
+      token:      ARK.getToken(),
+      projectId:  selectedProject.id,
+      clientId:   selectedProject.clientId,
+      type:       submission.type,
+      title:      submission.title || "",
+      note:       submission.note  || "",
+      url:        submission.url   || "",
+      fileType:   submission.fileType || "",
+      timestamp:  submission.timestamp
+    });
+
+    if (res.success) {
+      ARK.showToast("Work submitted!", "success");
+      clearSubForm(type);
+      // Add to local submissions list
+      if (!selectedProject.submissions) selectedProject.submissions = [];
+      selectedProject.submissions.unshift(submission);
+      renderSubmissions(selectedProject.submissions);
+    } else {
+      ARK.showToast(res.error || "Failed to submit", "error");
+    }
+  } catch(e) {
+    ARK.showToast("Connection error.", "error");
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = type === "link" ? "Submit link" : type === "file" ? "Upload to Drive" : type === "video" ? "Submit video" : "Send note"; }
+  }
+}
+
+function clearSubForm(type) {
+  if (type === "link")  { document.getElementById("sub-link-url").value = ""; document.getElementById("sub-link-title").value = ""; document.getElementById("sub-link-note").value = ""; }
+  if (type === "file")  { document.getElementById("sub-file-input").value = ""; document.getElementById("sub-file-note").value = ""; document.getElementById("sub-file-chosen").style.display = "none"; chosenFile = null; }
+  if (type === "video") { document.getElementById("sub-video-url").value = ""; document.getElementById("sub-video-title").value = ""; document.getElementById("sub-video-note").value = ""; }
+  if (type === "note")  { document.getElementById("sub-note-text").value = ""; }
+}
+
+function renderSubmissions(submissions) {
+  const list = document.getElementById("submissions-list");
+  if (!submissions?.length) { list.innerHTML = ""; return; }
+  const icons = {
+    link:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>`,
+    file:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>`,
+    video: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>`,
+    note:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>`
+  };
+  list.innerHTML = submissions.slice(0, 10).map(s => `
+    <div class="submission-item">
+      <div class="sub-icon ${s.type}">${icons[s.type] || icons.link}</div>
+      <div class="sub-info">
+        <div class="sub-info-title">${ARK.escHtml(s.title || "Untitled")}</div>
+        <div class="sub-info-meta">${s.type} · ${ARK.timeAgo(s.timestamp)}</div>
+        ${s.note && s.type === "note" ? `<div class="sub-info-note">${ARK.escHtml(s.note)}</div>` : ""}
+      </div>
+      ${s.url && s.type !== "note" ? `<a href="${ARK.escHtml(s.url)}" target="_blank" rel="noopener" class="sub-open-btn">Open →</a>` : ""}
+    </div>`).join("");
+}
+
+// Load submissions when opening detail panel
+const _origOpenDetail = openDetail;
+openDetail = function(id) {
+  _origOpenDetail(id);
+  if (selectedProject) {
+    renderSubmissions(selectedProject.submissions || []);
+  }
+};
 </script>
 </body>
 </html>
