@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Portal — ArkDez</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#0d0d0d;--ink2:#3d3d3d;--ink3:#737373;--ink4:#a3a3a3;
+  --line:#e5e5e5;--line2:#f0f0f0;--bg:#fff;--bg2:#fafafa;--bg3:#f5f5f5;
+  --accent:#1a6b3c;--accent2:#22c55e;--accent-bg:#f0fdf4;--accent-ln:#bbf7d0;
+  --red:#dc2626;--amber:#d97706;--blue:#2563eb;
+  --serif:'Instrument Serif',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
+  --r:10px;--r-lg:14px;--topbar-h:60px;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --sh:0 1px 3px rgba(0,0,0,.06);--sh-md:0 4px 16px rgba(0,0,0,.07);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100svh;}
+
+/* ── Auth gate ── */
+#auth-gate{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;transition:opacity .4s var(--ease),visibility .4s;}
+#auth-gate.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.gate-logo{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.2rem;color:#fff;box-shadow:0 4px 16px rgba(34,197,94,.3);animation:gatePulse 1.5s ease infinite;}
+@keyframes gatePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.gate-text{font-size:.78rem;color:var(--ink4);letter-spacing:.05em;}
+
+/* ── Layout ── */
+#app{opacity:0;transform:translateY(6px);transition:opacity .5s var(--ease),transform .5s var(--ease);min-height:100svh;}
+#app.ready{opacity:1;transform:none;}
+
+/* ── Topbar ── */
+#topbar{height:var(--topbar-h);background:var(--bg);border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:100;}
+.topbar-brand{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.topbar-brand-mark{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:.8rem;color:#fff;}
+.topbar-brand-name{font-size:.88rem;font-weight:700;color:var(--ink);}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.topbar-greeting{font-size:.82rem;color:var(--ink3);}
+.topbar-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:#fff;cursor:pointer;background:linear-gradient(135deg,#0a1a0f,#22c55e);position:relative;}
+.topbar-menu{position:absolute;top:42px;right:0;background:var(--bg);border:1px solid var(--line2);border-radius:var(--r-lg);box-shadow:var(--sh-md);min-width:180px;z-index:50;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .18s var(--ease),transform .18s var(--ease);}
+.topbar-menu.open{opacity:1;pointer-events:all;transform:translateY(0);}
+.topbar-menu-item{display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:.8rem;color:var(--ink2);cursor:pointer;transition:background .12s;}
+.topbar-menu-item:hover{background:var(--bg2);}
+.topbar-menu-item.danger{color:var(--red);}
+.topbar-menu-item.danger:hover{background:#fef2f2;}
+.topbar-menu-item svg{width:13px;height:13px;flex-shrink:0;}
+.menu-divider{height:1px;background:var(--line2);}
+
+/* ── Content ── */
+#content{max-width:900px;margin:0 auto;padding:28px 24px;}
+
+/* ── Freelancer filter tabs ── */
+.freelancer-tabs{display:flex;align-items:center;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
+.freelancer-tab{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .18s;border:1.5px solid var(--line2);background:var(--bg);color:var(--ink3);}
+.freelancer-tab:hover{border-color:var(--line);color:var(--ink2);}
+.freelancer-tab.active{background:var(--accent-bg);border-color:var(--accent-ln);color:var(--accent);}
+.freelancer-tab-av{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:#fff;flex-shrink:0;}
+
+/* ── Section headers ── */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.section-title{font-size:.76rem;font-weight:700;color:var(--ink4);letter-spacing:.08em;text-transform:uppercase;}
+.section-count{font-size:.72rem;color:var(--ink4);background:var(--bg3);padding:2px 8px;border-radius:999px;}
+
+/* ── Project cards ── */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:32px;}
+.project-card{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);padding:16px 18px;cursor:pointer;transition:all .2s var(--ease);animation:cardIn .3s var(--ease) both;}
+.project-card:hover{border-color:var(--accent-ln);box-shadow:var(--sh-md);transform:translateY(-2px);}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.project-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+.project-card-title{font-size:.88rem;font-weight:700;color:var(--ink);line-height:1.3;flex:1;margin-right:8px;}
+.project-card-freelancer{font-size:.7rem;color:var(--ink4);margin-bottom:10px;display:flex;align-items:center;gap:5px;}
+.project-card-freelancer svg{width:11px;height:11px;flex-shrink:0;}
+.progress-bar{height:4px;background:var(--line2);border-radius:2px;overflow:hidden;margin-bottom:10px;}
+.progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s var(--ease);}
+.project-card-meta{display:flex;align-items:center;justify-content:space-between;}
+.project-card-due{font-size:.68rem;color:var(--ink4);}
+.project-card-due.overdue{color:var(--red);}
+
+/* ── Badge ── */
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:.65rem;font-weight:700;padding:3px 7px;border-radius:999px;letter-spacing:.02em;text-transform:capitalize;flex-shrink:0;}
+.badge-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0;}
+.badge-active{background:#dcfce7;color:#166534;}.badge-active .badge-dot{background:#16a34a;}
+.badge-draft{background:var(--bg3);color:var(--ink3);}.badge-draft .badge-dot{background:var(--ink4);}
+.badge-paused{background:#f3f4f6;color:#374151;}.badge-paused .badge-dot{background:#9ca3af;}
+.badge-completed{background:#dbeafe;color:#1e40af;}.badge-completed .badge-dot{background:var(--blue);}
+.badge-cancelled{background:#fee2e2;color:#991b1b;}
+.badge-pending{background:#fef9c3;color:#854d0e;}.badge-pending .badge-dot{background:#ca8a04;}
+.badge-paid{background:#dcfce7;color:#166534;}.badge-paid .badge-dot{background:#16a34a;}
+.badge-overdue{background:#fee2e2;color:#991b1b;}.badge-overdue .badge-dot{background:var(--red);}
+
+/* ── Messages ── */
+.messages-panel{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);overflow:hidden;margin-bottom:32px;}
+.messages-panel-header{padding:14px 18px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;}
+.messages-panel-title{font-size:.84rem;font-weight:700;color:var(--ink);}
+.messages-list{max-height:320px;overflow-y:auto;}
+.message-item{display:flex;gap:10px;padding:12px 18px;border-bottom:1px solid var(--line2);transition:background .12s;}
+.message-item:last-child{border-bottom:none;}
+.message-item:hover{background:var(--bg2);}
+.message-item.unread{background:var(--accent-bg);}
+.message-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff;flex-shrink:0;background:linear-gradient(135deg,#0a1a0f,#22c55e);}
+.message-body{flex:1;min-width:0;}
+.message-sender{font-size:.78rem;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:6px;}
+.message-time{font-size:.65rem;color:var(--ink4);font-weight:400;}
+.message-text{font-size:.76rem;color:var(--ink3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.message-project{font-size:.65rem;color:var(--accent);background:var(--accent-bg);padding:1px 6px;border-radius:4px;font-weight:600;}
+
+/* ── Invoices ── */
+.invoice-row{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line2);transition:background .12s;}
+.invoice-row:last-child{border-bottom:none;}
+.invoice-row:hover{background:var(--bg2);}
+.invoice-info{flex:1;min-width:0;}
+.invoice-title{font-size:.82rem;font-weight:600;color:var(--ink);}
+.invoice-sub{font-size:.7rem;color:var(--ink4);margin-top:1px;}
+.invoice-amount{font-size:.88rem;font-weight:700;color:var(--ink);flex-shrink:0;}
+
+/* ── Empty state ── */
+.empty{display:flex;flex-direction:column;align-items:center;padding:40px 20px;text-align:center;}
+.empty svg{width:32px;height:32px;color:var(--line);margin-bottom:10px;}
+.empty p{font-size:.8rem;color:var(--ink4);line-height:1.55;}
+
+/* ── Message composer ── */
+.compose-bar{padding:12px 18px;border-top:1px solid var(--line2);display:flex;gap:8px;}
+.compose-input{flex:1;height:38px;background:var(--bg2);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 12px;font-size:.83rem;color:var(--ink);font-family:var(--sans);outline:none;transition:border-color .18s;}
+.compose-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(34,197,94,.08);}
+.compose-select{height:38px;background:var(--bg2);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink3);font-family:var(--sans);outline:none;cursor:pointer;}
+.compose-btn{height:38px;padding:0 16px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.8rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:background .15s;flex-shrink:0;}
+.compose-btn:hover{background:#155c33;}
+.compose-btn:disabled{opacity:.6;cursor:not-allowed;}
+
+/* ── Toast ── */
+#toast-container{position:fixed;bottom:20px;right:20px;z-index:9000;display:flex;flex-direction:column;gap:8px;}
+.toast{background:var(--ink);color:#fff;padding:10px 16px;border-radius:9px;font-size:.8rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.15);display:flex;align-items:center;gap:8px;max-width:300px;animation:toastIn .3s var(--ease) both;transition:opacity .3s,transform .3s;}
+.toast.out{opacity:0;transform:translateX(16px);}
+.toast.success{background:var(--accent);}
+.toast.error{background:var(--red);}
+.toast.warn{background:var(--amber);}
+@keyframes toastIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+
+@media(max-width:600px){
+  #content{padding:20px 14px;}
+  .projects-grid{grid-template-columns:1fr;}
+  .compose-bar{flex-direction:column;}
+  .compose-select{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<div id="auth-gate">
+  <div class="gate-logo">A</div>
+  <span class="gate-text">Loading your portal…</span>
+</div>
+
+<div id="app">
+  <header id="topbar">
+    <a href="/" class="topbar-brand">
+      <div class="topbar-brand-mark">A</div>
+      <span class="topbar-brand-name">ArkDez</span>
+    </a>
+    <div class="topbar-right">
+      <span class="topbar-greeting" id="topbar-greeting">Hi there</span>
+      <div style="position:relative;">
+        <div class="topbar-av" id="topbar-av" onclick="toggleMenu()">R</div>
+        <div class="topbar-menu" id="topbar-menu">
+          <div class="topbar-menu-item" style="padding:12px 14px 8px;">
+            <div style="font-size:.78rem;font-weight:700;color:var(--ink);" id="menu-name">Loading…</div>
+            <div style="font-size:.7rem;color:var(--ink4);margin-top:2px;" id="menu-email">…</div>
+          </div>
+          <div class="menu-divider"></div>
+          <div class="topbar-menu-item danger" onclick="logout()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign out
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="content">
+    <!-- Loading state -->
+    <div id="loading-state" style="padding:60px 0;text-align:center;color:var(--ink4);font-size:.84rem;">
+      <div style="margin-bottom:8px;">Loading your workspace…</div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" style="display:none;">
+
+      <!-- Freelancer filter tabs -->
+      <div class="freelancer-tabs" id="freelancer-tabs"></div>
+
+      <!-- Projects -->
+      <div class="section-header">
+        <span class="section-title">Projects</span>
+        <span class="section-count" id="projects-count">0</span>
+      </div>
+      <div class="projects-grid" id="projects-grid">
+        <div class="empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+          <p>No projects yet.</p>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="section-header">
+        <span class="section-title">Messages</span>
+        <span class="section-count" id="messages-count">0</span>
+      </div>
+      <div class="messages-panel">
+        <div class="messages-list" id="messages-list">
+          <div class="empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            <p>No messages yet.</p>
+          </div>
+        </div>
+        <div class="compose-bar">
+          <select class="compose-select" id="compose-freelancer" title="Send to">
+            <option value="">Select freelancer…</option>
+          </select>
+          <input class="compose-input" type="text" id="compose-input" placeholder="Send a message…" onkeydown="if(event.key==='Enter')sendMessage()">
+          <button class="compose-btn" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+
+      <!-- Invoices -->
+      <div class="section-header">
+        <span class="section-title">Invoices</span>
+        <span class="section-count" id="invoices-count">0</span>
+      </div>
+      <div class="messages-panel" style="margin-bottom:0;">
+        <div id="invoices-list">
+          <div class="empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+            <p>No invoices yet.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div id="toast-container"></div>
+
+<script>
+const API_KEY = "d29bb7407783daa176e5f6cf8dfc6677940df38fda145b06";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsjcZmIhwJF5DslXrFTPZJENckjKB_3re9qK73dewpLCCUNBcEi4-_iHBr6UvhVCSQpA/exec";
+const LOGIN_URL = "/client/login.html";
+
+let dashData       = null;
+let currentAccount = null;
+let activeFilter   = "all";
+
+async function api(payload) {
+  const body = new Blob([JSON.stringify({ ...payload, apiKey: API_KEY })], { type: "text/plain" });
+  const res  = await fetch(SCRIPT_URL, { method: "POST", body });
+  return res.json();
+}
+
+function getToken() {
+  return localStorage.getItem("ark_client_token") || sessionStorage.getItem("ark_client_token");
+}
+
+function showToast(msg, type = "") {
+  const container = document.getElementById("toast-container");
+  const el = document.createElement("div");
+  el.className = "toast " + type;
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(() => { el.classList.add("out"); setTimeout(() => el.remove(), 300); }, 3500);
+}
+
+// ── Auth ──
+async function boot() {
+  const token = getToken();
+  if (!token) return window.location.href = LOGIN_URL;
+
+  try {
+    const res = await api({ action: "client_validate_token", token });
+    if (!res.success) return window.location.href = LOGIN_URL;
+    currentAccount = res.account;
+    setupHeader();
+    await loadDashboard();
+  } catch(e) {
+    // Offline fallback
+    const stored = localStorage.getItem("ark_client") || sessionStorage.getItem("ark_client");
+    if (stored) { try { currentAccount = JSON.parse(stored); setupHeader(); } catch(e2){} }
+    showToast("Connection issue. Some data may be outdated.", "warn");
+    document.getElementById("auth-gate").classList.add("hidden");
+    document.getElementById("app").classList.add("ready");
+  }
+}
+
+function setupHeader() {
+  const { firstName, lastName, email } = currentAccount;
+  const initials = ((firstName||"?")[0] + (lastName||"")[0]).toUpperCase();
+  const h = new Date().getHours();
+  const g = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+  document.getElementById("topbar-greeting").textContent = g + ", " + firstName;
+  document.getElementById("topbar-av").textContent = initials;
+  document.getElementById("menu-name").textContent  = firstName + " " + lastName;
+  document.getElementById("menu-email").textContent = email;
+}
+
+async function loadDashboard() {
+  const token = getToken();
+  try {
+    const res = await api({ action: "get_client_dashboard", token });
+    if (!res.success) { showToast(res.error || "Failed to load dashboard", "error"); return; }
+    dashData = res;
+    renderDashboard();
+  } catch(e) {
+    showToast("Failed to load data. Please refresh.", "error");
+  } finally {
+    document.getElementById("auth-gate").classList.add("hidden");
+    document.getElementById("app").classList.add("ready");
+    document.getElementById("loading-state").style.display = "none";
+    document.getElementById("dashboard").style.display = "";
+  }
+}
+
+function renderDashboard() {
+  renderFreelancerTabs();
+  renderProjects();
+  renderMessages();
+  renderInvoices();
+  populateComposer();
+}
+
+// ── Freelancer tabs ──
+function renderFreelancerTabs() {
+  const tabs = document.getElementById("freelancer-tabs");
+  if (!dashData.freelancers?.length) { tabs.style.display = "none"; return; }
+
+  const colors = ["linear-gradient(135deg,#0a1a0f,#22c55e)","linear-gradient(135deg,#1e3a5f,#3b82f6)","linear-gradient(135deg,#4a0f2e,#ec4899)","linear-gradient(135deg,#2d1b00,#f59e0b)"];
+  let html = `<div class="freelancer-tab active" onclick="setFilter('all',this)">All</div>`;
+  dashData.freelancers.forEach((f, i) => {
+    const init = f.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0,2);
+    html += `<div class="freelancer-tab" onclick="setFilter('${f.id}',this)">
+      <div class="freelancer-tab-av" style="background:${colors[i%colors.length]}">${init}</div>
+      ${escHtml(f.workspaceName || f.name)}
+    </div>`;
+  });
+  tabs.innerHTML = html;
+}
+
+function setFilter(id, el) {
+  activeFilter = id;
+  document.querySelectorAll(".freelancer-tab").forEach(t => t.classList.remove("active"));
+  el.classList.add("active");
+  renderProjects();
+  renderMessages();
+}
+
+// ── Projects ──
+function renderProjects() {
+  const grid = document.getElementById("projects-grid");
+  let projects = dashData.projects || [];
+  if (activeFilter !== "all") {
+    projects = projects.filter(p => p.freelancerId === activeFilter);
+  }
+  document.getElementById("projects-count").textContent = projects.length;
+  if (!projects.length) {
+    grid.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg><p>No projects yet.</p></div>`;
+    return;
+  }
+  grid.innerHTML = projects.map((p, i) => {
+    const due    = p.dueDate ? new Date(p.dueDate) : null;
+    const isOver = due && due < new Date() && p.status !== "completed";
+    const dueStr = due ? due.toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "No due date";
+    return `
+    <div class="project-card" style="animation-delay:${i*40}ms">
+      <div class="project-card-header">
+        <div class="project-card-title">${escHtml(p.title)}</div>
+        ${badge(p.status)}
+      </div>
+      <div class="project-card-freelancer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        ${escHtml(p.freelancerName)} · ${escHtml(p.workspaceName)}
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${p.progress||0}%"></div></div>
+      <div class="project-card-meta">
+        <span class="project-card-due ${isOver?'overdue':''}">${isOver?'Overdue · ':'Due '}${dueStr}</span>
+        <span style="font-size:.7rem;color:var(--ink4);">${p.progress||0}% done</span>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// ── Messages ──
+function renderMessages() {
+  const list = document.getElementById("messages-list");
+  let msgs = dashData.messages || [];
+  if (activeFilter !== "all") {
+    const freelancer = dashData.freelancers?.find(f => f.id === activeFilter);
+    if (freelancer) msgs = msgs.filter(m => m.clientId === freelancer.clientId);
+  }
+  document.getElementById("messages-count").textContent = msgs.length;
+  if (!msgs.length) {
+    list.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><p>No messages yet.</p></div>`;
+    return;
+  }
+  list.innerHTML = msgs.slice(0, 20).map(m => {
+    const init = (m.senderName||"?")[0].toUpperCase();
+    const time = timeAgo(m.createdAt);
+    return `<div class="message-item ${m.read?'':'unread'}">
+      <div class="message-av">${init}</div>
+      <div class="message-body">
+        <div class="message-sender">${escHtml(m.senderName||"Unknown")} <span class="message-time">${time}</span></div>
+        <div class="message-text">${escHtml(m.body||"")}</div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// ── Invoices ──
+function renderInvoices() {
+  const list = document.getElementById("invoices-list");
+  const invs = dashData.invoices || [];
+  document.getElementById("invoices-count").textContent = invs.length;
+  if (!invs.length) {
+    list.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg><p>No invoices yet.</p></div>`;
+    return;
+  }
+  list.innerHTML = invs.map(i => {
+    const amt = new Intl.NumberFormat(undefined,{style:"currency",currency:i.currency||"USD"}).format(i.total||0);
+    return `<div class="invoice-row">
+      <div class="invoice-info">
+        <div class="invoice-title">${escHtml(i.title||"Invoice")}</div>
+        <div class="invoice-sub">${i.invoiceNumber ? "#"+escHtml(i.invoiceNumber)+" · " : ""}${i.dueDate ? "Due "+new Date(i.dueDate).toLocaleDateString(undefined,{month:"short",day:"numeric"}) : ""}</div>
+      </div>
+      ${badge(i.status)}
+      <div class="invoice-amount">${amt}</div>
+    </div>`;
+  }).join("");
+}
+
+// ── Composer ──
+function populateComposer() {
+  const sel = document.getElementById("compose-freelancer");
+  sel.innerHTML = '<option value="">Select freelancer…</option>';
+  (dashData.freelancers||[]).forEach(f => {
+    sel.innerHTML += `<option value="${f.clientId}">${escHtml(f.name)} (${escHtml(f.workspaceName)})</option>`;
+  });
+}
+
+async function sendMessage() {
+  const input    = document.getElementById("compose-input");
+  const sel      = document.getElementById("compose-freelancer");
+  const body     = input.value.trim();
+  const clientId = sel.value;
+  if (!body)     { showToast("Type a message first", "warn"); return; }
+  if (!clientId) { showToast("Select a freelancer to message", "warn"); return; }
+
+  const btn = document.querySelector(".compose-btn");
+  btn.disabled = true; btn.textContent = "Sending…";
+
+  try {
+    const token = getToken();
+    const res = await api({ action: "send_client_message", token, clientId, body, channel: "general" });
+    if (res.success) {
+      input.value = "";
+      showToast("Message sent!", "success");
+      await loadDashboard(); // refresh messages
+    } else {
+      showToast(res.error || "Failed to send", "error");
+    }
+  } catch(e) {
+    showToast("Connection error.", "error");
+  } finally {
+    btn.disabled = false; btn.textContent = "Send";
+  }
+}
+
+// ── User menu ──
+let menuOpen = false;
+function toggleMenu() {
+  menuOpen = !menuOpen;
+  document.getElementById("topbar-menu").classList.toggle("open", menuOpen);
+}
+document.addEventListener("click", e => {
+  if (!e.target.closest("#topbar-av") && !e.target.closest("#topbar-menu")) {
+    menuOpen = false;
+    document.getElementById("topbar-menu").classList.remove("open");
+  }
+});
+
+// ── Logout ──
+async function logout() {
+  const token = getToken();
+  localStorage.removeItem("ark_client_token"); localStorage.removeItem("ark_client");
+  sessionStorage.removeItem("ark_client_token"); sessionStorage.removeItem("ark_client");
+  try { await api({ action: "client_logout", token }); } catch(e){}
+  showToast("Signed out.", "success");
+  setTimeout(() => { window.location.href = LOGIN_URL; }, 800);
+}
+
+// ── Helpers ──
+function escHtml(str) { return String(str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function badge(status) {
+  const map = {active:"badge-active",draft:"badge-draft",paused:"badge-paused",completed:"badge-completed",cancelled:"badge-cancelled",paid:"badge-paid",overdue:"badge-overdue",pending:"badge-pending",sent:"badge-pending",viewed:"badge-pending"};
+  const cls = map[status]||"badge-draft";
+  return `<span class="badge ${cls}"><span class="badge-dot"></span>${escHtml(status)}</span>`;
+}
+
+function timeAgo(iso) {
+  if (!iso) return "";
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff/60000);
+  if (m < 1) return "Just now";
+  if (m < 60) return m + "m ago";
+  const h = Math.floor(m/60);
+  if (h < 24) return h + "h ago";
+  return Math.floor(h/24) + "d ago";
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") { menuOpen = false; document.getElementById("topbar-menu").classList.remove("open"); }
+});
+
+boot();
+</script>
+</body>
+</html>
