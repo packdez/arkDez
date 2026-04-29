@@ -251,7 +251,7 @@
     </div>
     <div class="sidebar-nav">
       <div class="nav-section-label">Workspace</div>
-      <a class="nav-item" href="dashboard" data-page="dashboard">
+      <a class="nav-item" href="dashboard.html" data-page="dashboard">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Dashboard
       </a>
@@ -408,6 +408,7 @@
                 <span id="detail-since">—</span>
               </div>
 
+              <div id="detail-invite-status" style="margin-bottom:12px;"></div>
               <div class="detail-section-title">Client portal</div>
               <div class="detail-portal-box">
                 <div class="detail-portal-url" id="detail-portal-url">—</div>
@@ -437,9 +438,9 @@
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                   Edit
                 </button>
-                <button class="btn-primary" onclick="openClientPortal()">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                  Open portal
+                <button class="btn-primary" id="detail-invite-btn" onclick="inviteClient(selectedClient?.id)">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.79 19.79 19.79 0 01.01 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+                  Invite
                 </button>
               </div>
             </div>
@@ -639,6 +640,10 @@ function buildCard(c, i) {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           Edit
         </div>
+        <div class="dropdown-item" onclick="inviteClient('${c.id}');event.stopPropagation()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.79 19.79 19.79 0 01.01 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+          Send invite
+        </div>
         <div class="dropdown-item" onclick="copyPortalLinkById('${c.portalToken}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
           Copy portal link
@@ -663,8 +668,13 @@ function buildCard(c, i) {
         <div class="client-stat-lbl">Outstanding</div>
       </div>
       <div class="client-stat">
-        <div>${ARK.badge(c.status)}</div>
-        <div class="client-stat-lbl">Status</div>
+        <div>${c.inviteStatus === "accepted"
+          ? '<span class="badge badge-active"><span class="badge-dot"></span>Portal active</span>'
+          : c.inviteStatus === "pending"
+          ? '<span class="badge badge-pending"><span class="badge-dot"></span>Invite pending</span>'
+          : '<span class="badge badge-draft"><span class="badge-dot"></span>Not invited</span>'
+        }</div>
+        <div class="client-stat-lbl">Portal</div>
       </div>
     </div>
     <div class="client-card-portal" onclick="copyPortalLinkById('${c.portalToken}');event.stopPropagation();">
@@ -702,6 +712,19 @@ function selectClient(id) {
     document.getElementById("detail-notes").textContent = c.notes;
   } else {
     notesWrap.style.display = "none";
+  }
+
+  // Invite status
+  const inviteEl = document.getElementById("detail-invite-status");
+  if (c.inviteStatus === "accepted") {
+    inviteEl.innerHTML = '<div style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:var(--accent-bg);border:1px solid var(--accent-ln);border-radius:8px;font-size:.74rem;color:var(--accent);font-weight:600;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Portal active — client has signed up</div>';
+    document.getElementById("detail-invite-btn").textContent = "Re-invite";
+  } else if (c.inviteStatus === "pending") {
+    inviteEl.innerHTML = '<div style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:#fef9c3;border:1px solid #fde68a;border-radius:8px;font-size:.74rem;color:#92400e;font-weight:600;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Invite sent — waiting for client to sign up</div>';
+    document.getElementById("detail-invite-btn").innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.79 19.79 19.79 0 01.01 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>Resend invite';
+  } else {
+    inviteEl.innerHTML = '';
+    document.getElementById("detail-invite-btn").innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.79 19.79 19.79 0 01.01 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>Invite';
   }
 
   document.getElementById("client-detail").classList.add("open");
@@ -908,6 +931,92 @@ function confirmAction(msg) {
   });
 }
 
+// ── Invite client ──────────────────────────────────────────
+async function inviteClient(id) {
+  if (!id) return;
+  closeCardMenu();
+  const c = allClients.find(x => x.id === id);
+  if (!c) return;
+
+  const btn = document.getElementById("detail-invite-btn");
+  if (btn) { btn.disabled = true; btn.textContent = "Generating…"; }
+
+  try {
+    const token = ARK.getToken();
+    const res = await ARK.api({ action: "generate_invite", token, clientId: id });
+    if (!res.success) { ARK.showToast(res.error || "Failed to generate invite", "error"); return; }
+
+    // Update local state
+    const idx = allClients.findIndex(x => x.id === id);
+    if (idx > -1) {
+      allClients[idx].inviteStatus = "pending";
+      allClients[idx].inviteToken  = res.inviteToken;
+      allClients[idx].inviteCode   = res.inviteCode;
+    }
+    renderClients();
+    if (selectedClient?.id === id) selectClient(id);
+
+    // Show invite modal
+    showInviteModal(c.name, res.inviteLink, res.inviteCode);
+  } catch(e) {
+    ARK.showToast("Connection error.", "error");
+  } finally {
+    if (btn) { btn.disabled = false; }
+  }
+}
+
+function showInviteModal(clientName, inviteLink, inviteCode) {
+  const fullLink = window.location.origin + inviteLink;
+  let modal = document.getElementById("modal-invite");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "modal-invite";
+    modal.className = "modal-overlay";
+    modal.onclick = function(e) { if (e.target === modal) ARK.closeModal("modal-invite"); };
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML = `
+    <div class="modal" style="max-width:440px;">
+      <div class="modal-header">
+        <h2 class="modal-title">Invite ${ARK.escHtml(clientName)}</h2>
+        <button class="modal-close" onclick="ARK.closeModal('modal-invite')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:.82rem;color:var(--ink3);line-height:1.6;margin-bottom:4px;">Share the invite link or short code. Both expire in 7 days.</p>
+        <div class="field">
+          <label class="field-label">Invite link</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input class="field-input" type="text" value="${ARK.escHtml(fullLink)}" readonly style="font-size:.72rem;color:var(--ink3);">
+            <button class="btn-secondary" style="flex-shrink:0;height:42px;" onclick="copyText('${ARK.escHtml(fullLink)}','Link copied!')">Copy</button>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Short invite code</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div style="flex:1;height:42px;background:var(--accent-bg);border:1.5px solid var(--accent-ln);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:800;color:var(--accent);letter-spacing:.15em;">${ARK.escHtml(inviteCode)}</div>
+            <button class="btn-secondary" style="flex-shrink:0;height:42px;" onclick="copyText('${ARK.escHtml(inviteCode)}','Code copied!')">Copy</button>
+          </div>
+        </div>
+        <div style="background:var(--bg2);border-radius:var(--r);padding:12px 14px;font-size:.76rem;color:var(--ink3);line-height:1.6;">
+          <strong style="color:var(--ink2);">How it works:</strong> Your client opens the invite link or goes to
+          <strong style="color:var(--ink2);">app.packdez.com/client/signup.html</strong> and enters the code.
+          They create their account and can log in anytime.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary" onclick="ARK.closeModal('modal-invite')" style="width:100%;justify-content:center;">Done</button>
+      </div>
+    </div>`;
+  ARK.openModal("modal-invite");
+}
+
+function copyText(text, msg) {
+  navigator.clipboard.writeText(text).then(() => {
+    ARK.showToast(msg || "Copied!", "success");
+  }).catch(() => ARK.showToast("Couldn't copy automatically", "warn"));
+}
 
 </script>
 </body>
