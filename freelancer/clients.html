@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clients — ArkDez</title>
+<link rel="stylesheet" href="../assets/ark.css">
+<style>
+/* ── Clients-specific styles ── */
+.content-grid { display: grid; grid-template-columns: 1fr 340px; gap: 18px; }
+
+/* Search + filter bar */
+.clients-toolbar {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px; flex-wrap: wrap;
+}
+.search-wrap {
+  position: relative; flex: 1; min-width: 200px;
+}
+.search-wrap svg {
+  position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+  color: var(--ink4); pointer-events: none;
+  width: 15px; height: 15px;
+}
+.search-input {
+  width: 100%; height: 38px;
+  background: var(--bg); border: 1.5px solid var(--line2);
+  border-radius: var(--r); padding: 0 12px 0 36px;
+  font-size: .84rem; color: var(--ink); font-family: var(--sans);
+  outline: none; transition: border-color .18s, box-shadow .18s;
+}
+.search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,197,94,.08); }
+.search-input::placeholder { color: var(--ink4); }
+
+.filter-btn {
+  height: 38px; padding: 0 14px;
+  background: var(--bg); border: 1.5px solid var(--line2);
+  border-radius: var(--r); font-size: .8rem; font-weight: 600;
+  color: var(--ink3); cursor: pointer; font-family: var(--sans);
+  display: flex; align-items: center; gap: 6px;
+  transition: all .15s; white-space: nowrap;
+}
+.filter-btn:hover { border-color: var(--line); color: var(--ink2); background: var(--bg3); }
+.filter-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+
+/* Clients grid */
+.clients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+/* Client card */
+.client-card {
+  background: var(--bg); border: 1.5px solid var(--line2);
+  border-radius: var(--r-lg); padding: 18px 18px 16px;
+  cursor: pointer; transition: all .2s var(--ease);
+  animation: cardIn .35s var(--ease) both;
+  position: relative; overflow: hidden;
+}
+.client-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2));
+  opacity: 0; transition: opacity .2s;
+}
+.client-card:hover { border-color: var(--accent-ln); box-shadow: 0 4px 20px rgba(26,107,60,.08); transform: translateY(-2px); }
+.client-card:hover::before { opacity: 1; }
+
+.client-card-top {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.client-card-av {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .82rem; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.client-card-menu {
+  width: 28px; height: 28px; border-radius: 7px;
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink4); transition: background .15s, color .15s;
+  opacity: 0; transition: opacity .15s;
+}
+.client-card:hover .client-card-menu { opacity: 1; }
+.client-card-menu:hover { background: var(--bg3); color: var(--ink2); }
+
+.client-card-name { font-size: .9rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.client-card-company { font-size: .75rem; color: var(--ink4); margin-bottom: 10px; }
+.client-card-email {
+  font-size: .75rem; color: var(--ink3); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 5px;
+}
+.client-card-email svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+.client-card-stats {
+  display: flex; gap: 14px; padding-top: 12px;
+  border-top: 1px solid var(--line2);
+}
+.client-stat { flex: 1; }
+.client-stat-val { font-size: .9rem; font-weight: 700; color: var(--ink); }
+.client-stat-lbl { font-size: .66rem; color: var(--ink4); margin-top: 1px; text-transform: uppercase; letter-spacing: .04em; }
+
+/* Portal link row */
+.client-card-portal {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 12px; padding: 8px 10px;
+  background: var(--accent-bg); border: 1px solid var(--accent-ln);
+  border-radius: 8px; cursor: pointer; transition: background .15s;
+}
+.client-card-portal:hover { background: #dcfce7; }
+.client-card-portal span {
+  flex: 1; font-size: .72rem; color: var(--accent); font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.client-card-portal svg { width: 13px; height: 13px; color: var(--accent); flex-shrink: 0; }
+
+/* Dropdown menu */
+.card-dropdown {
+  position: absolute; top: 44px; right: 12px;
+  background: var(--bg); border: 1px solid var(--line2);
+  border-radius: var(--r); box-shadow: 0 4px 16px rgba(0,0,0,.1);
+  z-index: 50; min-width: 160px; overflow: hidden;
+  opacity: 0; pointer-events: none; transform: translateY(-6px);
+  transition: opacity .18s var(--ease), transform .18s var(--ease);
+}
+.card-dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+.dropdown-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 12px; font-size: .8rem; color: var(--ink2);
+  cursor: pointer; transition: background .12s;
+}
+.dropdown-item:hover { background: var(--bg2); }
+.dropdown-item.danger { color: var(--red); }
+.dropdown-item.danger:hover { background: var(--red-bg); }
+.dropdown-item svg { width: 13px; height: 13px; flex-shrink: 0; }
+.dropdown-divider { height: 1px; background: var(--line2); }
+
+/* Detail panel (right side) */
+#client-detail {
+  background: var(--bg); border: 1.5px solid var(--line2);
+  border-radius: var(--r-lg); overflow: hidden;
+  position: sticky; top: calc(var(--topbar-h) + 20px);
+  display: none;
+}
+#client-detail.open { display: block; animation: pageIn .2s var(--ease) both; }
+.detail-header {
+  padding: 18px 18px 0;
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.detail-close {
+  width: 28px; height: 28px; border-radius: 7px;
+  background: none; border: none; cursor: pointer;
+  color: var(--ink4); display: flex; align-items: center;
+  justify-content: center; transition: background .15s; flex-shrink: 0;
+}
+.detail-close:hover { background: var(--bg3); }
+.detail-av {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 10px;
+}
+.detail-name { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); margin-bottom: 2px; }
+.detail-company { font-size: .78rem; color: var(--ink4); margin-bottom: 8px; }
+.detail-body { padding: 14px 18px 18px; }
+.detail-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .78rem; color: var(--ink3); margin-bottom: 8px;
+}
+.detail-row svg { width: 13px; height: 13px; flex-shrink: 0; color: var(--ink4); }
+.detail-section-title {
+  font-size: .68rem; font-weight: 700; color: var(--ink4);
+  letter-spacing: .08em; text-transform: uppercase;
+  margin: 16px 0 8px;
+}
+.detail-portal-box {
+  background: var(--accent-bg); border: 1px solid var(--accent-ln);
+  border-radius: var(--r); padding: 10px 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.detail-portal-url {
+  flex: 1; font-size: .72rem; color: var(--accent);
+  font-weight: 600; word-break: break-all; line-height: 1.4;
+}
+.detail-copy-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--accent); display: flex; align-items: center;
+  padding: 4px; border-radius: 5px; transition: background .15s; flex-shrink: 0;
+}
+.detail-copy-btn:hover { background: var(--accent-ln); }
+.detail-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px;
+}
+.detail-stat {
+  background: var(--bg2); border-radius: var(--r);
+  padding: 12px 12px 10px;
+}
+.detail-stat-val { font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.detail-stat-lbl { font-size: .67rem; color: var(--ink4); text-transform: uppercase; letter-spacing: .04em; }
+.detail-actions { display: flex; gap: 8px; margin-top: 16px; }
+.detail-actions .btn-secondary,
+.detail-actions .btn-primary { flex: 1; justify-content: center; height: 36px; font-size: .78rem; }
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg3) 25%, var(--line2) 50%, var(--bg3) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 6px;
+}
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+.skeleton-card {
+  background: var(--bg); border: 1.5px solid var(--line2);
+  border-radius: var(--r-lg); padding: 18px;
+}
+
+/* Modal form */
+#modal-add-client .modal { max-width: 460px; }
+.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+@media (max-width: 1024px) { .content-grid { grid-template-columns: 1fr; } #client-detail { position: static; } }
+@media (max-width: 600px) { .clients-grid { grid-template-columns: 1fr; } .modal-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div id="auth-gate">
+  <div class="gate-logo">A</div>
+  <span class="gate-text">Loading your workspace…</span>
+</div>
+
+<div id="sidebar-overlay" onclick="ARK.closeSidebar()"></div>
+
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <a href="/" class="sidebar-brand">
+        <div class="sidebar-brand-mark">A</div>
+        <span class="sidebar-brand-name">ArkDez</span>
+      </a>
+    </div>
+    <div class="workspace-pill" onclick="ARK.toggleUserMenu()">
+      <div class="workspace-av" id="ws-av">P</div>
+      <div class="workspace-info">
+        <div class="workspace-name" id="ws-name">Workspace</div>
+        <div class="workspace-plan">Free plan</div>
+      </div>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--ink4);flex-shrink:0"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+      <a class="nav-item" href="dashboard.html" data-page="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-item active" href="clients.html" data-page="clients">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Clients
+      </a>
+      <a class="nav-item" href="projects.html" data-page="projects">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+        Projects
+      </a>
+      <a class="nav-item" href="messages.html" data-page="messages">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Messages
+      </a>
+      <div class="nav-section-label">Finance</div>
+      <a class="nav-item" href="invoices.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Invoices
+      </a>
+      <div class="nav-section-label">Delivery</div>
+      <a class="nav-item" href="documents.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+        Documents
+      </a>
+      <a class="nav-item" href="onboarding.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Onboarding
+      </a>
+      <div class="nav-section-label">Account</div>
+      <a class="nav-item" href="settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Settings
+      </a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-pill" onclick="ARK.toggleUserMenu()" id="user-pill">
+        <div class="user-av" id="user-av">R</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Loading…</div>
+          <div class="user-email" id="user-email">…</div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--ink4);flex-shrink:0"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      </div>
+    </div>
+  </nav>
+
+  <div id="user-menu">
+    <div style="padding:4px;">
+      <div class="menu-item" onclick="window.location.href='settings.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Profile & settings
+      </div>
+      <div class="menu-divider"></div>
+      <div class="menu-item danger" onclick="ARK.logout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign out
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+    <header id="topbar">
+      <div class="topbar-left">
+        <button class="topbar-hamburger" onclick="ARK.openSidebar()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="topbar-page-title">Clients</div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn" onclick="ARK.toggleNotifications()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+        <button class="btn-primary" onclick="ARK.openModal('modal-add-client')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add client
+        </button>
+      </div>
+    </header>
+
+    <main id="content">
+      <div class="page active" id="page-clients">
+
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Clients</h1>
+            <p id="clients-count-label">Manage your client relationships and portals.</p>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="clients-toolbar">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-input" type="text" id="search-input" placeholder="Search clients…" oninput="filterClients()">
+          </div>
+          <button class="filter-btn active" id="filter-all" onclick="setFilter('all',this)">All</button>
+          <button class="filter-btn" id="filter-active" onclick="setFilter('active',this)">Active</button>
+          <button class="filter-btn" id="filter-archived" onclick="setFilter('archived',this)">Archived</button>
+        </div>
+
+        <!-- Main content -->
+        <div class="content-grid">
+          <div>
+            <!-- Loading skeletons -->
+            <div id="clients-loading" class="clients-grid">
+              <div class="skeleton-card"><div class="skeleton" style="width:40px;height:40px;border-radius:50%;margin-bottom:12px;"></div><div class="skeleton" style="height:14px;width:60%;margin-bottom:8px;"></div><div class="skeleton" style="height:11px;width:40%;margin-bottom:16px;"></div><div class="skeleton" style="height:11px;width:80%;"></div></div>
+              <div class="skeleton-card"><div class="skeleton" style="width:40px;height:40px;border-radius:50%;margin-bottom:12px;"></div><div class="skeleton" style="height:14px;width:55%;margin-bottom:8px;"></div><div class="skeleton" style="height:11px;width:35%;margin-bottom:16px;"></div><div class="skeleton" style="height:11px;width:75%;"></div></div>
+              <div class="skeleton-card"><div class="skeleton" style="width:40px;height:40px;border-radius:50%;margin-bottom:12px;"></div><div class="skeleton" style="height:14px;width:65%;margin-bottom:8px;"></div><div class="skeleton" style="height:11px;width:45%;margin-bottom:16px;"></div><div class="skeleton" style="height:11px;width:70%;"></div></div>
+            </div>
+            <!-- Clients grid -->
+            <div id="clients-grid" class="clients-grid" style="display:none;"></div>
+            <!-- Empty state -->
+            <div id="clients-empty" style="display:none;">
+              <div class="empty-state">
+                <div class="empty-state-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                </div>
+                <h3>No clients yet</h3>
+                <p>Add your first client to generate their portal link and start managing your work together.</p>
+                <button class="btn-primary" onclick="ARK.openModal('modal-add-client')">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add your first client
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Client detail panel -->
+          <div id="client-detail">
+            <div class="detail-header">
+              <div>
+                <div class="detail-av" id="detail-av">R</div>
+                <div class="detail-name" id="detail-name">Client Name</div>
+                <div class="detail-company" id="detail-company"></div>
+                <div id="detail-badge"></div>
+              </div>
+              <button class="detail-close" onclick="closeDetail()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <div class="detail-body">
+              <div class="detail-row" id="detail-email-row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <span id="detail-email">—</span>
+              </div>
+              <div class="detail-row" id="detail-phone-row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.79 19.79 19.79 0 01.01 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+                <span id="detail-phone">—</span>
+              </div>
+              <div class="detail-row" id="detail-since-row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span id="detail-since">—</span>
+              </div>
+
+              <div class="detail-section-title">Client portal</div>
+              <div class="detail-portal-box">
+                <div class="detail-portal-url" id="detail-portal-url">—</div>
+                <button class="detail-copy-btn" onclick="copyPortalLink()" title="Copy link">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                </button>
+              </div>
+
+              <div class="detail-stats">
+                <div class="detail-stat">
+                  <div class="detail-stat-val" id="detail-projects">0</div>
+                  <div class="detail-stat-lbl">Projects</div>
+                </div>
+                <div class="detail-stat">
+                  <div class="detail-stat-val" id="detail-outstanding">$0</div>
+                  <div class="detail-stat-lbl">Outstanding</div>
+                </div>
+              </div>
+
+              <div id="detail-notes-wrap" style="display:none">
+                <div class="detail-section-title">Notes</div>
+                <p style="font-size:.78rem;color:var(--ink3);line-height:1.6;" id="detail-notes"></p>
+              </div>
+
+              <div class="detail-actions">
+                <button class="btn-secondary" onclick="editClient()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  Edit
+                </button>
+                <button class="btn-primary" onclick="openClientPortal()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  Open portal
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Notification drawer -->
+<div id="notif-overlay" onclick="ARK.closeNotifications()"></div>
+<div id="notif-drawer">
+  <div class="notif-header">
+    <h3>Notifications</h3>
+    <button class="notif-close" onclick="ARK.closeNotifications()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="notif-list">
+    <div class="panel-empty" style="padding:40px 20px;text-align:center;color:var(--ink4);font-size:.82rem;">No notifications yet.</div>
+  </div>
+</div>
+
+<!-- Add client modal -->
+<div class="modal-overlay" id="modal-add-client" onclick="handleModalOverlayClick(event,'modal-add-client')">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Add client</h2>
+      <button class="modal-close" onclick="ARK.closeModal('modal-add-client')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-grid">
+        <div class="field">
+          <label class="field-label" for="new-name">Full name *</label>
+          <input class="field-input" type="text" id="new-name" placeholder="Jane Smith" autocomplete="off">
+          <span class="field-err" id="err-new-name" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span>
+        </div>
+        <div class="field">
+          <label class="field-label" for="new-company">Company</label>
+          <input class="field-input" type="text" id="new-company" placeholder="Acme Inc." autocomplete="off">
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="new-email">Email address</label>
+        <input class="field-input" type="email" id="new-email" placeholder="jane@acme.com" autocomplete="off">
+        <span class="field-err" id="err-new-email" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Enter a valid email</span>
+      </div>
+      <div class="field">
+        <label class="field-label" for="new-phone">Phone number</label>
+        <input class="field-input" type="tel" id="new-phone" placeholder="+1 555 000 0000" autocomplete="off">
+      </div>
+      <div class="field">
+        <label class="field-label" for="new-notes">Notes <span style="color:var(--ink4);font-weight:400;">(optional)</span></label>
+        <textarea class="field-input" id="new-notes" placeholder="How you met, project context, anything useful…" rows="3" style="height:auto;padding:10px 12px;resize:vertical;"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="ARK.closeModal('modal-add-client')">Cancel</button>
+      <button class="btn-primary" id="save-client-btn" onclick="saveClient()">
+        <span class="save-btn-text">Add client</span>
+        <div class="spinner" style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;display:none;"></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit client modal -->
+<div class="modal-overlay" id="modal-edit-client" onclick="handleModalOverlayClick(event,'modal-edit-client')">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Edit client</h2>
+      <button class="modal-close" onclick="ARK.closeModal('modal-edit-client')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-client-id">
+      <div class="modal-grid">
+        <div class="field">
+          <label class="field-label" for="edit-name">Full name *</label>
+          <input class="field-input" type="text" id="edit-name" autocomplete="off">
+        </div>
+        <div class="field">
+          <label class="field-label" for="edit-company">Company</label>
+          <input class="field-input" type="text" id="edit-company" autocomplete="off">
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="edit-email">Email address</label>
+        <input class="field-input" type="email" id="edit-email" autocomplete="off">
+      </div>
+      <div class="field">
+        <label class="field-label" for="edit-phone">Phone number</label>
+        <input class="field-input" type="tel" id="edit-phone" autocomplete="off">
+      </div>
+      <div class="field">
+        <label class="field-label" for="edit-notes">Notes</label>
+        <textarea class="field-input" id="edit-notes" rows="3" style="height:auto;padding:10px 12px;resize:vertical;"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="ARK.closeModal('modal-edit-client')">Cancel</button>
+      <button class="btn-primary" id="update-client-btn" onclick="updateClient()">
+        <span>Save changes</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<style>@keyframes spin{to{transform:rotate(360deg);}}</style>
+<script src="../assets/ark.js"></script>
+<script>
+// ── State ──────────────────────────────────────────────────
+let allClients    = [];
+let filteredClients = [];
+let currentFilter = "all";
+let selectedClient = null;
+let currentUser   = null;
+const PORTAL_BASE = window.location.origin + "/client/";
+
+// ── Boot ───────────────────────────────────────────────────
+ARK.requireAuth(function(user) {
+  currentUser = user;
+  ARK.bootSidebar(user);
+  document.getElementById("auth-gate").classList.add("hidden");
+  document.getElementById("app").classList.add("ready");
+  loadClients();
+});
+
+// ── Load clients ───────────────────────────────────────────
+async function loadClients() {
+  try {
+    const token = ARK.getToken();
+
+    // Demo mode
+    if (!window._ARK_URL) {
+      await new Promise(r => setTimeout(r, 800));
+      allClients = getDemoClients();
+      renderClients();
+      return;
+    }
+
+    const res = await ARK.api({ action: "get_clients", token });
+    if (!res.success) { ARK.showToast(res.error || "Failed to load clients", "error"); return; }
+    allClients = res.clients || [];
+    renderClients();
+  } catch(e) {
+    ARK.showToast("Connection error. Showing demo data.", "warn");
+    allClients = getDemoClients();
+    renderClients();
+  }
+}
+
+// ── Render ─────────────────────────────────────────────────
+function renderClients() {
+  document.getElementById("clients-loading").style.display = "none";
+
+  filteredClients = allClients.filter(c => {
+    const matchFilter = currentFilter === "all" || c.status === currentFilter;
+    const q = document.getElementById("search-input").value.toLowerCase();
+    const matchSearch = !q || c.name.toLowerCase().includes(q)
+      || (c.email || "").toLowerCase().includes(q)
+      || (c.company || "").toLowerCase().includes(q);
+    return matchFilter && matchSearch;
+  });
+
+  const grid  = document.getElementById("clients-grid");
+  const empty = document.getElementById("clients-empty");
+  const label = document.getElementById("clients-count-label");
+
+  const total = allClients.filter(c => c.status !== "archived").length;
+  label.textContent = total === 0
+    ? "Add your first client to get started."
+    : total + " client" + (total !== 1 ? "s" : "") + " in your workspace.";
+
+  if (filteredClients.length === 0) {
+    grid.style.display  = "none";
+    empty.style.display = "";
+    return;
+  }
+  grid.style.display  = "";
+  empty.style.display = "none";
+
+  grid.innerHTML = filteredClients.map((c, i) => buildCard(c, i)).join("");
+}
+
+function buildCard(c, i) {
+  const initials = ARK.initials(c.name);
+  const color    = ARK.avatarColor(c.name);
+  const portal   = PORTAL_BASE + "?token=" + c.portalToken;
+  const delay    = Math.min(i * 40, 300);
+
+  return `
+  <div class="client-card" id="card-${c.id}" onclick="selectClient('${c.id}')" style="animation-delay:${delay}ms">
+    <div class="client-card-top">
+      <div class="client-card-av" style="background:${color}">${ARK.escHtml(initials)}</div>
+      <button class="client-card-menu" onclick="toggleCardMenu(event,'menu-${c.id}')" aria-label="Options">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      </button>
+      <div class="card-dropdown" id="menu-${c.id}">
+        <div class="dropdown-item" onclick="editClientById('${c.id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit
+        </div>
+        <div class="dropdown-item" onclick="copyPortalLinkById('${c.portalToken}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy portal link
+        </div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item danger" onclick="archiveClientById('${c.id}','${ARK.escHtml(c.name)}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+          Archive
+        </div>
+      </div>
+    </div>
+    <div class="client-card-name">${ARK.escHtml(c.name)}</div>
+    ${c.company ? `<div class="client-card-company">${ARK.escHtml(c.company)}</div>` : ""}
+    ${c.email ? `<div class="client-card-email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>${ARK.escHtml(c.email)}</div>` : ""}
+    <div class="client-card-stats">
+      <div class="client-stat">
+        <div class="client-stat-val">${c.activeProjects || 0}</div>
+        <div class="client-stat-lbl">Active projects</div>
+      </div>
+      <div class="client-stat">
+        <div class="client-stat-val">${c.outstanding > 0 ? ARK.fmtCurrency(c.outstanding) : "$0"}</div>
+        <div class="client-stat-lbl">Outstanding</div>
+      </div>
+      <div class="client-stat">
+        <div>${ARK.badge(c.status)}</div>
+        <div class="client-stat-lbl">Status</div>
+      </div>
+    </div>
+    <div class="client-card-portal" onclick="copyPortalLinkById('${c.portalToken}');event.stopPropagation();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+      <span>${ARK.escHtml(portal)}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+    </div>
+  </div>`;
+}
+
+// ── Select client (detail panel) ───────────────────────────
+function selectClient(id) {
+  selectedClient = allClients.find(c => c.id === id);
+  if (!selectedClient) return;
+
+  const c       = selectedClient;
+  const color   = ARK.avatarColor(c.name);
+  const portal  = PORTAL_BASE + "?token=" + c.portalToken;
+
+  document.getElementById("detail-av").textContent   = ARK.initials(c.name);
+  document.getElementById("detail-av").style.background = color;
+  document.getElementById("detail-name").textContent = c.name;
+  document.getElementById("detail-company").textContent = c.company || "";
+  document.getElementById("detail-badge").innerHTML  = ARK.badge(c.status);
+  document.getElementById("detail-email").textContent = c.email || "—";
+  document.getElementById("detail-phone").textContent = c.phone || "—";
+  document.getElementById("detail-since").textContent = "Client since " + ARK.fmtDate(c.createdAt);
+  document.getElementById("detail-portal-url").textContent = portal;
+  document.getElementById("detail-projects").textContent   = c.projectCount || 0;
+  document.getElementById("detail-outstanding").textContent = ARK.fmtCurrency(c.outstanding || 0);
+
+  const notesWrap = document.getElementById("detail-notes-wrap");
+  if (c.notes) {
+    notesWrap.style.display = "";
+    document.getElementById("detail-notes").textContent = c.notes;
+  } else {
+    notesWrap.style.display = "none";
+  }
+
+  document.getElementById("client-detail").classList.add("open");
+
+  // Highlight selected card
+  document.querySelectorAll(".client-card").forEach(el => el.style.borderColor = "");
+  const card = document.getElementById("card-" + id);
+  if (card) card.style.borderColor = "var(--accent-ln)";
+}
+
+function closeDetail() {
+  document.getElementById("client-detail").classList.remove("open");
+  document.querySelectorAll(".client-card").forEach(el => el.style.borderColor = "");
+  selectedClient = null;
+}
+
+// ── Filter + Search ────────────────────────────────────────
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  el.classList.add("active");
+  renderClients();
+}
+function filterClients() { renderClients(); }
+
+// ── Add client ─────────────────────────────────────────────
+async function saveClient() {
+  const name    = document.getElementById("new-name").value.trim();
+  const email   = document.getElementById("new-email").value.trim();
+  const company = document.getElementById("new-company").value.trim();
+  const phone   = document.getElementById("new-phone").value.trim();
+  const notes   = document.getElementById("new-notes").value.trim();
+
+  // Validate
+  let ok = true;
+  if (!name) { document.getElementById("err-new-name").style.display = "block"; document.getElementById("new-name").classList.add("error"); ok = false; }
+  else        { document.getElementById("err-new-name").style.display = "none";  document.getElementById("new-name").classList.remove("error"); }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+    document.getElementById("err-new-email").style.display = "block"; document.getElementById("new-email").classList.add("error"); ok = false;
+  } else { document.getElementById("err-new-email").style.display = "none"; document.getElementById("new-email").classList.remove("error"); }
+  if (!ok) return;
+
+  const btn      = document.getElementById("save-client-btn");
+  const txtEl    = btn.querySelector(".save-btn-text");
+  const spinEl   = btn.querySelector(".spinner");
+  btn.disabled   = true; txtEl.style.display = "none"; spinEl.style.display = "block";
+
+  try {
+    const token = ARK.getToken();
+
+    // Demo mode
+    if (!window._ARK_URL) {
+      await new Promise(r => setTimeout(r, 900));
+      const newClient = {
+        id:            "demo-" + Date.now(),
+        name, email, company, phone, notes,
+        status:        "active",
+        portalToken:   "demo-token-" + Math.random().toString(36).slice(2),
+        portalEnabled: true,
+        createdAt:     new Date().toISOString(),
+        projectCount:  0, activeProjects: 0, outstanding: 0
+      };
+      allClients.unshift(newClient);
+      renderClients();
+      ARK.closeModal("modal-add-client");
+      clearAddForm();
+      ARK.showToast(name + " added successfully!", "success");
+      selectClient(newClient.id);
+      return;
+    }
+
+    const res = await ARK.api({ action:"create_client", token, name, email, company, phone, notes });
+    if (res.success) {
+      allClients.unshift(res.client);
+      renderClients();
+      ARK.closeModal("modal-add-client");
+      clearAddForm();
+      ARK.showToast(name + " added successfully!", "success");
+      selectClient(res.client.id);
+    } else {
+      ARK.showToast(res.error || "Failed to add client", "error");
+    }
+  } catch(e) {
+    ARK.showToast("Connection error. Try again.", "error");
+  } finally {
+    btn.disabled = false; txtEl.style.display = ""; spinEl.style.display = "none";
+  }
+}
+
+function clearAddForm() {
+  ["new-name","new-email","new-company","new-phone","new-notes"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+    el?.classList.remove("error");
+  });
+  ["err-new-name","err-new-email"].forEach(id => {
+    document.getElementById(id).style.display = "none";
+  });
+}
+
+// ── Edit client ────────────────────────────────────────────
+function editClient() {
+  if (selectedClient) editClientById(selectedClient.id);
+}
+function editClientById(id) {
+  const c = allClients.find(x => x.id === id);
+  if (!c) return;
+  document.getElementById("edit-client-id").value = c.id;
+  document.getElementById("edit-name").value       = c.name || "";
+  document.getElementById("edit-company").value    = c.company || "";
+  document.getElementById("edit-email").value      = c.email || "";
+  document.getElementById("edit-phone").value      = c.phone || "";
+  document.getElementById("edit-notes").value      = c.notes || "";
+  ARK.openModal("modal-edit-client");
+}
+
+async function updateClient() {
+  const id      = document.getElementById("edit-client-id").value;
+  const name    = document.getElementById("edit-name").value.trim();
+  const company = document.getElementById("edit-company").value.trim();
+  const email   = document.getElementById("edit-email").value.trim();
+  const phone   = document.getElementById("edit-phone").value.trim();
+  const notes   = document.getElementById("edit-notes").value.trim();
+  if (!name) { ARK.showToast("Client name is required", "error"); return; }
+
+  const btn = document.getElementById("update-client-btn");
+  btn.disabled = true; btn.textContent = "Saving…";
+
+  try {
+    const token = ARK.getToken();
+    if (!window._ARK_URL) {
+      await new Promise(r => setTimeout(r, 600));
+      const idx = allClients.findIndex(c => c.id === id);
+      if (idx > -1) Object.assign(allClients[idx], { name, company, email, phone, notes });
+      renderClients();
+      if (selectedClient?.id === id) selectClient(id);
+      ARK.closeModal("modal-edit-client");
+      ARK.showToast("Client updated", "success");
+      return;
+    }
+    const res = await ARK.api({ action:"update_client", token, clientId:id, name, company, email, phone, notes });
+    if (res.success) {
+      const idx = allClients.findIndex(c => c.id === id);
+      if (idx > -1) Object.assign(allClients[idx], { name, company, email, phone, notes });
+      renderClients();
+      if (selectedClient?.id === id) selectClient(id);
+      ARK.closeModal("modal-edit-client");
+      ARK.showToast("Client updated", "success");
+    } else {
+      ARK.showToast(res.error || "Failed to update", "error");
+    }
+  } catch(e) {
+    ARK.showToast("Connection error.", "error");
+  } finally {
+    btn.disabled = false; btn.textContent = "Save changes";
+  }
+}
+
+// ── Archive ────────────────────────────────────────────────
+async function archiveClientById(id, name) {
+  closeCardMenu();
+  if (!confirm) { /* no alerts — use inline confirm */ }
+  // Show confirmation toast with undo-style
+  const ok = await confirmAction(`Archive ${name}? They won't appear in active clients.`);
+  if (!ok) return;
+
+  try {
+    const token = ARK.getToken();
+    if (!window._ARK_URL) {
+      const idx = allClients.findIndex(c => c.id === id);
+      if (idx > -1) allClients[idx].status = "archived";
+      renderClients();
+      if (selectedClient?.id === id) closeDetail();
+      ARK.showToast(name + " archived", "success");
+      return;
+    }
+    const res = await ARK.api({ action:"archive_client", token, clientId:id });
+    if (res.success) {
+      const idx = allClients.findIndex(c => c.id === id);
+      if (idx > -1) allClients[idx].status = "archived";
+      renderClients();
+      if (selectedClient?.id === id) closeDetail();
+      ARK.showToast(name + " archived", "success");
+    } else {
+      ARK.showToast(res.error || "Failed to archive", "error");
+    }
+  } catch(e) {
+    ARK.showToast("Connection error.", "error");
+  }
+}
+
+// ── Portal link ────────────────────────────────────────────
+function copyPortalLink() {
+  if (!selectedClient) return;
+  copyPortalLinkById(selectedClient.portalToken);
+}
+function copyPortalLinkById(token) {
+  const url = PORTAL_BASE + "?token=" + token;
+  navigator.clipboard.writeText(url).then(() => {
+    ARK.showToast("Portal link copied to clipboard!", "success");
+  }).catch(() => {
+    ARK.showToast("Couldn't copy — try manually: " + url, "warn");
+  });
+}
+function openClientPortal() {
+  if (!selectedClient) return;
+  window.open(PORTAL_BASE + "?token=" + selectedClient.portalToken, "_blank");
+}
+
+// ── Card dropdown ──────────────────────────────────────────
+function toggleCardMenu(event, menuId) {
+  event.stopPropagation();
+  const menu = document.getElementById(menuId);
+  const wasOpen = menu.classList.contains("open");
+  closeCardMenu();
+  if (!wasOpen) menu.classList.add("open");
+}
+function closeCardMenu() {
+  document.querySelectorAll(".card-dropdown.open").forEach(m => m.classList.remove("open"));
+}
+document.addEventListener("click", closeCardMenu);
+
+// ── Modal overlay click outside ────────────────────────────
+function handleModalOverlayClick(e, id) {
+  if (e.target.classList.contains("modal-overlay")) ARK.closeModal(id);
+}
+
+// ── Inline confirm (no alert) ──────────────────────────────
+function confirmAction(msg) {
+  return new Promise(resolve => {
+    const container = document.getElementById("toast-container");
+    const el = document.createElement("div");
+    el.className = "toast warn";
+    el.style.cssText = "max-width:360px;flex-direction:column;align-items:flex-start;gap:10px;";
+    el.innerHTML = `
+      <div style="font-size:.82rem;line-height:1.4;">${ARK.escHtml(msg)}</div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="this.closest('.toast').remove();window._confirmResolve(true)" style="padding:5px 12px;background:#fff;color:#d97706;border:1px solid #fde68a;border-radius:6px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:inherit;">Confirm</button>
+        <button onclick="this.closest('.toast').remove();window._confirmResolve(false)" style="padding:5px 12px;background:none;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.2);border-radius:6px;font-size:.75rem;cursor:pointer;font-family:inherit;">Cancel</button>
+      </div>`;
+    window._confirmResolve = resolve;
+    container.appendChild(el);
+  });
+}
+
+// ── Demo data ──────────────────────────────────────────────
+function getDemoClients() {
+  return [
+    { id:"d1", name:"Moe Airbnb", email:"moe@airglitz.com.au", company:"AirGlitz", phone:"+61 400 000 001", status:"active", portalToken:"demo-abc123", portalEnabled:true, notes:"Airbnb automation system. Prefers async comms.", createdAt:"2025-01-15T10:00:00Z", projectCount:2, activeProjects:1, outstanding:500 },
+    { id:"d2", name:"Sarah Chen", email:"sarah@growthco.io", company:"GrowthCo", phone:"", status:"active", portalToken:"demo-def456", portalEnabled:true, notes:"", createdAt:"2025-02-20T10:00:00Z", projectCount:1, activeProjects:1, outstanding:0 },
+    { id:"d3", name:"James Okafor", email:"james@jamesokafor.com", company:"", phone:"+44 7700 900000", status:"active", portalToken:"demo-ghi789", portalEnabled:true, notes:"Referred by Moe.", createdAt:"2025-03-05T10:00:00Z", projectCount:3, activeProjects:0, outstanding:1200 },
+  ];
+}
+</script>
+</body>
+</html>
