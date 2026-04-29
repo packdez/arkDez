@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in — ArkDez Client Portal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#0d0d0d;--ink2:#3d3d3d;--ink3:#737373;--ink4:#a3a3a3;
+  --line:#e5e5e5;--line2:#f0f0f0;--bg:#ffffff;--bg2:#fafafa;--bg3:#f5f5f5;
+  --accent:#1a6b3c;--accent2:#22c55e;--accent-bg:#f0fdf4;--accent-ln:#bbf7d0;
+  --red:#dc2626;--red-bg:#fef2f2;
+  --serif:'Instrument Serif',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
+  --r:10px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg2);color:var(--ink);min-height:100svh;display:flex;align-items:center;justify-content:center;-webkit-font-smoothing:antialiased;padding:24px;}
+
+.auth-card{width:100%;max-width:400px;background:var(--bg);border:1.5px solid var(--line2);border-radius:20px;padding:36px 36px 32px;box-shadow:0 8px 40px rgba(0,0,0,.07);}
+.auth-brand{display:flex;align-items:center;gap:9px;margin-bottom:28px;text-decoration:none;}
+.auth-brand-mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:.9rem;color:#fff;box-shadow:0 2px 8px rgba(34,197,94,.3);}
+.auth-brand-name{font-size:.95rem;font-weight:700;color:var(--ink);}
+.auth-title{font-family:var(--serif);font-size:1.7rem;font-weight:400;color:var(--ink);letter-spacing:-.02em;margin-bottom:6px;}
+.auth-sub{font-size:.83rem;color:var(--ink3);margin-bottom:26px;line-height:1.5;}
+.auth-sub a{color:var(--accent);text-decoration:none;font-weight:600;}
+.auth-sub a:hover{text-decoration:underline;}
+.auth-form{display:flex;flex-direction:column;gap:14px;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field-label-row{display:flex;align-items:center;justify-content:space-between;}
+.field-label{font-size:.76rem;font-weight:600;color:var(--ink2);letter-spacing:.01em;}
+.field-label-link{font-size:.73rem;color:var(--accent);text-decoration:none;font-weight:500;}
+.field-label-link:hover{text-decoration:underline;}
+.field-input-wrap{position:relative;}
+.field-input{width:100%;height:44px;background:var(--bg2);border:1.5px solid var(--line);border-radius:var(--r);padding:0 13px;font-size:.875rem;color:var(--ink);font-family:var(--sans);outline:none;transition:border-color .18s,background .18s,box-shadow .18s;-webkit-appearance:none;}
+.field-input::placeholder{color:var(--ink4);}
+.field-input:focus{border-color:var(--accent);background:var(--bg);box-shadow:0 0 0 3px rgba(34,197,94,.1);}
+.field-input.error{border-color:var(--red);background:var(--red-bg);}
+.field-input.has-toggle{padding-right:40px;}
+.toggle-pw{position:absolute;right:11px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;padding:4px;transition:color .15s;}
+.toggle-pw:hover{color:var(--ink2);}
+.field-err{font-size:.7rem;color:var(--red);font-weight:500;display:none;margin-top:2px;}
+.field-err.show{display:block;}
+.auth-error-banner{background:var(--red-bg);border:1px solid #fecaca;border-radius:var(--r);padding:11px 13px;font-size:.8rem;color:var(--red);display:none;align-items:center;gap:8px;line-height:1.4;margin-bottom:4px;}
+.auth-error-banner.show{display:flex;}
+.auth-remember{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;}
+.auth-remember span{font-size:.78rem;color:var(--ink3);}
+.btn-submit{width:100%;height:46px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.88rem;font-weight:700;font-family:var(--sans);cursor:pointer;transition:background .18s,transform .15s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 2px 8px rgba(26,107,60,.22);margin-top:4px;}
+.btn-submit:hover{background:#155c33;}
+.btn-submit:active{transform:scale(.98);}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.btn-submit .spinner{width:17px;height:17px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;display:none;}
+.btn-submit.loading .btn-text{display:none;}
+.btn-submit.loading .spinner{display:block;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:9px;font-size:.8rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.15);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap;z-index:999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.success{background:var(--accent);}
+.toast.error{background:var(--red);}
+@media(max-width:480px){.auth-card{padding:28px 22px 24px;border-radius:16px;}}
+</style>
+</head>
+<body>
+<div class="auth-card">
+  <a href="/" class="auth-brand">
+    <div class="auth-brand-mark">A</div>
+    <span class="auth-brand-name">ArkDez</span>
+  </a>
+  <h1 class="auth-title">Welcome back</h1>
+  <p class="auth-sub">Don't have an account? <a href="signup.html">Create one</a></p>
+
+  <form class="auth-form" id="login-form" novalidate>
+    <div class="auth-error-banner" id="auth-error">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="auth-error-text">Invalid email or password.</span>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="email">Email address</label>
+      <input class="field-input" type="email" id="email" placeholder="jane@company.com" autocomplete="email" required>
+      <span class="field-err" id="err-email">Enter a valid email</span>
+    </div>
+
+    <div class="field">
+      <div class="field-label-row">
+        <label class="field-label" for="password">Password</label>
+        <a href="#" class="field-label-link">Forgot password?</a>
+      </div>
+      <div class="field-input-wrap">
+        <input class="field-input has-toggle" type="password" id="password" placeholder="Your password" autocomplete="current-password" required>
+        <button type="button" class="toggle-pw" id="toggle-pw">
+          <svg id="eye-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <span class="field-err" id="err-password">Enter your password</span>
+    </div>
+
+    <label class="auth-remember">
+      <input type="checkbox" id="remember" style="width:15px;height:15px;border-radius:4px;accent-color:var(--accent);">
+      <span>Keep me signed in for 30 days</span>
+    </label>
+
+    <button type="submit" class="btn-submit" id="submit-btn">
+      <span class="btn-text">Sign in</span>
+      <div class="spinner"></div>
+    </button>
+  </form>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const API_KEY = "d29bb7407783daa176e5f6cf8dfc6677940df38fda145b06";
+
+async function api(payload) {
+  const body = new Blob([JSON.stringify({ ...payload, apiKey: API_KEY })], { type: "text/plain" });
+  const res  = await fetch("https://script.google.com/macros/s/AKfycbzsjcZmIhwJF5DslXrFTPZJENckjKB_3re9qK73dewpLCCUNBcEi4-_iHBr6UvhVCSQpA/exec", { method: "POST", body });
+  return res.json();
+}
+
+// Check already logged in
+const existingToken = localStorage.getItem("ark_client_token") || sessionStorage.getItem("ark_client_token");
+if (existingToken) { window.location.href = "dashboard.html"; }
+
+// Auto-fill
+try { const u = JSON.parse(localStorage.getItem("ark_client")||"{}"); if (u.email) document.getElementById("email").value = u.email; } catch(e){}
+
+function showToast(msg, type) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.className = "toast "+(type||"")+" show";
+  setTimeout(() => t.className = "toast "+(type||""), 3000);
+}
+function showErr(id, msg) {
+  document.getElementById("err-"+id).textContent = msg || document.getElementById("err-"+id).textContent;
+  document.getElementById("err-"+id).classList.add("show");
+  document.getElementById(id)?.classList.add("error");
+}
+function clearErr(id) { document.getElementById("err-"+id)?.classList.remove("show"); document.getElementById(id)?.classList.remove("error"); }
+function validEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e); }
+function showAuthErr(msg) { document.getElementById("auth-error-text").textContent = msg; document.getElementById("auth-error").classList.add("show"); }
+function hideAuthErr() { document.getElementById("auth-error").classList.remove("show"); }
+
+const pwInput = document.getElementById("password");
+const eyeIcon = document.getElementById("eye-icon");
+let pwVisible = false;
+document.getElementById("toggle-pw").addEventListener("click", () => {
+  pwVisible = !pwVisible;
+  pwInput.type = pwVisible ? "text" : "password";
+  eyeIcon.innerHTML = pwVisible
+    ? '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+    : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+});
+
+["email","password"].forEach(id => { document.getElementById(id).addEventListener("input", () => { clearErr(id); hideAuthErr(); }); });
+
+document.getElementById("login-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  hideAuthErr();
+  let ok = true;
+  const em  = document.getElementById("email").value.trim();
+  const pw  = document.getElementById("password").value;
+  const rem = document.getElementById("remember").checked;
+
+  if (!validEmail(em)) { showErr("email", "Enter a valid email"); ok = false; }
+  if (!pw)              { showErr("password", "Enter your password"); ok = false; }
+  if (!ok) return;
+
+  const btn = document.getElementById("submit-btn");
+  btn.classList.add("loading"); btn.disabled = true;
+
+  try {
+    const res = await api({ action: "client_login", email: em, password: pw, remember: rem });
+    if (res.success) {
+      const store = rem ? localStorage : sessionStorage;
+      store.setItem("ark_client_token", res.token);
+      store.setItem("ark_client", JSON.stringify(res.account));
+      showToast("Welcome back!", "success");
+      setTimeout(() => { window.location.href = "dashboard.html"; }, 900);
+    } else {
+      showAuthErr(res.error || "Invalid email or password.");
+    }
+  } catch(err) {
+    showToast("Connection error. Try again.", "error");
+  } finally {
+    btn.classList.remove("loading"); btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
