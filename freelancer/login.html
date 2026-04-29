@@ -156,8 +156,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:10
   </div>
 </div>
 <div class="toast" id="toast"></div>
+<script src="../assets/ark.js"></script>
 <script>
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsjcZmIhwJF5DslXrFTPZJENckjKB_3re9qK73dewpLCCUNBcEi4-_iHBr6UvhVCSQpA/exec";
+const APPS_SCRIPT_URL = "";
 
 const pwInput = document.getElementById("password");
 const eyeIcon = document.getElementById("eye-icon");
@@ -198,16 +199,7 @@ document.getElementById("login-form").addEventListener("submit", async e => {
   btn.classList.add("loading"); btn.disabled = true;
 
   try {
-    if (!APPS_SCRIPT_URL) {
-      await new Promise(r => setTimeout(r, 1200));
-      const stored = localStorage.getItem("ark_user");
-      if (!stored) { showAuthErr("No account found. Please sign up first."); return; }
-      showToast("Welcome back!", "success");
-      setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
-      return;
-    }
-    const body = new Blob([JSON.stringify({ action:"login", email, password, remember })], { type:"text/plain" });
-    const res  = await fetch(APPS_SCRIPT_URL, { method:"POST", body }).then(r => r.json());
+    const res = await ARK.api({ action:"login", email, password, remember });
     if (res.success) {
       const store = remember ? localStorage : sessionStorage;
       store.setItem("ark_token", res.token);
