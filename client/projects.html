@@ -320,8 +320,28 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
   #main{margin-left:0;}
   .topbar-hamburger{display:flex;}
   .projects-grid{grid-template-columns:1fr;}
-  #project-detail{width:100vw;}
+  #project-detail{width:100vw;max-width:100vw;}
   .field-row{grid-template-columns:1fr;}
+  .kanban-board{grid-template-columns:1fr 1fr;gap:10px;}
+  .toolbar{gap:6px;}
+  .filter-btn{padding:0 10px;font-size:.75rem;}
+  #content{padding:16px;}
+  .page-header h1{font-size:1.3rem;}
+  .detail-grid{grid-template-columns:1fr 1fr;}
+  .status-select-wrap{gap:4px;}
+  .status-opt{padding:4px 9px;font-size:.7rem;}
+  .approval-actions{flex-direction:column;}
+  .modal{max-width:100%;margin:0;}
+  .modal-overlay{padding:10px;}
+}
+@media(max-width:480px){
+  .kanban-board{grid-template-columns:1fr;}
+  .toolbar{flex-wrap:wrap;}
+  .search-wrap{min-width:100%;order:-1;}
+  .view-toggle{margin-left:0;}
+  .filter-btn{flex:1;text-align:center;}
+  .freelancer-tabs{gap:4px;}
+  .fl-tab{padding:4px 10px;font-size:.72rem;}
 }
 
 /* ── Status selector ── */
@@ -453,6 +473,10 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
       <a class="nav-item" href="documents.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
         Documents
+      </a>
+      <a class="nav-item" href="freelancers.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Freelancers
       </a>
     </div>
 
@@ -832,12 +856,16 @@ function markClientChange(id){
   // Also update seen so any subsequent poll won't flag it
   const sm=getSeenMap();sm[id]="client-pending-"+Date.now();localStorage.setItem(SEEN_KEY,JSON.stringify(sm));
 }
-// Dot shows ONLY when: seen[id] exists AND seen[id] != updatedAt AND client didn't just change it
+// Dot shows ONLY when: seen[id] exists AND seen[id] != updatedAt
+// AND client didn't recently make a change (within 90s grace period)
 function projectHasChanges(p){
   const seen=getSeenMap();
   if(!seen[p.id]) return false;
   if(seen[p.id]===String(p.updatedAt)) return false;
   if(seen[p.id].startsWith("client-pending-")) return false;
+  // Grace period: if client made ANY recent change to this project (within 90s), no dot
+  const cm=getClientMap();
+  if(cm[p.id]&&(Date.now()-cm[p.id])<90000) return false;
   return true;
 }
 function countChangedProjects(){return allProjects.filter(p=>projectHasChanges(p)).length;}
@@ -1050,21 +1078,66 @@ function closeDetail(){
 }
 
 function renderStatusSelector(current){
-  document.getElementById("detail-status-wrap").innerHTML=["draft","active","paused","completed","cancelled"].map(s=>
-    `<div class="status-opt ${s===current?"active":""}" data-s="${s}" onclick="changeProjectStatus('${s}')">${s.charAt(0).toUpperCase()+s.slice(1)}</div>`
-  ).join("");
+  const wrap=document.getElementById("detail-status-wrap");
+  if(current==="completed"){
+    wrap.innerHTML=`
+      <div class="status-opt active" data-s="completed">✓ Completed</div>
+      <div class="status-opt" data-s="active" onclick="restartProject()" style="background:var(--bg3);color:var(--ink3);cursor:pointer;" title="Restart project — unchecks all milestones">↺ Restart</div>`;
+  } else {
+    wrap.innerHTML=["draft","active","paused","completed","cancelled"].map(s=>
+      `<div class="status-opt ${s===current?"active":""}" data-s="${s}" onclick="changeProjectStatus('${s}')">${s.charAt(0).toUpperCase()+s.slice(1)}</div>`
+    ).join("");
+  }
 }
 async function changeProjectStatus(status){
   if(!selectedProject)return;
-  markClientChange(selectedProject.id); // own change — never show dot
-  const old=selectedProject.status;selectedProject.status=status;renderStatusSelector(status);
-  const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].status=status;renderProjects();
+  markClientChange(selectedProject.id);
+  const old=selectedProject.status;
+  selectedProject.status=status;
+  // When marking completed — mark all milestones/subtasks as done+approved
+  if(status==="completed"){
+    selectedProject.milestones.forEach(m=>{
+      m.status="done";m.completedAt=m.completedAt||new Date().toISOString();
+      m.approvalStatus="approved";m.approvedAt=m.approvedAt||new Date().toISOString();
+      (m.subtasks||[]).forEach(s=>{s.status="done";s.completedAt=s.completedAt||new Date().toISOString();});
+    });
+    projectsDirty=true;
+  }
+  renderStatusSelector(status);
+  const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].status=status;
+  recalcAndSyncProgress();
+  renderMilestones(selectedProject.milestones);
+  renderProjects();
   try{
     const res=await api({action:"update_client_project_status",token:getToken(),projectId:selectedProject.id,status});
     if(!res.success){selectedProject.status=old;showToast(res.error||"Failed","error");}
-    else{// Mark seen so client's own status change doesn't show dot
-if(selectedProject)markProjectSeen(selectedProject.id,new Date().toISOString());showToast("Status updated","success");if(status==="completed")promptRating(selectedProject);}
+    else{
+      markProjectSeen(selectedProject.id,new Date().toISOString());
+      showToast("Status updated","success");
+      if(status==="completed"){scheduleProjectSave();promptRating(selectedProject);}
+    }
   }catch(e){showToast("Connection error.","error");}
+}
+
+function restartProject(){
+  if(!selectedProject)return;
+  if(!confirm("Restart this project? This will uncheck all milestones and set status back to Active."))return;
+  markClientChange(selectedProject.id);
+  selectedProject.milestones.forEach(m=>{
+    m.status="pending";m.completedAt="";m.approvalStatus="pending";m.approvedAt="";m.approvedBy="";
+    if(m.revisionNotes&&m.revisionNotes.resolved)m.revisionNotes={};
+    (m.subtasks||[]).forEach(s=>{s.status="pending";s.completedAt="";});
+  });
+  selectedProject.status="active";
+  projectsDirty=true;
+  renderStatusSelector("active");
+  recalcAndSyncProgress();
+  renderMilestones(selectedProject.milestones);
+  const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].status="active";
+  renderProjects();
+  scheduleProjectSave();
+  api({action:"update_client_project_status",token:getToken(),projectId:selectedProject.id,status:"active"});
+  showToast("Project restarted","success");
 }
 
 function renderMilestones(milestones){
@@ -1121,7 +1194,8 @@ function renderMilestones(milestones){
           <div class="inline-form-btns"><button class="inline-save" onclick="saveMsNote(${mi})">Save note</button><button class="inline-cancel" onclick="toggleMsNoteForm(${mi})">Cancel</button></div>
         </div>
         ${ap==="approved"?`<div class="approved-stamp"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Approved${m.approvedAt?" · "+fmtDate(m.approvedAt):""}</div>`:""}
-        ${ap==="revision_requested"?`<div class="revision-stamp"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Revision requested</div>${(revNotes.checklist?.length||revNotes.notes)?`<div class="revision-notes-box">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}${revNotes.notes?"<br>"+escHtml(revNotes.notes):""}</div>`:""}<button onclick="clearRevision('${m.id}',${mi})" style="margin-top:8px;display:flex;align-items:center;gap:5px;height:32px;padding:0 12px;background:#f0fdf4;color:#166534;border:1.5px solid #bbf7d0;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:background .15s;" onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Mark revision done</button>`:""}
+        ${ap==="revision_requested"?`<div class="revision-stamp"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Revision requested</div>${(revNotes.checklist?.length||revNotes.notes)?`<div class="revision-notes-box">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}${revNotes.notes?"<br>"+escHtml(revNotes.notes):""}</div>`:""}<button onclick="clearRevision('${m.id}',${mi})" style="margin-top:8px;display:flex;align-items:center;gap:5px;height:32px;padding:0 12px;background:#f0fdf4;color:#166534;border:1.5px solid #bbf7d0;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:background .15s;" onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Mark revision done</button>`:
+          (revNotes&&revNotes.resolved)?`<div style="padding:8px 10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--r);font-size:.74rem;color:#166534;margin-bottom:4px;display:flex;align-items:center;gap:6px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Revision resolved${revNotes.resolvedAt?" · "+fmtDate(revNotes.resolvedAt):""}</div>${(revNotes.checklist?.length||revNotes.notes)?`<div class="revision-notes-box" style="opacity:.65;">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}${revNotes.notes?"<br>"+escHtml(revNotes.notes):""}</div>`:""}`:""}
         ${m.status==="done"&&ap==="pending"?`<div class="approval-actions">
           <button class="btn-approve" onclick="approveMilestone('${m.id}',${mi})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Approve</button>
           <button class="btn-revision" onclick="openRevisionModal('${m.id}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Request revision</button>
@@ -1131,11 +1205,36 @@ function renderMilestones(milestones){
   }).join("");
 }
 
-function toggleMs(headerEl,mi){const body=headerEl.nextElementSibling,chev=headerEl.querySelector(".ms-chevron");if(!body)return;body.classList.toggle("open");chev?.classList.toggle("open",body.classList.contains("open"));}
+function toggleMs(headerEl,mi){
+  const list=document.getElementById("milestone-list");
+  const allBodies=list.querySelectorAll(".milestone-body");
+  const allChevs=list.querySelectorAll(".ms-chevron");
+  const body=headerEl.nextElementSibling;
+  const chev=headerEl.querySelector(".ms-chevron");
+  const isOpen=body?.classList.contains("open");
+  // Close all
+  allBodies.forEach(b=>b.classList.remove("open"));
+  allChevs.forEach(c=>c.classList.remove("open"));
+  // Open this one if it was closed
+  if(!isOpen&&body){body.classList.add("open");chev?.classList.add("open");}
+}
 function toggleMilestoneComplete(e,mi){e.stopPropagation();if(!selectedProject)return;if(['draft','paused','cancelled'].includes(selectedProject.status))return;const m=selectedProject.milestones[mi];if(m.approvalStatus==="approved")return;m.status=m.status==="done"?"pending":"done";m.completedAt=m.status==="done"?new Date().toISOString():"";projectsDirty=true;updateLocalProgress();renderMilestones(selectedProject.milestones);scheduleProjectSave();}
 function toggleSubtaskComplete(mi,si){if(!selectedProject)return;if(['draft','paused','cancelled'].includes(selectedProject.status))return;const s=selectedProject.milestones[mi].subtasks[si];s.status=s.status==="done"?"pending":"done";s.completedAt=s.status==="done"?new Date().toISOString():"";projectsDirty=true;renderMilestones(selectedProject.milestones);scheduleProjectSave();}
 function addSubtaskInline(mi){if(!selectedProject)return;const input=document.getElementById("new-sub-"+mi);const title=input?.value.trim();if(!title)return;selectedProject.milestones[mi].subtasks.push({id:"tmp-"+Date.now(),title,status:"pending",completedAt:""});projectsDirty=true;renderMilestones(selectedProject.milestones);scheduleProjectSave();}
-function updateLocalProgress(){if(!selectedProject)return;const ms=selectedProject.milestones,done=ms.filter(m=>m.status==="done"||m.approvalStatus==="approved").length,prog=ms.length>0?Math.round((done/ms.length)*100):0;selectedProject.progress=prog;document.getElementById("detail-progress-num").textContent=prog+"%";document.getElementById("detail-progress-fill").style.width=prog+"%";const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].progress=prog;renderProjects();}
+function updateLocalProgress(){recalcAndSyncProgress();}
+function recalcAndSyncProgress(){
+  if(!selectedProject)return;
+  const ms=selectedProject.milestones;
+  // A milestone counts as done if status=done OR approvalStatus=approved
+  const done=ms.filter(m=>m.status==="done"||m.approvalStatus==="approved").length;
+  const prog=ms.length>0?Math.round((done/ms.length)*100):0;
+  selectedProject.progress=prog;
+  const numEl=document.getElementById("detail-progress-num");if(numEl)numEl.textContent=prog+"%";
+  const fillEl=document.getElementById("detail-progress-fill");if(fillEl)fillEl.style.width=prog+"%";
+  const idx=allProjects.findIndex(p=>p.id===selectedProject.id);
+  if(idx>-1)allProjects[idx].progress=prog;
+  renderProjects();
+}
 
 function toggleAddMilestoneForm(){const f=document.getElementById("add-milestone-form"),isOpen=f.classList.contains("show");f.classList.toggle("show",!isOpen);if(!isOpen)setTimeout(()=>document.getElementById("new-ms-title")?.focus(),50);}
 function saveNewMilestone(){if(!selectedProject)return;const input=document.getElementById("new-ms-title"),title=input?.value.trim();if(!title){input?.focus();return;}selectedProject.milestones.push({id:"tmp-"+Date.now(),title,status:"pending",subtasks:[],attachments:[],approvalStatus:"pending",revisionNotes:{},dueDate:"",completedAt:""});projectsDirty=true;renderMilestones(selectedProject.milestones);document.getElementById("add-milestone-form").classList.remove("show");if(input)input.value="";scheduleProjectSave();}
@@ -1158,14 +1257,23 @@ function saveProjectNote(){if(!selectedProject)return;const content=document.get
 let _projSaveTimer=null;
 function scheduleProjectSave(){clearTimeout(_projSaveTimer);_projSaveTimer=setTimeout(saveProjectMilestones,5000);}
 async function saveProjectMilestones(){if(!selectedProject||!projectsDirty)return;markClientChange(selectedProject.id);projectsDirty=false;try{const res=await api({action:"save_milestones",token:getToken(),projectId:selectedProject.id,milestones:selectedProject.milestones});if(res.success){selectedProject.progress=res.progress;document.getElementById("detail-progress-num").textContent=res.progress+"%";document.getElementById("detail-progress-fill").style.width=res.progress+"%";const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1){allProjects[idx].progress=res.progress;// Mark as seen with new updatedAt so our own saves don't show dot
-markProjectSeen(selectedProject.id,allProjects[idx].updatedAt||selectedProject.updatedAt);}saveToCache();updateChangeBadges();renderProjects();}}catch(e){projectsDirty=true;}}
+markProjectSeen(selectedProject.id,allProjects[idx].updatedAt||selectedProject.updatedAt);
+          // Clear client-change marker now that save succeeded
+          const cm=getClientMap();delete cm[selectedProject.id];localStorage.setItem(CLIENT_KEY,JSON.stringify(cm));
+        }saveToCache();updateChangeBadges();renderProjects();}}catch(e){projectsDirty=true;}}
 window.addEventListener("beforeunload",()=>{if(projectsDirty)saveProjectMilestones();});
 
 async function approveMilestone(milestoneId,mi){
   if(selectedProject)markClientChange(selectedProject.id);
   const btns=document.querySelectorAll(".btn-approve");btns.forEach(b=>{b.disabled=true;b.textContent="Approving…";}); 
   try{const res=await api({action:"approve_milestone",token:getToken(),milestoneId});
-  if(res.success){if(selectedProject){const m=selectedProject.milestones[mi];if(m){m.approvalStatus="approved";m.approvedAt=new Date().toISOString();m.status="done";}updateLocalProgress();renderMilestones(selectedProject.milestones);if(res.projectCompleted){selectedProject.status="completed";const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].status="completed";renderStatusSelector("completed");renderProjects();promptRating(selectedProject);}saveToCache();}showToast(res.projectCompleted?"🎉 All milestones approved! Project complete.":"Milestone approved!","success");}else showToast(res.error||"Failed","error");}catch(e){showToast("Connection error.","error");}
+  if(res.success){if(selectedProject){const m=selectedProject.milestones[mi];if(m){m.approvalStatus="approved";m.approvedAt=new Date().toISOString();m.status="done";}
+    // Recalculate progress from scratch after approval
+    recalcAndSyncProgress();
+    renderMilestones(selectedProject.milestones);
+    const allApproved=selectedProject.milestones.length>0&&selectedProject.milestones.every(ms=>ms.approvalStatus==="approved");
+    if(allApproved||res.projectCompleted){selectedProject.status="completed";const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].status="completed";renderStatusSelector("completed");renderProjects();promptRating(selectedProject);}
+    saveToCache();}showToast(res.projectCompleted||selectedProject?.milestones?.every(ms=>ms.approvalStatus==="approved")?"🎉 All milestones approved! Project complete.":"Milestone approved!","success");}else showToast(res.error||"Failed","error");}catch(e){showToast("Connection error.","error");}
 }
 
 function openRevisionModal(milestoneId){document.getElementById("revision-milestone-id").value=milestoneId;document.getElementById("revision-notes").value="";document.querySelectorAll(".rev-check-item").forEach(el=>{el.classList.remove("selected");el.querySelector("input").checked=false;});openModal("modal-revision");}
@@ -1189,9 +1297,16 @@ async function clearRevision(milestoneId, mi){
     const res=await api({action:"clear_revision",token:getToken(),milestoneId});
     if(res.success){
       const m=selectedProject.milestones[mi];
-      if(m){m.approvalStatus="pending";m.status="in-progress";m.revisionNotes={};}
+      if(m){
+        // Keep revision notes but mark as resolved so both parties can still see what was requested
+        if(m.revisionNotes&&typeof m.revisionNotes==="object"){
+          m.revisionNotes.resolvedAt=new Date().toISOString();
+          m.revisionNotes.resolved=true;
+        }
+        m.approvalStatus="pending";m.status="in-progress";
+      }
       renderMilestones(selectedProject.milestones);
-      showToast("Revision marked as done","success");
+      showToast("Revision marked as done — milestone is back in progress","success");
       saveToCache();
     }else showToast(res.error||"Failed","error");
   }catch(e){showToast("Connection error.","error");}
