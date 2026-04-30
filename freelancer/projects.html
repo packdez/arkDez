@@ -7,231 +7,259 @@
 <link rel="stylesheet" href="../assets/ark.css">
 <style>
 /* ── View toggle ── */
-.view-toggle {
-  display: flex; gap: 2px;
-  background: var(--bg3); border-radius: 8px; padding: 3px;
-}
-.view-btn {
-  width: 30px; height: 28px; border-radius: 6px;
-  background: none; border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--ink4); transition: all .15s;
-}
-.view-btn:hover { color: var(--ink2); }
-.view-btn.active { background: var(--bg); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
-.view-btn svg { width: 14px; height: 14px; }
+.view-toggle{display:flex;gap:2px;background:var(--bg3);border-radius:8px;padding:3px;}
+.view-btn{width:30px;height:28px;border-radius:6px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink4);transition:all .15s;}
+.view-btn:hover{color:var(--ink2);}
+.view-btn.active{background:var(--bg);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.view-btn svg{width:14px;height:14px;}
 
 /* ── Toolbar ── */
-.projects-toolbar {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 20px; flex-wrap: wrap;
-}
-.search-wrap { position: relative; flex: 1; min-width: 200px; }
-.search-wrap svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--ink4); pointer-events: none; width: 15px; height: 15px; }
-.search-input { width: 100%; height: 38px; background: var(--bg); border: 1.5px solid var(--line2); border-radius: var(--r); padding: 0 12px 0 36px; font-size: .84rem; color: var(--ink); font-family: var(--sans); outline: none; transition: border-color .18s, box-shadow .18s; }
-.search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,197,94,.08); }
-.search-input::placeholder { color: var(--ink4); }
-.filter-btn { height: 38px; padding: 0 14px; background: var(--bg); border: 1.5px solid var(--line2); border-radius: var(--r); font-size: .8rem; font-weight: 600; color: var(--ink3); cursor: pointer; font-family: var(--sans); display: flex; align-items: center; gap: 6px; transition: all .15s; white-space: nowrap; }
-.filter-btn:hover { border-color: var(--line); color: var(--ink2); background: var(--bg3); }
-.filter-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+.projects-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.search-wrap{position:relative;flex:1;min-width:200px;}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--ink4);pointer-events:none;width:15px;height:15px;}
+.search-input{width:100%;height:38px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 12px 0 36px;font-size:.84rem;color:var(--ink);font-family:var(--sans);outline:none;transition:border-color .18s,box-shadow .18s;}
+.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(34,197,94,.08);}
+.search-input::placeholder{color:var(--ink4);}
+.filter-btn{height:38px;padding:0 14px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);font-size:.8rem;font-weight:600;color:var(--ink3);cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:6px;transition:all .15s;white-space:nowrap;}
+.filter-btn:hover{border-color:var(--line);color:var(--ink2);background:var(--bg3);}
+.filter-btn.active{border-color:var(--accent);color:var(--accent);background:var(--accent-bg);}
+
+/* ── Stats row ── */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px;}
+.stat-card{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);padding:14px 16px;}
+.stat-card-label{font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px;}
+.stat-card-val{font-family:var(--serif);font-size:1.5rem;color:var(--ink);line-height:1.1;}
+.stat-card-sub{font-size:.7rem;color:var(--ink4);margin-top:3px;}
 
 /* ── Card view ── */
-.projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
-.project-card {
-  background: var(--bg); border: 1.5px solid var(--line2);
-  border-radius: var(--r-lg); padding: 18px;
-  cursor: pointer; transition: all .2s var(--ease);
-  animation: cardIn .35s var(--ease) both; position: relative;
-}
-.project-card:hover { border-color: var(--accent-ln); box-shadow: var(--sh-md); transform: translateY(-2px); }
-.project-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
-.project-card-title { font-size: .9rem; font-weight: 700; color: var(--ink); line-height: 1.3; flex: 1; }
-.project-card-client { font-size: .74rem; color: var(--ink4); margin-bottom: 12px; display: flex; align-items: center; gap: 5px; }
-.project-card-client svg { width: 11px; height: 11px; }
-.project-card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-.project-type-pill { font-size: .66rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--bg3); color: var(--ink3); letter-spacing: .03em; text-transform: capitalize; }
-.project-budget { font-size: .74rem; color: var(--ink3); font-weight: 600; }
-.project-due { font-size: .72rem; color: var(--ink4); margin-left: auto; }
-.project-due.overdue { color: var(--red); font-weight: 600; }
-.progress-wrap { margin-bottom: 6px; }
-.progress-bar { height: 4px; background: var(--line2); border-radius: 2px; overflow: hidden; }
-.progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .6s var(--ease); }
-.progress-label { display: flex; justify-content: space-between; font-size: .67rem; color: var(--ink4); margin-top: 4px; }
-.milestone-preview { font-size: .72rem; color: var(--ink4); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line2); display: flex; align-items: center; gap: 5px; }
-.milestone-preview svg { width: 11px; height: 11px; flex-shrink: 0; }
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
+.project-card{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);padding:18px;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .2s;position:relative;overflow:hidden;}
+.project-card:hover{border-color:var(--accent-ln);box-shadow:var(--sh-md);transform:translateY(-2px);}
+.project-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px;}
+.project-card-title{font-size:.9rem;font-weight:700;color:var(--ink);line-height:1.3;flex:1;}
+.project-card-client{font-size:.74rem;color:var(--ink4);margin-bottom:12px;display:flex;align-items:center;gap:5px;}
+.project-card-client svg{width:11px;height:11px;}
+.project-card-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.project-type-pill{font-size:.66rem;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--bg3);color:var(--ink3);text-transform:capitalize;}
+.project-type-pill.hourly{background:#eff6ff;color:#1d4ed8;}
+.project-type-pill.retainer{background:#f5f3ff;color:#7c3aed;}
+.project-budget{font-size:.74rem;color:var(--ink3);font-weight:600;}
+.project-due{font-size:.72rem;color:var(--ink4);margin-left:auto;}
+.project-due.overdue{color:var(--red);font-weight:600;}
+.progress-wrap{margin-bottom:6px;}
+.progress-bar{height:4px;background:var(--line2);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s var(--ease);}
+.progress-label{display:flex;justify-content:space-between;font-size:.67rem;color:var(--ink4);margin-top:4px;}
+
+/* Red dot for client changes */
+.change-dot{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;margin-left:6px;vertical-align:middle;flex-shrink:0;}
+
+/* Card notices */
+.card-notice{display:flex;align-items:center;gap:6px;padding:6px 9px;border-radius:7px;font-size:.7rem;font-weight:600;margin-top:10px;}
+.card-notice svg{width:11px;height:11px;flex-shrink:0;}
+.card-notice.pending{background:#fffbeb;border:1px solid #fde68a;color:#92400e;}
+.card-notice.revision{background:#f5f3ff;border:1px solid #ddd6fe;color:#7c3aed;}
+.card-notice.request{background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;}
 
 /* ── List view ── */
-.projects-list { display: flex; flex-direction: column; gap: 0; background: var(--bg); border: 1.5px solid var(--line2); border-radius: var(--r-lg); overflow: hidden; }
-.project-row { display: flex; align-items: center; gap: 14px; padding: 13px 18px; border-bottom: 1px solid var(--line2); cursor: pointer; transition: background .12s; }
-.project-row:last-child { border-bottom: none; }
-.project-row:hover { background: var(--bg2); }
-.project-row-title { font-size: .84rem; font-weight: 600; color: var(--ink); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.project-row-client { font-size: .74rem; color: var(--ink4); width: 130px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.project-row-type { font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--bg3); color: var(--ink3); flex-shrink: 0; text-transform: capitalize; }
-.project-row-budget { font-size: .78rem; font-weight: 600; color: var(--ink2); width: 90px; flex-shrink: 0; text-align: right; }
-.project-row-due { font-size: .72rem; color: var(--ink4); width: 80px; flex-shrink: 0; text-align: right; }
-.project-row-due.overdue { color: var(--red); font-weight: 600; }
-.project-row-progress { width: 80px; flex-shrink: 0; }
+.projects-list{display:flex;flex-direction:column;gap:0;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);overflow:hidden;}
+.project-row{display:flex;align-items:center;gap:14px;padding:13px 18px;border-bottom:1px solid var(--line2);cursor:pointer;transition:background .12s;}
+.project-row:last-child{border-bottom:none;}
+.project-row:hover{background:var(--bg2);}
+.project-row-title{font-size:.84rem;font-weight:600;color:var(--ink);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.project-row-client{font-size:.74rem;color:var(--ink4);width:130px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.project-row-type{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--bg3);color:var(--ink3);flex-shrink:0;text-transform:capitalize;}
+.project-row-budget{font-size:.78rem;font-weight:600;color:var(--ink2);width:90px;flex-shrink:0;text-align:right;}
+.project-row-due{font-size:.72rem;color:var(--ink4);width:80px;flex-shrink:0;text-align:right;}
+.project-row-due.overdue{color:var(--red);font-weight:600;}
+.project-row-progress{width:80px;flex-shrink:0;}
+
+/* ── Kanban ── */
+.kanban-board{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start;}
+.kanban-col{min-width:0;}
+.kanban-col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 4px;}
+.kanban-col-title{font-size:.74rem;font-weight:700;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase;}
+.kanban-col-count{font-size:.68rem;color:var(--ink4);background:var(--bg3);padding:1px 7px;border-radius:999px;}
+.kanban-card{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;}
+.kanban-card:hover{border-color:var(--accent-ln);box-shadow:var(--sh);transform:translateY(-1px);}
+.kanban-card-title{font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:4px;line-height:1.3;}
+.kanban-card-client{font-size:.7rem;color:var(--ink4);margin-bottom:8px;flex:1;}
+.kanban-card-footer{display:flex;align-items:center;justify-content:space-between;}
 
 /* ── Detail panel ── */
-#project-detail {
-  position: fixed; top: 0; right: 0; bottom: 0;
-  width: 420px; max-width: 100vw;
-  background: var(--bg); border-left: 1px solid var(--line2);
-  z-index: 150; display: flex; flex-direction: column;
-  transform: translateX(100%);
-  transition: transform .3s var(--ease);
-  box-shadow: -8px 0 40px rgba(0,0,0,.07);
-}
-#project-detail.open { transform: translateX(0); }
-#detail-overlay {
-  position: fixed; inset: 0; z-index: 149;
-  background: rgba(0,0,0,.15);
-  opacity: 0; pointer-events: none; transition: opacity .25s;
-}
-#detail-overlay.open { opacity: 1; pointer-events: all; }
+#project-detail{position:fixed;top:0;right:0;bottom:0;width:460px;max-width:100vw;background:var(--bg);border-left:1px solid var(--line2);z-index:150;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s var(--ease);box-shadow:-8px 0 40px rgba(0,0,0,.07);height:100vh;overflow:hidden;}
+#project-detail.open{transform:translateX(0);}
+#detail-overlay{position:fixed;inset:0;z-index:149;background:rgba(0,0,0,.15);opacity:0;pointer-events:none;transition:opacity .25s;}
+#detail-overlay.open{opacity:1;pointer-events:all;}
+.detail-topbar{height:56px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0;}
+.detail-topbar-title{font-size:.86rem;font-weight:700;color:var(--ink);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.detail-topbar-actions{display:flex;align-items:center;gap:6px;}
+.detail-close{width:28px;height:28px;border-radius:7px;background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.detail-close:hover{background:var(--bg3);}
+.detail-scroll{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line2) transparent;}
+.detail-scroll::-webkit-scrollbar{width:3px;}
+.detail-scroll::-webkit-scrollbar-thumb{background:var(--line2);border-radius:2px;}
+.detail-section{padding:16px 18px;border-bottom:1px solid var(--line2);}
+.detail-section:last-child{border-bottom:none;padding-bottom:40px;}
+.detail-section-title{font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;}
+.detail-field{margin-bottom:12px;}
+.detail-field-label{font-size:.72rem;color:var(--ink4);margin-bottom:3px;}
+.detail-field-val{font-size:.84rem;color:var(--ink);font-weight:500;}
+.detail-progress-num{font-family:var(--serif);font-size:2rem;color:var(--ink);line-height:1;margin-bottom:6px;}
+.detail-progress-bar{height:6px;background:var(--line2);border-radius:3px;overflow:hidden;}
+.detail-progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s var(--ease);}
 
-.detail-topbar { height: 56px; border-bottom: 1px solid var(--line2); display: flex; align-items: center; justify-content: space-between; padding: 0 18px; flex-shrink: 0; }
-.detail-topbar-title { font-size: .86rem; font-weight: 700; color: var(--ink); }
-.detail-topbar-actions { display: flex; align-items: center; gap: 6px; }
-.detail-close { width: 28px; height: 28px; border-radius: 7px; background: none; border: none; cursor: pointer; color: var(--ink4); display: flex; align-items: center; justify-content: center; transition: background .15s; }
-.detail-close:hover { background: var(--bg3); }
-
-.detail-scroll { flex: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--line2) transparent; }
-.detail-scroll::-webkit-scrollbar { width: 3px; }
-.detail-scroll::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 2px; }
-
-.detail-section { padding: 16px 18px; border-bottom: 1px solid var(--line2); }
-.detail-section:last-child { border-bottom: none; }
-.detail-section-title { font-size: .68rem; font-weight: 700; color: var(--ink4); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; }
-
-.detail-field { margin-bottom: 12px; }
-.detail-field-label { font-size: .72rem; color: var(--ink4); margin-bottom: 3px; }
-.detail-field-val { font-size: .84rem; color: var(--ink); font-weight: 500; }
-
-.detail-progress-big { margin-bottom: 4px; }
-.detail-progress-num { font-family: var(--serif); font-size: 2rem; color: var(--ink); line-height: 1; margin-bottom: 6px; }
-.detail-progress-bar { height: 6px; background: var(--line2); border-radius: 3px; overflow: hidden; }
-.detail-progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .6s var(--ease); }
+/* ── Status selector ── */
+.status-select-wrap{display:flex;gap:6px;flex-wrap:wrap;}
+.status-opt{padding:5px 12px;border-radius:999px;font-size:.74rem;font-weight:700;cursor:pointer;border:1.5px solid transparent;transition:all .15s;}
+.status-opt.active{border-color:currentColor;}
+.status-opt[data-s="draft"]{background:var(--bg3);color:var(--ink3);}
+.status-opt[data-s="active"]{background:#dcfce7;color:#166534;}
+.status-opt[data-s="paused"]{background:#f3f4f6;color:#374151;}
+.status-opt[data-s="completed"]{background:#dbeafe;color:#1e40af;}
+.status-opt[data-s="cancelled"]{background:#fee2e2;color:#991b1b;}
 
 /* ── Milestones ── */
-.milestone-list { display: flex; flex-direction: column; gap: 6px; }
-.milestone-item {
-  border: 1.5px solid var(--line2); border-radius: var(--r);
-  overflow: hidden; transition: border-color .15s;
+.milestone-list{display:flex;flex-direction:column;gap:6px;}
+.milestone-item{border:1.5px solid var(--line2);border-radius:var(--r);overflow:hidden;transition:border-color .15s;}
+.milestone-item.done{border-color:var(--accent-ln);}
+.milestone-header{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;background:none;width:100%;text-align:left;font-family:var(--sans);transition:background .12s;}
+.milestone-header:hover{background:var(--bg2);}
+.milestone-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;cursor:pointer;background:none;}
+.milestone-check.done{background:var(--accent);border-color:var(--accent);}
+.milestone-check.done svg,.milestone-check svg{display:none;width:10px;height:10px;}
+.milestone-check.done svg{display:block;}
+.milestone-title{font-size:.82rem;font-weight:600;color:var(--ink);flex:1;}
+.milestone-title.done{text-decoration:line-through;color:var(--ink4);}
+.milestone-chevron{color:var(--ink4);flex-shrink:0;transition:transform .2s;}
+.milestone-chevron.open{transform:rotate(90deg);}
+.milestone-chevron svg{width:12px;height:12px;}
+.subtask-list{padding:0 12px 10px 40px;display:flex;flex-direction:column;gap:5px;}
+.subtask-item{display:flex;align-items:center;gap:8px;}
+.subtask-check{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;background:none;}
+.subtask-check.done{background:var(--accent);border-color:var(--accent);}
+.subtask-check.done svg{display:block;}
+.subtask-check svg{display:none;width:8px;height:8px;}
+.subtask-title{font-size:.77rem;color:var(--ink2);flex:1;}
+.subtask-title.done{text-decoration:line-through;color:var(--ink4);}
+.milestone-add-btn{display:flex;align-items:center;gap:6px;padding:8px 0;font-size:.78rem;color:var(--accent);font-weight:600;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:opacity .15s;}
+.milestone-add-btn:hover{opacity:.7;}
+
+/* ── Inline editing ── */
+.milestone-title-input{font-size:.82rem;font-weight:600;color:var(--ink);background:none;border:none;outline:none;font-family:var(--sans);flex:1;padding:0;border-bottom:1.5px solid transparent;transition:border-color .15s;}
+.milestone-title-input:focus{border-bottom-color:var(--accent);}
+.subtask-title-input{font-size:.77rem;color:var(--ink2);flex:1;background:none;border:none;outline:none;font-family:var(--sans);padding:0;border-bottom:1.5px solid transparent;transition:border-color .15s;}
+.subtask-title-input:focus{border-bottom-color:var(--accent);}
+.milestone-actions{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.ms-action-btn{width:22px;height:22px;border-radius:5px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink4);transition:all .12s;opacity:0;}
+.milestone-item:hover .ms-action-btn,.subtask-item:hover .ms-action-btn{opacity:1;}
+.ms-action-btn:hover{background:var(--bg3);color:var(--red);}
+.ms-action-btn svg{width:11px;height:11px;}
+
+/* Milestone amount input */
+.ms-amount-input{width:70px;height:26px;background:var(--bg2);border:1px solid var(--line2);border-radius:6px;padding:0 7px;font-size:.75rem;color:var(--ink);font-family:var(--sans);outline:none;text-align:right;}
+.ms-amount-input:focus{border-color:var(--accent);}
+
+/* ── Time logging ── */
+.time-log-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line2);transition:background .12s;}
+.time-log-row:hover{background:var(--bg2);}
+.time-log-date{font-size:.76rem;color:var(--ink4);width:80px;flex-shrink:0;}
+.time-log-hours{font-size:.88rem;font-weight:700;color:var(--ink);width:50px;flex-shrink:0;}
+.time-log-desc{font-size:.78rem;color:var(--ink2);flex:1;}
+.time-total{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg2);border-top:2px solid var(--accent-ln);}
+.time-total-label{font-size:.76rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;}
+.time-total-val{font-family:var(--serif);font-size:1.2rem;color:var(--ink);}
+
+/* Retainer deliverables */
+.deliverable-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--line2);border-radius:var(--r);margin-bottom:6px;}
+.deliverable-status{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;background:none;transition:all .2s;}
+.deliverable-status.done{background:var(--accent);border-color:var(--accent);}
+.deliverable-status svg{display:none;width:10px;height:10px;}
+.deliverable-status.done svg{display:block;}
+
+/* ── Project-level attachments ── */
+.proj-attach-list{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;}
+.proj-attach-row{display:flex;align-items:center;gap:7px;padding:6px 8px;background:var(--bg2);border:1px solid var(--line2);border-radius:7px;}
+.proj-attach-icon{font-size:.85rem;flex-shrink:0;}
+.proj-attach-name{font-size:.76rem;color:var(--ink2);font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.proj-attach-open{font-size:.68rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:none;border-radius:4px;padding:2px 8px;cursor:pointer;flex-shrink:0;}
+
+/* ── Delete confirm modal ── */
+.confirm-modal{background:var(--bg);border-radius:var(--r-xl);box-shadow:0 20px 60px rgba(0,0,0,.2);width:100%;max-width:400px;overflow:hidden;}
+.confirm-modal-header{padding:20px 20px 0;}
+.confirm-modal-icon{width:44px;height:44px;border-radius:12px;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.confirm-modal-icon svg{width:20px;height:20px;color:var(--red);}
+.confirm-modal-title{font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:6px;}
+.confirm-modal-desc{font-size:.82rem;color:var(--ink3);line-height:1.5;margin-bottom:0;}
+.confirm-modal-footer{display:flex;gap:10px;padding:16px 20px;justify-content:flex-end;border-top:1px solid var(--line2);margin-top:16px;}
+
+/* ── New project wizard ── */
+.wizard-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;}
+.wizard-overlay.open{opacity:1;pointer-events:all;}
+.wizard-modal{background:var(--bg);border-radius:var(--r-xl);box-shadow:0 20px 60px rgba(0,0,0,.18);width:100%;max-width:560px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
+.wizard-header{padding:20px 24px 0;flex-shrink:0;}
+.wizard-step-label{font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;}
+.wizard-title{font-family:var(--serif);font-size:1.4rem;color:var(--ink);margin-bottom:4px;}
+.wizard-subtitle{font-size:.82rem;color:var(--ink3);margin-bottom:0;}
+.wizard-progress{display:flex;gap:4px;padding:14px 24px 0;}
+.wizard-step-dot{flex:1;height:3px;border-radius:2px;background:var(--line2);transition:background .3s;}
+.wizard-step-dot.active{background:var(--accent);}
+.wizard-step-dot.done{background:var(--accent-ln);}
+.wizard-body{padding:20px 24px;overflow-y:auto;flex:1;}
+.wizard-footer{padding:16px 24px;border-top:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+
+/* Type selector cards */
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;}
+.type-card{border:2px solid var(--line2);border-radius:var(--r-lg);padding:16px 14px;cursor:pointer;transition:all .2s;text-align:center;user-select:none;}
+.type-card:hover{border-color:var(--accent-ln);background:var(--accent-bg);}
+.type-card.selected{border-color:var(--accent);background:var(--accent-bg);}
+.type-card-icon{font-size:1.6rem;margin-bottom:8px;display:block;}
+.type-card-name{font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.type-card-desc{font-size:.7rem;color:var(--ink4);line-height:1.4;}
+
+/* ── Modals ── */
+.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--bg);border-radius:var(--r-xl);box-shadow:0 20px 60px rgba(0,0,0,.15);width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid var(--line2);flex-shrink:0;}
+.modal-title{font-family:var(--serif);font-size:1.2rem;color:var(--ink);}
+.modal-close{width:28px;height:28px;border-radius:7px;background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.modal-close:hover{background:var(--bg3);}
+.modal-body{padding:18px 20px;overflow-y:auto;flex:1;}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--line2);display:flex;justify-content:flex-end;gap:10px;flex-shrink:0;}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.field-label{font-size:.76rem;font-weight:600;color:var(--ink2);}
+.field-input{height:42px;background:var(--bg2);border:1.5px solid var(--line);border-radius:var(--r);padding:0 12px;font-size:.86rem;color:var(--ink);font-family:var(--sans);outline:none;transition:border-color .18s,box-shadow .18s;width:100%;}
+.field-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(34,197,94,.08);}
+.field-input::placeholder{color:var(--ink4);}
+.field-textarea{height:auto;padding:10px 12px;resize:vertical;min-height:80px;}
+.field-select{cursor:pointer;}
+
+/* ── Skeleton (static, no animation) ── */
+.skeleton{background:var(--bg3);border-radius:6px;}
+
+/* ── Btn variants ── */
+.btn-danger{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 16px;background:#fee2e2;color:var(--red);border:1.5px solid #fecaca;border-radius:var(--r);font-size:.8rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:background .15s;white-space:nowrap;}
+.btn-danger:hover{background:#fecaca;}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .project-row-client,.project-row-type,.project-row-budget,.project-row-progress{display:none;}
+  #project-detail{width:100vw;max-width:100vw;}
+  .projects-grid{grid-template-columns:1fr;}
+  .kanban-board{grid-template-columns:1fr 1fr;}
+  .projects-toolbar{gap:6px;}
+  .filter-btn{padding:0 10px;font-size:.76rem;}
+  .type-grid{grid-template-columns:1fr;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .wizard-modal{max-height:100vh;border-radius:0;}
 }
-.milestone-item.done { border-color: var(--accent-ln); }
-.milestone-header {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; cursor: pointer; background: none;
-  width: 100%; text-align: left; font-family: var(--sans);
-  transition: background .12s;
-}
-.milestone-header:hover { background: var(--bg2); }
-.milestone-check {
-  width: 18px; height: 18px; border-radius: 50%;
-  border: 2px solid var(--line); flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .2s; cursor: pointer; background: none;
-}
-.milestone-check.done { background: var(--accent); border-color: var(--accent); }
-.milestone-check.done svg { display: block; }
-.milestone-check svg { display: none; width: 10px; height: 10px; }
-.milestone-title { font-size: .82rem; font-weight: 600; color: var(--ink); flex: 1; }
-.milestone-title.done { text-decoration: line-through; color: var(--ink4); }
-.milestone-due { font-size: .68rem; color: var(--ink4); flex-shrink: 0; }
-.milestone-chevron { color: var(--ink4); flex-shrink: 0; transition: transform .2s; }
-.milestone-chevron.open { transform: rotate(90deg); }
-.milestone-chevron svg { width: 12px; height: 12px; }
-
-.subtask-list { padding: 0 12px 10px 40px; display: flex; flex-direction: column; gap: 5px; }
-.subtask-item { display: flex; align-items: center; gap: 8px; }
-.subtask-check {
-  width: 15px; height: 15px; border-radius: 4px;
-  border: 1.5px solid var(--line); flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all .15s; background: none;
-}
-.subtask-check.done { background: var(--accent); border-color: var(--accent); }
-.subtask-check.done svg { display: block; }
-.subtask-check svg { display: none; width: 8px; height: 8px; }
-.subtask-title { font-size: .77rem; color: var(--ink2); flex: 1; }
-.subtask-title.done { text-decoration: line-through; color: var(--ink4); }
-
-.milestone-add-btn { display: flex; align-items: center; gap: 6px; padding: 8px 0; font-size: .78rem; color: var(--accent); font-weight: 600; cursor: pointer; background: none; border: none; font-family: var(--sans); transition: opacity .15s; }
-.milestone-add-btn:hover { opacity: .7; }
-
-/* ── Status selector in detail ── */
-.status-select-wrap { display: flex; gap: 6px; flex-wrap: wrap; }
-.status-opt { padding: 5px 12px; border-radius: 999px; font-size: .74rem; font-weight: 700; cursor: pointer; border: 1.5px solid transparent; transition: all .15s; }
-.status-opt.active { border-color: currentColor; }
-.status-opt[data-s="draft"]     { background: var(--bg3);     color: var(--ink3); }
-.status-opt[data-s="active"]    { background: #dcfce7;         color: #166534; }
-.status-opt[data-s="paused"]    { background: #f3f4f6;         color: #374151; }
-.status-opt[data-s="completed"] { background: #dbeafe;         color: #1e40af; }
-.status-opt[data-s="cancelled"] { background: #fee2e2;         color: #991b1b; }
-
-/* ── Kanban view ── */
-.kanban-board { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; align-items: start; }
-.kanban-col { min-width: 0; }
-.kanban-col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; padding: 0 4px; }
-.kanban-col-title { font-size: .74rem; font-weight: 700; color: var(--ink3); letter-spacing: .06em; text-transform: uppercase; }
-.kanban-col-count { font-size: .68rem; color: var(--ink4); background: var(--bg3); padding: 1px 7px; border-radius: 999px; }
-.kanban-col-body { display: flex; flex-direction: column; gap: 8px; }
-.kanban-card { background: var(--bg); border: 1.5px solid var(--line2); border-radius: var(--r); padding: 12px 14px; cursor: pointer; transition: all .18s; display: flex; flex-direction: column; }
-.kanban-card:hover { border-color: var(--accent-ln); box-shadow: var(--sh); transform: translateY(-1px); }
-.kanban-card-title { font-size: .82rem; font-weight: 700; color: var(--ink); margin-bottom: 4px; line-height: 1.3; }
-.kanban-card-client { font-size: .7rem; color: var(--ink4); margin-bottom: 8px; flex: 1; }
-.kanban-card-footer { display: flex; align-items: center; justify-content: space-between; }
-
-/* ── Inline milestone editing ── */
-.milestone-title-input {
-  font-size: .82rem; font-weight: 600; color: var(--ink);
-  background: none; border: none; outline: none;
-  font-family: var(--sans); flex: 1; padding: 0;
-  border-bottom: 1.5px solid transparent;
-  transition: border-color .15s;
-}
-.milestone-title-input:focus { border-bottom-color: var(--accent); }
-.subtask-title-input {
-  font-size: .77rem; color: var(--ink2); flex: 1;
-  background: none; border: none; outline: none;
-  font-family: var(--sans); padding: 0;
-  border-bottom: 1.5px solid transparent;
-  transition: border-color .15s;
-}
-.subtask-title-input:focus { border-bottom-color: var(--accent); }
-.milestone-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-.ms-action-btn {
-  width: 22px; height: 22px; border-radius: 5px;
-  background: none; border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--ink4); transition: all .12s; opacity: 0;
-}
-.milestone-item:hover .ms-action-btn,
-.subtask-item:hover .ms-action-btn { opacity: 1; }
-.ms-action-btn:hover { background: var(--bg3); color: var(--red); }
-.ms-action-btn svg { width: 11px; height: 11px; }
-
-
-
-/* ── Skeleton ── */
-.skeleton { background: linear-gradient(90deg,var(--bg3) 25%,var(--line2) 50%,var(--bg3) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; }
-@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-
-@media (max-width:768px) {
-  .project-row-client,.project-row-type,.project-row-budget,.project-row-progress { display:none; }
-  #project-detail { width: 100vw; max-width: 100vw; }
-  .projects-grid { grid-template-columns: 1fr; }
-  .kanban-board { grid-template-columns: 1fr 1fr; }
-  .projects-toolbar { gap: 6px; }
-  .filter-btn { padding: 0 10px; font-size: .76rem; }
-}
-@media (max-width:480px) {
-  .kanban-board { grid-template-columns: 1fr; }
-  .projects-toolbar { flex-wrap: wrap; }
-  .search-wrap { min-width: 100%; order: -1; }
-  .view-toggle { margin-left: 0; }
+@media(max-width:480px){
+  .kanban-board{grid-template-columns:1fr;}
+  .projects-toolbar{flex-wrap:wrap;}
+  .search-wrap{min-width:100%;order:-1;}
+  .view-toggle{margin-left:0;}
+  .stats-row{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -242,7 +270,6 @@
 <div id="detail-overlay" onclick="closeDetail()"></div>
 
 <div id="app">
-  <!-- SIDEBAR -->
   <nav id="sidebar">
     <div class="sidebar-header">
       <a href="/" class="sidebar-brand"><div class="sidebar-brand-mark">A</div><span class="sidebar-brand-name">ArkDez</span></a>
@@ -256,7 +283,7 @@
       <div class="nav-section-label">Workspace</div>
       <a class="nav-item" href="dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
       <a class="nav-item" href="clients.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Clients</a>
-      <a class="nav-item active" href="projects.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Projects</a>
+      <a class="nav-item active" href="projects.html" id="nav-projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Projects<span class="change-dot" id="nav-projects-dot" style="display:none;"></span></a>
       <a class="nav-item" href="messages.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages</a>
       <div class="nav-section-label">Finance</div>
       <a class="nav-item" href="invoices.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Invoices</a>
@@ -291,7 +318,7 @@
       </div>
       <div class="topbar-right">
         <button class="topbar-btn" onclick="ARK.toggleNotifications()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></button>
-        <button class="btn-primary" onclick="ARK.openModal('modal-new-project')">
+        <button class="btn-primary" onclick="openWizard()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           New project
         </button>
@@ -300,12 +327,19 @@
 
     <main id="content">
       <div class="page active">
-
         <div class="page-header">
           <div class="page-header-left">
             <h1>Projects</h1>
             <p id="projects-count-label">Track every project from kickoff to delivery.</p>
           </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-row" id="stats-row">
+          <div class="stat-card"><div class="stat-card-label">Active</div><div class="stat-card-val" id="stat-active">—</div><div class="stat-card-sub">projects running</div></div>
+          <div class="stat-card"><div class="stat-card-label">Total spend</div><div class="stat-card-val" id="stat-spend">—</div><div class="stat-card-sub">across milestones</div></div>
+          <div class="stat-card"><div class="stat-card-label">Revisions</div><div class="stat-card-val" id="stat-revisions">—</div><div class="stat-card-sub">pending review</div></div>
+          <div class="stat-card"><div class="stat-card-label">Completed</div><div class="stat-card-val" id="stat-completed">—</div><div class="stat-card-sub">this month</div></div>
         </div>
 
         <div class="projects-toolbar">
@@ -318,62 +352,58 @@
           <button class="filter-btn" id="filter-draft" onclick="setFilter('draft',this)">Draft</button>
           <button class="filter-btn" id="filter-completed" onclick="setFilter('completed',this)">Completed</button>
           <div class="view-toggle" style="margin-left:auto;">
-            <button class="view-btn active" id="view-card" onclick="setView('card',this)" title="Card view">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            </button>
-            <button class="view-btn" id="view-list" onclick="setView('list',this)" title="List view">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-            </button>
-            <button class="view-btn" id="view-kanban" onclick="setView('kanban',this)" title="Kanban view">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="5" height="18"/><rect x="10" y="3" width="5" height="12"/><rect x="17" y="3" width="5" height="15"/></svg>
-            </button>
+            <button class="view-btn active" id="view-card" onclick="setView('card',this)" title="Card view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></button>
+            <button class="view-btn" id="view-list" onclick="setView('list',this)" title="List view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button>
+            <button class="view-btn" id="view-kanban" onclick="setView('kanban',this)" title="Kanban view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="5" height="18"/><rect x="10" y="3" width="5" height="12"/><rect x="17" y="3" width="5" height="15"/></svg></button>
           </div>
         </div>
 
-        <!-- Loading -->
         <div id="projects-loading">
           <div class="projects-grid">
             <div style="background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);padding:18px;"><div class="skeleton" style="height:14px;width:60%;margin-bottom:8px;"></div><div class="skeleton" style="height:11px;width:40%;margin-bottom:16px;"></div><div class="skeleton" style="height:4px;margin-bottom:8px;"></div><div class="skeleton" style="height:11px;width:50%;"></div></div>
             <div style="background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);padding:18px;"><div class="skeleton" style="height:14px;width:55%;margin-bottom:8px;"></div><div class="skeleton" style="height:11px;width:35%;margin-bottom:16px;"></div><div class="skeleton" style="height:4px;margin-bottom:8px;"></div><div class="skeleton" style="height:11px;width:45%;"></div></div>
           </div>
         </div>
-
-        <!-- Projects container -->
         <div id="projects-container"></div>
-
-        <!-- Empty state -->
         <div id="projects-empty" style="display:none;">
           <div class="empty-state">
             <div class="empty-state-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div>
             <h3>No projects yet</h3>
             <p>Create your first project and assign it to a client.</p>
-            <button class="btn-primary" onclick="ARK.openModal('modal-new-project')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              New project
-            </button>
+            <button class="btn-primary" onclick="openWizard()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New project</button>
           </div>
         </div>
-
       </div>
     </main>
   </div>
 </div>
 
-<!-- Project detail panel -->
+<!-- ── Project detail panel ── -->
 <div id="project-detail">
   <div class="detail-topbar">
     <span class="detail-topbar-title" id="detail-title">Project</span>
     <div class="detail-topbar-actions">
       <button class="btn-secondary" style="height:30px;font-size:.75rem;padding:0 10px;" onclick="editProject()">Edit</button>
+      <button id="detail-send-request-btn" class="btn-secondary" style="height:30px;font-size:.75rem;padding:0 10px;display:none;" onclick="sendProjectRequest()">Send to Client</button>
+      <button id="detail-delete-btn" class="btn-danger" style="height:30px;font-size:.75rem;padding:0 10px;" onclick="confirmDeleteProject()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>Delete</button>
       <button class="detail-close" onclick="closeDetail()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
   </div>
   <div class="detail-scroll">
 
+    <!-- Client change notice -->
+    <div id="detail-change-notice" style="display:none;padding:10px 18px;background:#fef2f2;border-bottom:1px solid #fecaca;">
+      <div style="display:flex;align-items:center;gap:7px;font-size:.76rem;color:var(--red);font-weight:600;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Client made updates to this project
+      </div>
+    </div>
+
     <!-- Status -->
     <div class="detail-section">
       <div class="detail-section-title">Status</div>
       <div class="status-select-wrap" id="detail-status-wrap"></div>
+      <div id="detail-request-status" style="display:none;margin-top:8px;padding:7px 10px;border-radius:var(--r);font-size:.75rem;"></div>
     </div>
 
     <!-- Info -->
@@ -392,15 +422,25 @@
       </div>
     </div>
 
-    <!-- Progress -->
-    <div class="detail-section">
+    <!-- Progress (shown for milestone/retainer projects) -->
+    <div class="detail-section" id="detail-progress-section">
       <div class="detail-section-title">Overall progress</div>
       <div class="detail-progress-num" id="detail-progress-num">0%</div>
       <div class="detail-progress-bar"><div class="detail-progress-fill" id="detail-progress-fill" style="width:0%"></div></div>
     </div>
 
-    <!-- Milestones -->
-    <div class="detail-section">
+    <!-- Spend summary -->
+    <div class="detail-section" id="detail-spend-section" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="detail-section-title" style="margin-bottom:0;">Spend tracker</div>
+        <div style="font-family:var(--serif);font-size:1.3rem;color:var(--ink);" id="detail-spend-total">$0</div>
+      </div>
+      <div style="font-size:.73rem;color:var(--ink4);margin-top:3px;" id="detail-spend-sub"></div>
+      <div style="height:5px;background:var(--line2);border-radius:3px;overflow:hidden;margin-top:10px;"><div id="detail-spend-bar" style="height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s var(--ease);"></div></div>
+    </div>
+
+    <!-- Milestones section (one-off / fixed price) -->
+    <div class="detail-section" id="detail-milestones-section">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <div class="detail-section-title" style="margin-bottom:0;">Milestones</div>
         <button class="milestone-add-btn" onclick="addMilestone()">
@@ -411,73 +451,154 @@
       <div class="milestone-list" id="milestone-list"></div>
     </div>
 
+    <!-- Time logs section (hourly) -->
+    <div class="detail-section" id="detail-time-section" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="detail-section-title" style="margin-bottom:0;">Time logs</div>
+        <button class="milestone-add-btn" onclick="openLogTimeModal()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Log time
+        </button>
+      </div>
+      <div id="time-log-list" style="border:1.5px solid var(--line2);border-radius:var(--r);overflow:hidden;"></div>
+      <div id="time-log-empty" style="text-align:center;padding:20px 0;font-size:.78rem;color:var(--ink4);display:none;">No time logged yet.</div>
+    </div>
+
+    <!-- Retainer deliverables section -->
+    <div class="detail-section" id="detail-retainer-section" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="detail-section-title" style="margin-bottom:0;">Monthly deliverables</div>
+        <button class="milestone-add-btn" onclick="addDeliverable()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add deliverable
+        </button>
+      </div>
+      <div id="retainer-period" style="font-size:.75rem;color:var(--ink4);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
+        <span id="retainer-period-label"></span>
+        <div style="display:flex;gap:5px;">
+          <button onclick="changeRetainerPeriod(-1)" style="width:24px;height:24px;border:1px solid var(--line2);border-radius:5px;background:var(--bg);cursor:pointer;font-size:.8rem;">‹</button>
+          <button onclick="changeRetainerPeriod(1)" style="width:24px;height:24px;border:1px solid var(--line2);border-radius:5px;background:var(--bg);cursor:pointer;font-size:.8rem;">›</button>
+        </div>
+      </div>
+      <div id="deliverable-list"></div>
+    </div>
+
+    <!-- Project files section (for ALL project types) -->
+    <div class="detail-section" id="detail-files-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="detail-section-title" style="margin-bottom:0;">Project files & links</div>
+        <div style="display:flex;gap:6px;">
+          <button class="milestone-add-btn" onclick="triggerProjectUpload()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload</button>
+          <button class="milestone-add-btn" onclick="toggleProjLinkInput()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>Add link</button>
+        </div>
+      </div>
+      <div id="proj-link-input-wrap" style="display:none;margin-bottom:10px;display:none;flex-direction:column;gap:6px;">
+        <input id="proj-link-url" type="url" placeholder="https://…" style="height:36px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveProjectLink()">
+        <input id="proj-link-label" type="text" placeholder="Label (e.g. Design file, Live site…)" style="height:36px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveProjectLink()">
+        <div style="display:flex;gap:6px;"><button onclick="saveProjectLink()" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save link</button><button onclick="toggleProjLinkInput()" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button></div>
+      </div>
+      <div class="proj-attach-list" id="proj-attach-list"></div>
+      <div id="proj-attach-empty" style="font-size:.76rem;color:var(--ink4);">No files added yet.</div>
+    </div>
 
   </div>
 </div>
 
-<!-- Notification drawer -->
+<!-- ── Notification drawer ── -->
 <div id="notif-overlay" onclick="ARK.closeNotifications()"></div>
 <div id="notif-drawer">
   <div class="notif-header"><h3>Notifications</h3><button class="notif-close" onclick="ARK.closeNotifications()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
   <div class="notif-list"><div class="panel-empty" style="padding:40px 20px;text-align:center;color:var(--ink4);font-size:.82rem;">No notifications yet.</div></div>
 </div>
 
-<!-- New project modal -->
-<div class="modal-overlay" id="modal-new-project" onclick="if(event.target===this)ARK.closeModal('modal-new-project')">
+<!-- ── NEW PROJECT WIZARD ── -->
+<div class="wizard-overlay" id="wizard-overlay">
+  <div class="wizard-modal" id="wizard-modal">
+    <div class="wizard-header">
+      <div class="wizard-step-label" id="wizard-step-label">Step 1 of 3</div>
+      <div class="wizard-title" id="wizard-title">What type of project?</div>
+      <div class="wizard-subtitle" id="wizard-subtitle">Choose how this project will be structured and billed.</div>
+    </div>
+    <div class="wizard-progress" id="wizard-progress">
+      <div class="wizard-step-dot active" id="wdot-1"></div>
+      <div class="wizard-step-dot" id="wdot-2"></div>
+      <div class="wizard-step-dot" id="wdot-3"></div>
+    </div>
+    <div class="wizard-body" id="wizard-body"></div>
+    <div class="wizard-footer">
+      <button class="btn-secondary" id="wizard-back-btn" onclick="wizardBack()" style="display:none;">Back</button>
+      <div style="display:flex;gap:8px;margin-left:auto;">
+        <button class="btn-secondary" onclick="closeWizard()">Cancel</button>
+        <button class="btn-primary" id="wizard-next-btn" onclick="wizardNext()">
+          <span id="wizard-next-label">Continue</span>
+          <div id="wizard-next-spin" style="display:none;width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DELETE CONFIRM MODAL ── -->
+<div class="modal-overlay" id="modal-delete">
+  <div class="confirm-modal">
+    <div class="confirm-modal-header">
+      <div class="confirm-modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></div>
+      <div class="confirm-modal-title">Delete project?</div>
+      <div class="confirm-modal-desc">This action cannot be undone. The project and all its milestones will be permanently deleted. Client files in Drive will not be affected.</div>
+    </div>
+    <div class="confirm-modal-footer">
+      <button class="btn-secondary" onclick="ARK.closeModal('modal-delete')">Keep it</button>
+      <button class="btn-primary" style="background:var(--red);" onclick="executeDeleteProject()" id="delete-confirm-btn">
+        <span id="delete-confirm-label">Delete project</span>
+        <div id="delete-confirm-spin" style="display:none;width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;"></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── LOG TIME MODAL ── -->
+<div class="modal-overlay" id="modal-log-time" onclick="if(event.target===this)ARK.closeModal('modal-log-time')">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-header">
+      <h2 class="modal-title">Log time</h2>
+      <button class="modal-close" onclick="ARK.closeModal('modal-log-time')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="field"><label class="field-label">Date</label><input class="field-input" type="date" id="log-date"></div>
+      <div class="field"><label class="field-label">Hours worked</label><input class="field-input" type="number" id="log-hours" placeholder="e.g. 2.5" min="0.25" step="0.25"></div>
+      <div class="field"><label class="field-label">Description</label><textarea class="field-input field-textarea" id="log-desc" placeholder="What did you work on?" rows="3" style="height:auto;padding:10px 12px;resize:vertical;min-height:70px;"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="ARK.closeModal('modal-log-time')">Cancel</button>
+      <button class="btn-primary" onclick="saveTimeLog()">
+        <span id="log-save-label">Log time</span>
+        <div id="log-save-spin" style="display:none;width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;"></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── EDIT PROJECT MODAL ── -->
+<div class="modal-overlay" id="modal-edit-project" onclick="if(event.target===this)ARK.closeModal('modal-edit-project')">
   <div class="modal" style="max-width:520px;">
     <div class="modal-header">
-      <h2 class="modal-title" id="modal-project-title">New project</h2>
-      <button class="modal-close" onclick="ARK.closeModal('modal-new-project')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      <h2 class="modal-title">Edit project</h2>
+      <button class="modal-close" onclick="ARK.closeModal('modal-edit-project')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="edit-project-id">
-      <div class="field">
-        <label class="field-label" for="p-title">Project title *</label>
-        <input class="field-input" type="text" id="p-title" placeholder="e.g. Airbnb Automation System" autocomplete="off">
-        <span class="field-err" id="err-p-title" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span>
-      </div>
-      <div class="field">
-        <label class="field-label" for="p-client">Client *</label>
-        <select class="field-input field-select" id="p-client">
-          <option value="">Select client…</option>
-        </select>
-        <span class="field-err" id="err-p-client" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span>
-      </div>
-      <div class="field">
-        <label class="field-label" for="p-desc">Description</label>
-        <textarea class="field-input" id="p-desc" rows="2" style="height:auto;padding:10px 12px;resize:vertical;" placeholder="What does this project involve?"></textarea>
-      </div>
+      <div class="field"><label class="field-label">Project title *</label><input class="field-input" type="text" id="ep-title" placeholder="e.g. Airbnb Automation System" autocomplete="off"><span id="err-ep-title" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
+      <div class="field"><label class="field-label">Description</label><textarea class="field-input field-textarea" id="ep-desc" rows="2" style="height:auto;padding:10px 12px;resize:vertical;" placeholder="What does this project involve?"></textarea></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div class="field">
-          <label class="field-label" for="p-type">Type</label>
-          <select class="field-input field-select" id="p-type">
-            <option value="one-off">One-off</option>
-            <option value="retainer">Retainer</option>
-          </select>
-        </div>
-        <div class="field">
-          <label class="field-label" for="p-due">Due date</label>
-          <input class="field-input" type="date" id="p-due">
-        </div>
-        <div class="field">
-          <label class="field-label" for="p-budget-type">Budget type</label>
-          <select class="field-input field-select" id="p-budget-type" onchange="toggleBudget()">
-            <option value="fixed">Fixed price</option>
-            <option value="hourly">Hourly</option>
-          </select>
-        </div>
-        <div class="field" id="budget-amount-field">
-          <label class="field-label" for="p-budget">Amount ($)</label>
-          <input class="field-input" type="number" id="p-budget" placeholder="0" min="0">
-        </div>
+        <div class="field"><label class="field-label">Due date</label><input class="field-input" type="date" id="ep-due"></div>
+        <div class="field"><label class="field-label">Amount ($)</label><input class="field-input" type="number" id="ep-budget" placeholder="0" min="0"></div>
       </div>
+      <div id="ep-hours-field" style="display:none;"><div class="field"><label class="field-label">Estimated hours</label><input class="field-input" type="number" id="ep-hours" placeholder="e.g. 40" min="1"></div></div>
+      <div id="ep-rate-field" style="display:none;"><div class="field"><label class="field-label">Hourly rate ($)</label><input class="field-input" type="number" id="ep-rate" placeholder="e.g. 75" min="1"></div></div>
     </div>
     <div class="modal-footer">
-      <button class="btn-secondary" onclick="ARK.closeModal('modal-new-project')">Cancel</button>
-      <button class="btn-primary" id="save-project-btn" onclick="saveProject()">
-        <span id="save-project-label">Create project</span>
-        <div style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;display:none;" id="save-project-spinner"></div>
-      </button>
+      <button class="btn-secondary" onclick="ARK.closeModal('modal-edit-project')">Cancel</button>
+      <button class="btn-primary" onclick="saveEditProject()"><span id="ep-save-label">Save changes</span><div id="ep-save-spin" style="display:none;width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;"></div></button>
     </div>
   </div>
 </div>
@@ -486,29 +607,47 @@
 <style>@keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@keyframes spin{to{transform:rotate(360deg)}}</style>
 <script src="../assets/ark.js"></script>
 <script>
-// ── State ──────────────────────────────────────────────────
-let allProjects    = [];
-let allClients     = [];
-let currentFilter  = "all";
-let currentView    = "card";
-let selectedProject = null;
-let milestonesDirty = false;
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let allProjects = [], allClients = [];
+let currentFilter = "all", currentView = "card";
+let selectedProject = null, milestonesDirty = false;
+let timeLogs = [], retainerPeriodOffset = 0;
+let projectAttachments = [];
+// Change detection
+const SEEN_KEY = "ark_freelancer_projects_seen";
+const CLIENT_KEY = "ark_freelancer_client_changes";
+let pollTimer = null;
+const DRIVE_FOLDER_ID = "1oaLlUJrnD0uzPtM6CmL4NFWRwbULnxz7";
 
-// ── Boot ───────────────────────────────────────────────────
+// Wizard state
+let wizard = { step: 1, totalSteps: 3, type: "one-off", data: {} };
+
+// ═══════════════════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════════════════
 ARK.requireAuth(async function(user) {
   ARK.bootSidebar(user);
   document.getElementById("auth-gate").classList.add("hidden");
   document.getElementById("app").classList.add("ready");
   await Promise.all([loadProjects(), loadClients()]);
+  startPolling();
+  // Pre-fill today's date in log modal
+  document.getElementById("log-date").value = new Date().toISOString().slice(0,10);
 });
 
-// ── Load ───────────────────────────────────────────────────
 async function loadProjects() {
   try {
     const res = await ARK.api({ action: "get_projects", token: ARK.getToken() });
     if (!res.success) { ARK.showToast(res.error || "Failed to load", "error"); return; }
+    // First load: mark all as seen
+    const seen = getSeenMap();
+    (res.projects || []).forEach(p => { if (!seen[p.id]) markSeen(p.id, p.updatedAt); });
     allProjects = res.projects || [];
+    updateStats();
     renderProjects();
+    updateChangeDots();
   } catch(e) { ARK.showToast("Connection error.", "error"); }
   finally { document.getElementById("projects-loading").style.display = "none"; }
 }
@@ -517,102 +656,150 @@ async function loadClients() {
   try {
     const res = await ARK.api({ action: "get_clients", token: ARK.getToken() });
     if (res.success) allClients = res.clients || [];
-    populateClientDropdown();
   } catch(e) {}
 }
 
-function populateClientDropdown() {
-  const sel = document.getElementById("p-client");
-  sel.innerHTML = '<option value="">Select client…</option>';
-  allClients.filter(c => c.status === "active").forEach(c => {
-    sel.innerHTML += `<option value="${c.id}">${ARK.escHtml(c.name)}${c.company ? " · " + ARK.escHtml(c.company) : ""}</option>`;
-  });
+// ═══════════════════════════════════════════════════════════
+// POLLING — silent background, no blinking
+// ═══════════════════════════════════════════════════════════
+function startPolling() {
+  pollTimer = setInterval(async () => {
+    try {
+      const res = await ARK.api({ action: "get_projects", token: ARK.getToken() });
+      if (!res.success) return;
+      const incoming = res.projects || [];
+      detectClientChanges(incoming);
+      allProjects = incoming;
+      updateStats();
+      renderProjects();
+      updateChangeDots();
+    } catch(e) {} // silent
+  }, 30000);
 }
 
-// ── Search: fuzzy match + debounce ──────────────────────────
+// ═══════════════════════════════════════════════════════════
+// CHANGE DETECTION — client changes only
+// ═══════════════════════════════════════════════════════════
+function getSeenMap() { try { return JSON.parse(localStorage.getItem(SEEN_KEY)||"{}"); } catch(e) { return {}; } }
+function getClientMap() { try { return JSON.parse(localStorage.getItem(CLIENT_KEY)||"{}"); } catch(e) { return {}; } }
+function markSeen(id, updatedAt) { const m=getSeenMap(); m[id]=String(updatedAt); localStorage.setItem(SEEN_KEY,JSON.stringify(m)); }
+function markFreelancerChange(id) {
+  // Freelancer changed — update seen so no dot appears
+  const cm=getClientMap(); cm[id]=Date.now(); localStorage.setItem(CLIENT_KEY,JSON.stringify(cm));
+  const sm=getSeenMap(); sm[id]="freelancer-pending-"+Date.now(); localStorage.setItem(SEEN_KEY,JSON.stringify(sm));
+}
+function projectHasClientChanges(p) {
+  const seen=getSeenMap();
+  if (!seen[p.id]) return false;
+  if (seen[p.id]===String(p.updatedAt)) return false;
+  if (seen[p.id].startsWith("freelancer-pending-")) return false;
+  // Grace period: freelancer made change within 90s
+  const cm=getClientMap(); if (cm[p.id]&&(Date.now()-cm[p.id])<90000) return false;
+  return true;
+}
+function detectClientChanges(incoming) {
+  const seen = getSeenMap();
+  incoming.forEach(p => {
+    if (!seen[p.id]) { markSeen(p.id, p.updatedAt); return; }
+    if (seen[p.id].startsWith("freelancer-pending-")) { markSeen(p.id, p.updatedAt); }
+  });
+}
+function updateChangeDots() {
+  const changed = allProjects.filter(p => projectHasClientChanges(p));
+  const dot = document.getElementById("nav-projects-dot");
+  if (dot) dot.style.display = changed.length > 0 ? "inline-block" : "none";
+}
+
+// ═══════════════════════════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════════════════════════
+function updateStats() {
+  const active = allProjects.filter(p=>p.status==="active").length;
+  const completed = allProjects.filter(p=>p.status==="completed"&&new Date(p.updatedAt||p.createdAt).getMonth()===new Date().getMonth()).length;
+  const revisions = allProjects.reduce((sum,p)=>sum+((p.milestones||[]).filter(m=>m.approvalStatus==="revision_requested").length),0);
+  const spend = allProjects.reduce((sum,p)=>sum+((p.milestones||[]).reduce((s,m)=>s+(parseFloat(m.amount)||0)*(m.status==="done"||m.approvalStatus==="approved"?1:0),0)),0);
+  document.getElementById("stat-active").textContent = active;
+  document.getElementById("stat-completed").textContent = completed;
+  document.getElementById("stat-revisions").textContent = revisions;
+  document.getElementById("stat-spend").textContent = "$"+spend.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
+}
+
+// ═══════════════════════════════════════════════════════════
+// SEARCH & RENDER
+// ═══════════════════════════════════════════════════════════
 function fuzzyMatch(str, pattern) {
   if (!pattern) return true;
-  str = str.toLowerCase().trim(); pattern = pattern.toLowerCase().trim();
+  str=str.toLowerCase().trim(); pattern=pattern.toLowerCase().trim();
   if (!pattern) return true;
   if (str.includes(pattern)) return true;
-  const words = str.split(/[\s\-_]+/);
-  if (words.some(w => w.startsWith(pattern))) return true;
-  const tokens = pattern.split(/\s+/).filter(Boolean);
-  if (tokens.length > 1) return tokens.every(tok => words.some(w => w.startsWith(tok)));
+  const words=str.split(/[\s\-_]+/);
+  if (words.some(w=>w.startsWith(pattern))) return true;
+  const tokens=pattern.split(/\s+/).filter(Boolean);
+  if (tokens.length>1) return tokens.every(tok=>words.some(w=>w.startsWith(tok)));
   return false;
 }
-let _searchTimer = null;
-function handleSearch() {
-  clearTimeout(_searchTimer);
-  _searchTimer = setTimeout(() => renderProjects(), 150);
-}
+let _searchTimer=null;
+function handleSearch() { clearTimeout(_searchTimer); _searchTimer=setTimeout(()=>renderProjects(),150); }
 
-// ── Render ─────────────────────────────────────────────────
 function renderProjects() {
-  const q = document.getElementById("search-input").value.toLowerCase();
-  const filtered = allProjects.filter(p => {
-    if (p.status === "deleted") return false;
-    if (currentFilter !== "all" && p.status !== currentFilter) return false;
-    if (q && !fuzzyMatch(p.title, q) && !fuzzyMatch(p.clientName||"", q) && !fuzzyMatch(p.type||"", q)) return false;
+  const q=document.getElementById("search-input").value.toLowerCase();
+  const filtered=allProjects.filter(p=>{
+    if (p.status==="deleted") return false;
+    if (currentFilter!=="all"&&p.status!==currentFilter) return false;
+    if (q&&!fuzzyMatch(p.title,q)&&!fuzzyMatch(p.clientName||"",q)&&!fuzzyMatch(p.type||"",q)) return false;
     return true;
   });
-
-  const count = allProjects.filter(p => p.status !== "deleted").length;
-  document.getElementById("projects-count-label").textContent = count === 0
-    ? "Create your first project to get started."
-    : count + " project" + (count !== 1 ? "s" : "") + " in your workspace.";
-
-  const container = document.getElementById("projects-container");
-  const empty     = document.getElementById("projects-empty");
-
-  if (!filtered.length) { container.innerHTML = ""; empty.style.display = ""; return; }
-  empty.style.display = "none";
-
-  if (currentView === "card")   container.innerHTML = renderCardView(filtered);
-  else if (currentView === "list")   container.innerHTML = renderListView(filtered);
-  else if (currentView === "kanban") container.innerHTML = renderKanbanView(filtered);
+  const count=allProjects.filter(p=>p.status!=="deleted").length;
+  document.getElementById("projects-count-label").textContent=count===0?"Create your first project.":count+" project"+(count!==1?"s":"")+" in your workspace.";
+  const container=document.getElementById("projects-container"), empty=document.getElementById("projects-empty");
+  if (!filtered.length) { container.innerHTML=""; empty.style.display=""; return; }
+  empty.style.display="none";
+  if (currentView==="card") container.innerHTML=renderCardView(filtered);
+  else if (currentView==="list") container.innerHTML=renderListView(filtered);
+  else container.innerHTML=renderKanbanView(filtered);
 }
 
-// ── Card view ──────────────────────────────────────────────
+function typeLabel(t) {
+  if (t==="hourly") return "Hourly";
+  if (t==="retainer") return "Retainer";
+  return "One-off";
+}
+function typePillClass(t) {
+  if (t==="hourly") return "project-type-pill hourly";
+  if (t==="retainer") return "project-type-pill retainer";
+  return "project-type-pill";
+}
+
 function renderCardView(projects) {
-  return `<div class="projects-grid">${projects.map((p, i) => {
-    const due    = p.dueDate ? new Date(p.dueDate) : null;
-    const isOver = due && due < new Date() && p.status !== "completed";
-    const doneM  = (p.milestones||[]).filter(m => m.status === "done" || m.approvalStatus === "approved").length;
-    const totalM = (p.milestones||[]).length;
-    return `<div class="project-card" onclick="openDetail('${p.id}')" >
+  return `<div class="projects-grid">${projects.map(p=>{
+    const due=p.dueDate?new Date(p.dueDate):null,isOver=due&&due<new Date()&&p.status!=="completed";
+    const doneM=(p.milestones||[]).filter(m=>m.status==="done"||m.approvalStatus==="approved").length;
+    const totalM=(p.milestones||[]).length;
+    const hasClientChange=projectHasClientChanges(p);
+    const hasRevision=(p.milestones||[]).some(m=>m.approvalStatus==="revision_requested");
+    const isPending=p.requestStatus==="pending_client";
+    return `<div class="project-card" onclick="openDetail('${p.id}')">
       <div class="project-card-header">
-        <div class="project-card-title">${ARK.escHtml(p.title)}</div>
+        <div class="project-card-title">${ARK.escHtml(p.title)}${hasClientChange?'<span class="change-dot"></span>':''}</div>
         ${badgeHtml(p.status)}
       </div>
-      <div class="project-card-client">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-        ${ARK.escHtml(p.clientName||"No client")}
-      </div>
+      <div class="project-card-client"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>${ARK.escHtml(p.clientName||"No client")}</div>
       <div class="project-card-meta">
-        <span class="project-type-pill">${ARK.escHtml(p.type)}</span>
-        ${p.budgetAmount > 0 ? `<span class="project-budget">${ARK.fmtCurrency(p.budgetAmount, p.currency)}</span>` : ""}
-        ${due ? `<span class="project-due ${isOver?"overdue":""}">${isOver?"Overdue":"Due"} ${due.toLocaleDateString(undefined,{month:"short",day:"numeric"})}</span>` : ""}
+        <span class="${typePillClass(p.type)}">${typeLabel(p.type)}</span>
+        ${p.budgetAmount>0?`<span class="project-budget">${ARK.fmtCurrency(p.budgetAmount,p.currency)}${p.type==="hourly"?"/hr":""}</span>`:""}
+        ${due?`<span class="project-due ${isOver?"overdue":""}">${isOver?"Overdue":"Due"} ${due.toLocaleDateString(undefined,{month:"short",day:"numeric"})}</span>`:""}
       </div>
       <div class="progress-wrap">
         <div class="progress-bar"><div class="progress-fill" style="width:${p.progress||0}%"></div></div>
-        <div class="progress-label"><span>${totalM > 0 ? doneM+"/"+totalM+" milestones" : "No milestones"}</span><span>${p.progress||0}%</span></div>
+        <div class="progress-label"><span>${p.type==="hourly"?`${(p.totalHours||0)}h logged`:totalM>0?doneM+"/"+totalM+" milestones":"No milestones"}</span><span>${p.progress||0}%</span></div>
       </div>
-      ${p.requestStatus==="pending"?`<div style="display:flex;align-items:center;gap:6px;padding:7px 9px;background:#fffbeb;border:1px solid #fde68a;border-radius:7px;font-size:.7rem;color:#92400e;font-weight:600;margin-top:10px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Client project request
-        <button onclick="event.stopPropagation();respondToRequest('${p.id}','accepted')" style="margin-left:auto;height:22px;padding:0 8px;background:var(--accent);color:#fff;border:none;border-radius:5px;font-size:.67rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Accept</button>
-        <button onclick="event.stopPropagation();respondToRequest('${p.id}','declined')" style="height:22px;padding:0 8px;background:#fee2e2;color:#991b1b;border:none;border-radius:5px;font-size:.67rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Decline</button>
-      </div>`:""}
-      ${(p.milestones||[]).some(m=>m.approvalStatus==="revision_requested")?`<div style="display:flex;align-items:center;gap:6px;padding:6px 9px;background:var(--purple-bg,#f5f3ff);border:1px solid var(--purple-ln,#ddd6fe);border-radius:7px;font-size:.7rem;color:#7c3aed;font-weight:600;margin-top:8px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;flex-shrink:0;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-        Client requested a revision
-      </div>`:""}
+      ${isPending?`<div class="card-notice request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Awaiting client acceptance</div>`:""}
+      ${hasRevision?`<div class="card-notice revision"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Client requested revision</div>`:""}
+      ${p.requestStatus==="pending"&&!isPending?`<div class="card-notice pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Client project request — <button onclick="event.stopPropagation();respondToRequest('${p.id}','accepted')" style="background:var(--accent);color:#fff;border:none;border-radius:4px;padding:1px 8px;cursor:pointer;font-size:.67rem;font-weight:700;font-family:var(--sans);margin-left:4px;">Accept</button><button onclick="event.stopPropagation();respondToRequest('${p.id}','declined')" style="background:#fee2e2;color:#991b1b;border:none;border-radius:4px;padding:1px 8px;cursor:pointer;font-size:.67rem;font-weight:700;font-family:var(--sans);margin-left:3px;">Decline</button></div>`:""}
     </div>`;
   }).join("")}</div>`;
 }
 
-// ── List view ──────────────────────────────────────────────
 function renderListView(projects) {
   return `<div class="projects-list">
     <div style="display:flex;align-items:center;gap:14px;padding:9px 18px;border-bottom:1px solid var(--line2);background:var(--bg2);">
@@ -624,85 +811,113 @@ function renderListView(projects) {
       <div style="width:80px;font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;text-align:right;">Due</div>
       <div style="width:80px;font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;">Progress</div>
     </div>
-    ${projects.map(p => {
-      const due    = p.dueDate ? new Date(p.dueDate) : null;
-      const isOver = due && due < new Date() && p.status !== "completed";
+    ${projects.map(p=>{
+      const due=p.dueDate?new Date(p.dueDate):null,isOver=due&&due<new Date()&&p.status!=="completed";
+      const hasChange=projectHasClientChanges(p);
       return `<div class="project-row" onclick="openDetail('${p.id}')">
-        <div class="project-row-title">${ARK.escHtml(p.title)}</div>
+        <div class="project-row-title">${ARK.escHtml(p.title)}${hasChange?'<span class="change-dot"></span>':''}</div>
         <div class="project-row-client">${ARK.escHtml(p.clientName||"—")}</div>
-        <div class="project-row-type">${ARK.escHtml(p.type)}</div>
+        <div class="project-row-type">${typeLabel(p.type)}</div>
         <div>${badgeHtml(p.status)}</div>
-        <div class="project-row-budget">${p.budgetAmount > 0 ? ARK.fmtCurrency(p.budgetAmount, p.currency) : "—"}</div>
-        <div class="project-row-due ${isOver?"overdue":""}">${due ? due.toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "—"}</div>
-        <div class="project-row-progress">
-          <div class="progress-bar" style="height:5px;"><div class="progress-fill" style="width:${p.progress||0}%"></div></div>
-          <div style="font-size:.65rem;color:var(--ink4);margin-top:2px;">${p.progress||0}%</div>
-        </div>
+        <div class="project-row-budget">${p.budgetAmount>0?ARK.fmtCurrency(p.budgetAmount,p.currency)+(p.type==="hourly"?"/hr":""):"—"}</div>
+        <div class="project-row-due ${isOver?"overdue":""}">${due?due.toLocaleDateString(undefined,{month:"short",day:"numeric"}):"—"}</div>
+        <div class="project-row-progress"><div class="progress-bar" style="height:5px;"><div class="progress-fill" style="width:${p.progress||0}%"></div></div><div style="font-size:.65rem;color:var(--ink4);margin-top:2px;">${p.progress||0}%</div></div>
       </div>`;
     }).join("")}
   </div>`;
 }
 
-// ── Kanban view ────────────────────────────────────────────
 function renderKanbanView(projects) {
-  const cols = [
-    { key:"draft",     label:"Draft" },
-    { key:"active",    label:"Active" },
-    { key:"paused",    label:"Paused" },
-    { key:"completed", label:"Completed" }
-  ];
-  return `<div class="kanban-board">${cols.map(col => {
-    const colProjects = projects.filter(p => p.status === col.key);
-    return `<div class="kanban-col">
-      <div class="kanban-col-header">
-        <span class="kanban-col-title">${col.label}</span>
-        <span class="kanban-col-count">${colProjects.length}</span>
-      </div>
-      <div class="kanban-col-body">
-        ${colProjects.map(p => `
-          <div class="kanban-card" onclick="openDetail('${p.id}')">
-            <div class="kanban-card-title">${ARK.escHtml(p.title)}</div>
-            <div class="kanban-card-client">${ARK.escHtml(p.clientName||"No client")}</div>
-            <div class="kanban-card-footer">
-              ${p.budgetAmount > 0 ? `<span style="font-size:.7rem;font-weight:600;color:var(--ink3);">${ARK.fmtCurrency(p.budgetAmount, p.currency)}</span>` : '<span></span>'}
-              <span style="font-size:.7rem;color:var(--ink4);">${p.progress||0}%</span>
-            </div>
-          </div>`).join("")}
-        ${!colProjects.length ? `<div style="border:1.5px dashed var(--line2);border-radius:var(--r);padding:20px;text-align:center;font-size:.76rem;color:var(--ink4);">No projects</div>` : ""}
-      </div>
-    </div>`;
+  const cols=[{key:"draft",label:"Draft"},{key:"active",label:"Active"},{key:"paused",label:"Paused"},{key:"completed",label:"Completed"}];
+  return `<div class="kanban-board">${cols.map(col=>{
+    const cp=projects.filter(p=>p.status===col.key);
+    return `<div class="kanban-col"><div class="kanban-col-header"><span class="kanban-col-title">${col.label}</span><span class="kanban-col-count">${cp.length}</span></div>
+    <div class="kanban-col-body">${cp.map(p=>`<div class="kanban-card" onclick="openDetail('${p.id}')">
+      <div class="kanban-card-title">${ARK.escHtml(p.title)}${projectHasClientChanges(p)?'<span class="change-dot"></span>':''}</div>
+      <div class="kanban-card-client">${ARK.escHtml(p.clientName||"No client")}</div>
+      <div class="kanban-card-footer">${p.budgetAmount>0?`<span style="font-size:.7rem;font-weight:600;color:var(--ink3);">${ARK.fmtCurrency(p.budgetAmount,p.currency)}</span>`:"<span></span>"}<span style="font-size:.7rem;color:var(--ink4);">${p.progress||0}%</span></div>
+    </div>`).join("")}${!cp.length?`<div style="border:1.5px dashed var(--line2);border-radius:var(--r);padding:20px;text-align:center;font-size:.76rem;color:var(--ink4);">No projects</div>`:""}</div></div>`;
   }).join("")}</div>`;
 }
 
-// ── Detail panel ───────────────────────────────────────────
-function openDetail(id) {
-  if (milestonesDirty) saveMilestones();
-  selectedProject = allProjects.find(p => p.id === id);
+// ═══════════════════════════════════════════════════════════
+// DETAIL PANEL
+// ═══════════════════════════════════════════════════════════
+async function openDetail(id) {
+  if (milestonesDirty) await saveNow();
+  selectedProject=allProjects.find(p=>p.id===id);
   if (!selectedProject) return;
-  const p = selectedProject;
+  const p=selectedProject;
 
-  document.getElementById("detail-title").textContent = p.title;
-  document.getElementById("detail-client").textContent  = p.clientName || "—";
-  document.getElementById("detail-type").textContent    = p.type === "one-off" ? "One-off" : "Retainer";
-  document.getElementById("detail-budget").textContent  = p.budgetAmount > 0 ? ARK.fmtCurrency(p.budgetAmount, p.currency) + (p.budgetType === "hourly" ? "/hr" : "") : "—";
-  document.getElementById("detail-due").textContent     = p.dueDate ? ARK.fmtDate(p.dueDate) : "—";
-  document.getElementById("detail-start").textContent   = p.startDate ? ARK.fmtDate(p.startDate) : "—";
-  document.getElementById("detail-created").textContent = ARK.fmtDate(p.createdAt);
+  // Mark as seen — clears change dot
+  markSeen(p.id, p.updatedAt);
+  markFreelancerChange(p.id); // also reset freelancer-pending
+  updateChangeDots(); renderProjects();
 
-  const descWrap = document.getElementById("detail-desc-wrap");
-  if (p.description) { descWrap.style.display = ""; document.getElementById("detail-desc").textContent = p.description; }
-  else descWrap.style.display = "none";
+  document.getElementById("detail-title").textContent=p.title;
+  document.getElementById("detail-client").textContent=p.clientName||"—";
+  document.getElementById("detail-type").textContent=typeLabel(p.type);
+  document.getElementById("detail-budget").textContent=p.budgetAmount>0?ARK.fmtCurrency(p.budgetAmount,p.currency)+(p.type==="hourly"?"/hr":""):"—";
+  document.getElementById("detail-due").textContent=p.dueDate?ARK.fmtDate(p.dueDate):"—";
+  document.getElementById("detail-start").textContent=p.startDate?ARK.fmtDate(p.startDate):"—";
+  document.getElementById("detail-created").textContent=ARK.fmtDate(p.createdAt);
+  const dw=document.getElementById("detail-desc-wrap");
+  if (p.description) { dw.style.display=""; document.getElementById("detail-desc").textContent=p.description; } else dw.style.display="none";
 
-  // Progress
-  document.getElementById("detail-progress-num").textContent = (p.progress || 0) + "%";
-  document.getElementById("detail-progress-fill").style.width = (p.progress || 0) + "%";
-
-  // Status selector
   renderStatusSelector(p.status);
 
-  // Milestones
-  renderMilestones(p.milestones || []);
-  milestonesDirty = false;
+  // Request status notice
+  const rsEl=document.getElementById("detail-request-status");
+  if (p.requestStatus==="pending_client") {
+    rsEl.style.display=""; rsEl.style.background="#eff6ff"; rsEl.style.border="1px solid #bfdbfe"; rsEl.style.color="#1d4ed8"; rsEl.style.borderRadius="var(--r)";
+    rsEl.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:middle;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Sent to client — awaiting acceptance';
+  } else if (p.requestStatus==="pending") {
+    rsEl.style.display=""; rsEl.style.background="#fffbeb"; rsEl.style.border="1px solid #fde68a"; rsEl.style.color="#92400e"; rsEl.style.borderRadius="var(--r)";
+    rsEl.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:middle;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg> Client created this project — accepting will set it to Active';
+  } else rsEl.style.display="none";
+
+  // Show/hide send to client button (only for draft projects not yet sent)
+  const sendBtn=document.getElementById("detail-send-request-btn");
+  sendBtn.style.display=(p.status==="draft"&&!p.requestStatus)?"":"none";
+
+  // Delete button (hidden for active/completed)
+  document.getElementById("detail-delete-btn").style.display=(p.status==="active"||p.status==="completed")?"none":"";
+
+  // Client change notice
+  const changeNotice=document.getElementById("detail-change-notice");
+  changeNotice.style.display="none"; // already marked seen above
+
+  // Show correct sections based on project type
+  const isMilestone=p.type==="one-off"||p.type==="fixed";
+  const isHourly=p.type==="hourly";
+  const isRetainer=p.type==="retainer";
+
+  document.getElementById("detail-progress-section").style.display=isMilestone||isRetainer?"":"none";
+  document.getElementById("detail-milestones-section").style.display=isMilestone?"":"none";
+  document.getElementById("detail-time-section").style.display=isHourly?"":"none";
+  document.getElementById("detail-retainer-section").style.display=isRetainer?"":"none";
+  document.getElementById("detail-spend-section").style.display=isMilestone?"":"none";
+
+  if (isMilestone) {
+    document.getElementById("detail-progress-num").textContent=(p.progress||0)+"%";
+    document.getElementById("detail-progress-fill").style.width=(p.progress||0)+"%";
+    renderMilestones(p.milestones||[]);
+    renderSpend(p);
+    milestonesDirty=false;
+  }
+  if (isHourly) {
+    await loadTimeLogs(p.id);
+  }
+  if (isRetainer) {
+    document.getElementById("detail-progress-num").textContent=(p.progress||0)+"%";
+    document.getElementById("detail-progress-fill").style.width=(p.progress||0)+"%";
+    renderRetainerSection(p);
+    milestonesDirty=false;
+  }
+
+  // Project files (all types)
+  projectAttachments=Array.isArray(p.attachments)?p.attachments:[];
+  renderProjectFiles();
 
   document.getElementById("project-detail").classList.add("open");
   document.getElementById("detail-overlay").classList.add("open");
@@ -712,668 +927,652 @@ function closeDetail() {
   if (milestonesDirty) saveNow();
   document.getElementById("project-detail").classList.remove("open");
   document.getElementById("detail-overlay").classList.remove("open");
-  selectedProject = null;
+  selectedProject=null;
 }
 
-// ── Status selector ────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// STATUS SELECTOR
+// ═══════════════════════════════════════════════════════════
 function renderStatusSelector(current) {
-  const statuses = ["draft","active","paused","completed","cancelled"];
-  document.getElementById("detail-status-wrap").innerHTML = statuses.map(s => `
-    <div class="status-opt ${s === current ? "active" : ""}" data-s="${s}" onclick="changeStatus('${s}')">
-      ${s.charAt(0).toUpperCase() + s.slice(1)}
-    </div>`).join("");
+  document.getElementById("detail-status-wrap").innerHTML=["draft","active","paused","completed","cancelled"].map(s=>
+    `<div class="status-opt ${s===current?"active":""}" data-s="${s}" onclick="changeStatus('${s}')">${s.charAt(0).toUpperCase()+s.slice(1)}</div>`
+  ).join("");
 }
-
 async function changeStatus(status) {
   if (!selectedProject) return;
-  const old = selectedProject.status;
-  selectedProject.status = status;
-  renderStatusSelector(status);
-  const idx = allProjects.findIndex(p => p.id === selectedProject.id);
-  if (idx > -1) allProjects[idx].status = status;
-  renderProjects();
+  markFreelancerChange(selectedProject.id);
+  const old=selectedProject.status;
+  selectedProject.status=status; renderStatusSelector(status);
+  const idx=allProjects.findIndex(p=>p.id===selectedProject.id);
+  if (idx>-1) allProjects[idx].status=status; renderProjects();
+  // Update delete btn visibility
+  document.getElementById("detail-delete-btn").style.display=(status==="active"||status==="completed")?"none":"";
   try {
-    const res = await ARK.api({ action:"update_project", token:ARK.getToken(), projectId:selectedProject.id, status });
-    if (!res.success) { selectedProject.status = old; ARK.showToast(res.error || "Failed to update", "error"); }
-    else ARK.showToast("Status updated", "success");
-  } catch(e) { ARK.showToast("Connection error.", "error"); }
+    const res=await ARK.api({action:"update_project",token:ARK.getToken(),projectId:selectedProject.id,status});
+    if (!res.success) { selectedProject.status=old; ARK.showToast(res.error||"Failed","error"); }
+    else ARK.showToast("Status updated","success");
+  } catch(e) { ARK.showToast("Connection error.","error"); }
 }
 
-// ── Respond to client project request ─────────────────────
+// ═══════════════════════════════════════════════════════════
+// RESPOND TO CLIENT REQUEST
+// ═══════════════════════════════════════════════════════════
 async function respondToRequest(projectId, response) {
   try {
-    const res = await ARK.api({ action: "respond_to_project_request", token: ARK.getToken(), projectId, response });
+    const res=await ARK.api({action:"respond_to_project_request",token:ARK.getToken(),projectId,response});
     if (res.success) {
-      const idx = allProjects.findIndex(p => p.id === projectId);
-      if (idx > -1) {
-        allProjects[idx].requestStatus = response;
-        allProjects[idx].status = response === "accepted" ? "active" : "cancelled";
-      }
-      ARK.showToast(response === "accepted" ? "Project accepted!" : "Project declined", "success");
-      renderProjects();
-    } else { ARK.showToast(res.error || "Failed", "error"); }
-  } catch(e) { ARK.showToast("Connection error.", "error"); }
+      const idx=allProjects.findIndex(p=>p.id===projectId);
+      if (idx>-1) { allProjects[idx].requestStatus=response; allProjects[idx].status=response==="accepted"?"active":"cancelled"; }
+      ARK.showToast(response==="accepted"?"Project accepted! Now Active.":"Project declined","success");
+      renderProjects(); if (selectedProject?.id===projectId) openDetail(projectId);
+    } else ARK.showToast(res.error||"Failed","error");
+  } catch(e) { ARK.showToast("Connection error.","error"); }
 }
 
-// ── Mark revision done (freelancer side) ───────────────────
-async function markRevisionDone(milestoneId, mi) {
+async function sendProjectRequest() {
+  if (!selectedProject) return;
   try {
-    const res = await ARK.api({ action: "clear_revision", token: ARK.getToken(), milestoneId });
+    const res=await ARK.api({action:"request_project_acceptance",token:ARK.getToken(),projectId:selectedProject.id});
     if (res.success) {
-      if (selectedProject) {
-        const m = selectedProject.milestones[mi];
-        if (m) {
-          if (m.revisionNotes && typeof m.revisionNotes === "object") {
-            m.revisionNotes.resolved = true;
-            m.revisionNotes.resolvedAt = new Date().toISOString();
-          }
-          m.approvalStatus = "pending";
-          m.status = "in-progress";
-        }
-        milestonesDirty = true;
-        renderMilestones(selectedProject.milestones);
-        saveNow();
-      }
-      ARK.showToast("Revision marked done — awaiting client approval", "success");
-    } else { ARK.showToast(res.error || "Failed", "error"); }
-  } catch(e) { ARK.showToast("Connection error.", "error"); }
+      selectedProject.requestStatus="pending_client";
+      const idx=allProjects.findIndex(p=>p.id===selectedProject.id);
+      if (idx>-1) allProjects[idx].requestStatus="pending_client";
+      document.getElementById("detail-send-request-btn").style.display="none";
+      const rsEl=document.getElementById("detail-request-status");
+      rsEl.style.display=""; rsEl.style.background="#eff6ff"; rsEl.style.color="#1d4ed8"; rsEl.style.border="1px solid #bfdbfe"; rsEl.style.borderRadius="var(--r)";
+      rsEl.textContent="Sent to client — awaiting acceptance";
+      ARK.showToast("Project request sent to client!","success");
+    } else ARK.showToast(res.error||"Failed","error");
+  } catch(e) { ARK.showToast("Connection error.","error"); }
 }
 
-// ── Milestones — inline editing, no duplicates ────────────
+// ═══════════════════════════════════════════════════════════
+// SPEND TRACKER
+// ═══════════════════════════════════════════════════════════
+function renderSpend(p) {
+  const milestones=p.milestones||[];
+  const totalMs=milestones.reduce((s,m)=>s+(parseFloat(m.amount)||0),0);
+  const earnedMs=milestones.filter(m=>m.status==="done"||m.approvalStatus==="approved").reduce((s,m)=>s+(parseFloat(m.amount)||0),0);
+  const budget=p.budgetAmount||0;
+  const total=totalMs||budget;
+  document.getElementById("detail-spend-total").textContent=ARK.fmtCurrency(earnedMs,p.currency||"USD");
+  document.getElementById("detail-spend-sub").textContent=total>0?`of ${ARK.fmtCurrency(total,p.currency||"USD")} allocated`:"No amounts set on milestones";
+  const pct=total>0?Math.min(Math.round((earnedMs/total)*100),100):0;
+  document.getElementById("detail-spend-bar").style.width=pct+"%";
+  document.getElementById("detail-spend-section").style.display=totalMs>0||budget>0?"":"none";
+}
+
+// ═══════════════════════════════════════════════════════════
+// MILESTONES
+// ═══════════════════════════════════════════════════════════
 function renderMilestones(milestones) {
-  const list = document.getElementById("milestone-list");
-  if (!milestones.length) {
-    list.innerHTML = `<div style="text-align:center;padding:20px 0;font-size:.78rem;color:var(--ink4);">No milestones yet — add your first one above.</div>`;
-    return;
-  }
-
-  // Preserve open/closed state
-  const openStates = {};
-  list.querySelectorAll(".subtask-list").forEach((el, i) => {
-    openStates[i] = el.style.display !== "none";
-  });
-
-  list.innerHTML = milestones.map((m, mi) => {
-    const ap       = m.approvalStatus || "pending";
-    const isDone   = m.status === "done" || ap === "approved";
-    const subtasks = m.subtasks || [];
-    const revNotes = m.revisionNotes || {};
-    const isOpen   = openStates[mi] || false;
-    let bcolor = "var(--line2)";
-    if (ap === "approved") bcolor = "var(--accent-ln,#bbf7d0)";
-    if (ap === "revision_requested") bcolor = "#ddd6fe";
+  const list=document.getElementById("milestone-list");
+  if (!milestones.length) { list.innerHTML=`<div style="text-align:center;padding:20px 0;font-size:.78rem;color:var(--ink4);">No milestones yet — add your first one above.</div>`; return; }
+  const openStates={};
+  list.querySelectorAll(".subtask-list").forEach((el,i)=>{ openStates[i]=el.style.display!=="none"; });
+  list.innerHTML=milestones.map((m,mi)=>{
+    const ap=m.approvalStatus||"pending", isDone=m.status==="done"||ap==="approved";
+    const subtasks=m.subtasks||[], revNotes=m.revisionNotes||{};
+    const isOpen=openStates[mi]||false;
+    let bcolor="var(--line2)"; if(ap==="approved")bcolor="var(--accent-ln,#bbf7d0)"; if(ap==="revision_requested")bcolor="#ddd6fe";
     return `
-    <div class="milestone-item ${isDone ? "done" : ""}" style="border-color:${bcolor}">
+    <div class="milestone-item ${isDone?"done":""}" style="border-color:${bcolor}">
       <div class="milestone-header" onclick="toggleMilestoneOpen(this)">
-        <button class="milestone-check ${isDone || ap==="approved" ? "done" : ""}" onclick="toggleMilestone(event,${mi})" title="${isDone ? "Mark incomplete" : "Mark done"}">
+        <button class="milestone-check ${isDone||ap==="approved"?"done":""}" onclick="toggleMilestone(event,${mi})">
           <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
         </button>
-        <input class="milestone-title-input ${isDone ? "done" : ""}" value="${ARK.escHtml(m.title)}"
-          onclick="event.stopPropagation()"
-          onchange="editMilestoneTitle(${mi}, this.value)"
-          onblur="editMilestoneTitle(${mi}, this.value)"
-          placeholder="Milestone title">
-        ${ap==="approved"?`<span style="background:#dcfce7;color:#166534;font-size:.6rem;flex-shrink:0;padding:2px 7px;border-radius:999px;font-weight:700;white-space:nowrap;">✓ Approved</span>`:""}
-        ${ap==="revision_requested"?`<span style="background:#f5f3ff;color:#7c3aed;font-size:.6rem;flex-shrink:0;padding:2px 7px;border-radius:999px;font-weight:700;white-space:nowrap;">↩ Revision</span>`:""}
-        ${revNotes&&revNotes.resolved?`<span style="background:#dcfce7;color:#166534;font-size:.6rem;flex-shrink:0;padding:2px 7px;border-radius:999px;font-weight:700;white-space:nowrap;">✓ Resolved</span>`:""}
+        <input class="milestone-title-input ${isDone?"done":""}" value="${ARK.escHtml(m.title)}" onclick="event.stopPropagation()" onchange="editMilestoneTitle(${mi},this.value)" onblur="editMilestoneTitle(${mi},this.value)" placeholder="Milestone title">
+        <input class="ms-amount-input" type="number" value="${m.amount||""}" placeholder="$" min="0" step="0.01" onclick="event.stopPropagation()" onchange="editMilestoneAmount(${mi},this.value)" onblur="editMilestoneAmount(${mi},this.value)" title="Milestone amount">
+        ${ap==="approved"?`<span style="background:#dcfce7;color:#166634;font-size:.6rem;flex-shrink:0;padding:2px 6px;border-radius:999px;font-weight:700;">✓ Approved</span>`:""}
+        ${ap==="revision_requested"?`<span style="background:#f5f3ff;color:#7c3aed;font-size:.6rem;flex-shrink:0;padding:2px 6px;border-radius:999px;font-weight:700;">↩ Revision</span>`:""}
+        ${revNotes&&revNotes.resolved?`<span style="background:#dcfce7;color:#166634;font-size:.6rem;flex-shrink:0;padding:2px 6px;border-radius:999px;font-weight:700;">✓ Resolved</span>`:""}
         <div class="milestone-actions">
-          <button class="ms-action-btn" onclick="event.stopPropagation();deleteMilestone(${mi})" title="Delete milestone">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-          </button>
+          <button class="ms-action-btn" onclick="event.stopPropagation();deleteMilestone(${mi})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button>
         </div>
-        <div class="milestone-chevron ${isOpen ? "open" : ""}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        <div class="milestone-chevron ${isOpen?"open":""}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
       </div>
-      <div class="subtask-list" style="display:${isOpen ? "flex" : "none"};flex-direction:column;">
-        ${subtasks.map((s, si) => `
-          <div class="subtask-item">
-            <button class="subtask-check ${s.status === "done" ? "done" : ""}" onclick="toggleSubtask(${mi},${si})">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-            </button>
-            <input class="subtask-title-input ${s.status === "done" ? "done" : ""}" value="${ARK.escHtml(s.title)}"
-              onchange="editSubtaskTitle(${mi},${si},this.value)"
-              onblur="editSubtaskTitle(${mi},${si},this.value)"
-              placeholder="Subtask title">
-            <button class="ms-action-btn" style="opacity:0;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0"
-              onclick="deleteSubtask(${mi},${si})" title="Delete">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-          </div>`).join("")}
-        <button onclick="addSubtask(${mi})" style="display:flex;align-items:center;gap:5px;padding:5px 0 2px;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add subtask
+      <div class="subtask-list" style="display:${isOpen?"flex":"none"};flex-direction:column;">
+        ${subtasks.map((s,si)=>`<div class="subtask-item">
+          <button class="subtask-check ${s.status==="done"?"done":""}" onclick="toggleSubtask(${mi},${si})"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></button>
+          <input class="subtask-title-input ${s.status==="done"?"done":""}" value="${ARK.escHtml(s.title)}" onchange="editSubtaskTitle(${mi},${si},this.value)" onblur="editSubtaskTitle(${mi},${si},this.value)" placeholder="Subtask title">
+          <button class="ms-action-btn" style="opacity:0;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0" onclick="deleteSubtask(${mi},${si})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>`).join("")}
+        <button onclick="addSubtask(${mi})" style="display:flex;align-items:center;gap:5px;padding:5px 0 2px;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add subtask
         </button>
-        ${(m.attachments||[]).length > 0 ? `
-        <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line2);display:flex;flex-direction:column;gap:5px;">
-          ${(m.attachments||[]).map(a => `
-          ${a.type === "note"
-            ? `<div style="border:1px solid var(--line2);border-radius:6px;overflow:hidden;">
-                <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.note-chev').classList.toggle('open')"
-                  style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);cursor:pointer;user-select:none;">
-                  <span style="font-size:.82rem;flex-shrink:0;">📝</span>
-                  <span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;">Note</span>
-                  <span class="note-chev" style="font-size:.65rem;color:var(--ink4);transition:transform .15s;display:inline-block;">▶</span>
-                </div>
-                <div style="display:none;padding:7px 10px 8px;font-size:.75rem;color:var(--ink3);line-height:1.6;background:var(--bg2);border-top:1px solid var(--line2);white-space:pre-wrap;">${ARK.escHtml(a.content||"")}</div>
-              </div>`
-            : `<div style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);border:1px solid var(--line2);border-radius:6px;">
-                <span style="font-size:.85rem;flex-shrink:0;">${getFileIcon(a.type)}</span>
-                <span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${ARK.escHtml(a.name)}">${ARK.escHtml(a.name)}</span>
-                <button onclick="openAttachment('${ARK.escHtml(a.url)}','${ARK.escHtml(a.type)}')" style="font-size:.68rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:none;border-radius:4px;padding:2px 7px;cursor:pointer;flex-shrink:0;">Open</button>
-              </div>`
-          }`).join("")}
-        </div>` : ""}
+        ${(m.attachments||[]).length>0?`<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line2);display:flex;flex-direction:column;gap:5px;">
+          ${(m.attachments||[]).map(a=>a.type==="note"
+            ?`<div style="border:1px solid var(--line2);border-radius:6px;overflow:hidden;"><div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);cursor:pointer;"><span style="font-size:.82rem;">📝</span><span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;">Note</span><span style="font-size:.65rem;color:var(--ink4);">▶</span></div><div style="display:none;padding:7px 10px;font-size:.75rem;color:var(--ink3);line-height:1.6;background:var(--bg2);border-top:1px solid var(--line2);white-space:pre-wrap;">${ARK.escHtml(a.content||"")}</div></div>`
+            :`<div style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);border:1px solid var(--line2);border-radius:6px;"><span style="font-size:.85rem;">${getFileIcon(a.type)}</span><span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ARK.escHtml(a.name)}</span><button onclick="openAttachment('${ARK.escHtml(a.url)}')" style="font-size:.68rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:none;border-radius:4px;padding:2px 7px;cursor:pointer;">Open</button></div>`
+          ).join("")}
+        </div>`:""}
         <div style="display:flex;align-items:center;gap:10px;margin-top:4px;flex-wrap:wrap;">
-          <button data-attach-mi="${mi}" onclick="triggerMilestoneUpload(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            + Attach file
-          </button>
-          <button onclick="toggleLinkInput(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-            + Add link
-          </button>
-          <button onclick="toggleNoteInput(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            + Add note
-          </button>
+          <button data-attach-mi="${mi}" onclick="triggerMilestoneUpload(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>+ Attach file</button>
+          <button onclick="toggleLinkInput(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>+ Add link</button>
+          <button onclick="toggleNoteInput(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>+ Add note</button>
         </div>
-        <div id="link-input-${mi}" style="display:none;margin-top:6px;display:none;flex-direction:column;gap:6px;">
-          <input id="link-url-${mi}" type="url" placeholder="https://…" style="height:34px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveMilestoneLink(${mi})">
-          <input id="link-label-${mi}" type="text" placeholder="Label (e.g. Figma file, Live preview…)" style="height:34px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveMilestoneLink(${mi})">
-          <div style="display:flex;gap:6px;">
-            <button onclick="saveMilestoneLink(${mi})" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save link</button>
-            <button onclick="toggleLinkInput(${mi})" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button>
-          </div>
+        <div id="link-input-${mi}" style="display:none;flex-direction:column;gap:6px;margin-top:6px;">
+          <input id="link-url-${mi}" type="url" placeholder="https://…" style="height:34px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveMilestoneLink(${mi})">
+          <input id="link-label-${mi}" type="text" placeholder="Label…" style="height:34px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveMilestoneLink(${mi})">
+          <div style="display:flex;gap:6px;"><button onclick="saveMilestoneLink(${mi})" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save link</button><button onclick="toggleLinkInput(${mi})" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button></div>
         </div>
         <div id="note-input-${mi}" style="display:none;flex-direction:column;gap:6px;margin-top:6px;">
-          <textarea id="note-text-${mi}" placeholder="Add a note about this milestone — context, decisions, blockers…" rows="3" style="background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:9px 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;resize:vertical;min-height:72px;width:100%;line-height:1.5;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'"></textarea>
-          <div style="display:flex;gap:6px;">
-            <button onclick="saveMilestoneNote(${mi})" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save note</button>
-            <button onclick="toggleNoteInput(${mi})" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button>
-          </div>
+          <textarea id="note-text-${mi}" rows="3" placeholder="Add a milestone note…" style="background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:9px 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;resize:vertical;min-height:72px;width:100%;line-height:1.5;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'"></textarea>
+          <div style="display:flex;gap:6px;"><button onclick="saveMilestoneNote(${mi})" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save note</button><button onclick="toggleNoteInput(${mi})" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button></div>
         </div>
-
-        ${ap==="revision_requested"?`<div style="margin-top:8px;padding:10px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:var(--r);">
-          <div style="font-size:.74rem;font-weight:700;color:#7c3aed;margin-bottom:6px;display:flex;align-items:center;gap:5px;">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-            Client requested revision
-          </div>
-          ${(revNotes.checklist||[]).length?`<div style="font-size:.73rem;color:#5b21b6;margin-bottom:4px;">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}</div>`:""}
-          ${revNotes.notes?`<div style="font-size:.73rem;color:#5b21b6;font-style:italic;">${ARK.escHtml(revNotes.notes)}</div>`:""}
+        ${ap==="revision_requested"?`<div style="margin-top:8px;padding:10px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:var(--r);"><div style="font-size:.74rem;font-weight:700;color:#7c3aed;margin-bottom:6px;display:flex;align-items:center;gap:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Client requested revision</div>${(revNotes.checklist||[]).length?`<div style="font-size:.73rem;color:#5b21b6;margin-bottom:4px;">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}</div>`:""}${revNotes.notes?`<div style="font-size:.73rem;color:#5b21b6;font-style:italic;">${ARK.escHtml(revNotes.notes)}</div>`:""}
           <button onclick="markRevisionDone('${m.id}',${mi})" style="margin-top:8px;display:flex;align-items:center;gap:5px;height:30px;padding:0 12px;background:#f0fdf4;color:#166534;border:1.5px solid #bbf7d0;border-radius:var(--r);font-size:.73rem;font-weight:700;cursor:pointer;font-family:var(--sans);">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-            Mark revision done
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Mark revision done
           </button>
         </div>`:""}
-        ${revNotes&&revNotes.resolved?`<div style="margin-top:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--r);font-size:.73rem;color:#166534;">
-          <strong>Revision resolved</strong>${revNotes.resolvedAt?" · "+new Date(revNotes.resolvedAt).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):""}
-          ${(revNotes.checklist||[]).length?`<div style="margin-top:4px;opacity:.7;">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}</div>`:""}
-        </div>`:""}
+        ${revNotes&&revNotes.resolved?`<div style="margin-top:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--r);font-size:.73rem;color:#166534;"><strong>Revision resolved</strong>${revNotes.resolvedAt?" · "+new Date(revNotes.resolvedAt).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):""}${(revNotes.checklist||[]).length?`<div style="margin-top:4px;opacity:.7;">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}</div>`:""}</div>`:""}
       </div>
     </div>`;
   }).join("");
 }
 
 function toggleMilestoneOpen(headerEl) {
-  const list = document.getElementById("milestone-list");
-  const allSubs  = list.querySelectorAll(".subtask-list");
-  const allChevs = list.querySelectorAll(".milestone-chevron");
-  const sub  = headerEl.parentElement.querySelector(".subtask-list");
-  const chev = headerEl.querySelector(".milestone-chevron");
+  const list=document.getElementById("milestone-list");
+  const allSubs=list.querySelectorAll(".subtask-list"), allChevs=list.querySelectorAll(".milestone-chevron");
+  const sub=headerEl.parentElement.querySelector(".subtask-list"), chev=headerEl.querySelector(".milestone-chevron");
   if (!sub) return;
-  const isOpen = sub.style.display !== "none";
-  // Close all first
-  allSubs.forEach(s => { s.style.display = "none"; });
-  allChevs.forEach(c => c.classList.remove("open"));
-  // Open this if it was closed
-  if (!isOpen) {
-    sub.style.display = "flex";
-    sub.style.flexDirection = "column";
-    chev?.classList.add("open");
-  }
+  const isOpen=sub.style.display!=="none";
+  allSubs.forEach(s=>{s.style.display="none";}); allChevs.forEach(c=>c.classList.remove("open"));
+  if (!isOpen) { sub.style.display="flex"; sub.style.flexDirection="column"; chev?.classList.add("open"); }
 }
 
 function toggleMilestone(e, mi) {
-  e.stopPropagation();
-  if (!selectedProject) return;
-  const m = selectedProject.milestones[mi];
-  m.status = m.status === "done" ? "pending" : "done";
-  m.completedAt = m.status === "done" ? new Date().toISOString() : "";
-  milestonesDirty = true;
-  // Update just this milestone's visual — no full re-render to avoid losing open state
-  const item  = document.getElementById("milestone-list").children[mi];
-  const check = item?.querySelector(".milestone-check");
-  const title = item?.querySelector(".milestone-title-input");
-  if (check) check.classList.toggle("done", m.status === "done");
-  if (title) title.classList.toggle("done", m.status === "done");
-  item?.classList.toggle("done", m.status === "done");
-  updateProgressFromMilestones();
-  saveNow();
+  e.stopPropagation(); if (!selectedProject) return;
+  const m=selectedProject.milestones[mi];
+  m.status=m.status==="done"?"pending":"done"; m.completedAt=m.status==="done"?new Date().toISOString():"";
+  milestonesDirty=true;
+  const item=document.getElementById("milestone-list").children[mi];
+  const check=item?.querySelector(".milestone-check"), title=item?.querySelector(".milestone-title-input");
+  if (check) check.classList.toggle("done",m.status==="done");
+  if (title) title.classList.toggle("done",m.status==="done");
+  item?.classList.toggle("done",m.status==="done");
+  updateProgressFromMilestones(); markFreelancerChange(selectedProject.id); saveNow();
 }
-
 function toggleSubtask(mi, si) {
   if (!selectedProject) return;
-  const s = selectedProject.milestones[mi].subtasks[si];
-  s.status = s.status === "done" ? "pending" : "done";
-  s.completedAt = s.status === "done" ? new Date().toISOString() : "";
-  milestonesDirty = true;
-  // Update just this subtask visual
-  const list  = document.getElementById("milestone-list");
-  const msEl  = list?.children[mi];
-  const stEl  = msEl?.querySelectorAll(".subtask-item")[si];
-  const check = stEl?.querySelector(".subtask-check");
-  const title = stEl?.querySelector(".subtask-title-input");
-  if (check) check.classList.toggle("done", s.status === "done");
-  if (title) title.classList.toggle("done", s.status === "done");
-  saveNow();
+  const s=selectedProject.milestones[mi].subtasks[si];
+  s.status=s.status==="done"?"pending":"done"; s.completedAt=s.status==="done"?new Date().toISOString():"";
+  milestonesDirty=true;
+  const list=document.getElementById("milestone-list"), msEl=list?.children[mi], stEl=msEl?.querySelectorAll(".subtask-item")[si];
+  const check=stEl?.querySelector(".subtask-check"), title=stEl?.querySelector(".subtask-title-input");
+  if (check) check.classList.toggle("done",s.status==="done");
+  if (title) title.classList.toggle("done",s.status==="done");
+  markFreelancerChange(selectedProject.id); saveNow();
 }
-
 function editMilestoneTitle(mi, val) {
-  if (!selectedProject || !val.trim()) return;
-  selectedProject.milestones[mi].title = val.trim();
-  milestonesDirty = true;
-  scheduleSave();
+  if (!selectedProject||!val.trim()) return;
+  selectedProject.milestones[mi].title=val.trim(); milestonesDirty=true; scheduleSave();
 }
-
+function editMilestoneAmount(mi, val) {
+  if (!selectedProject) return;
+  selectedProject.milestones[mi].amount=parseFloat(val)||0; milestonesDirty=true;
+  renderSpend(selectedProject); scheduleSave();
+}
 function editSubtaskTitle(mi, si, val) {
-  if (!selectedProject || !val.trim()) return;
-  selectedProject.milestones[mi].subtasks[si].title = val.trim();
-  milestonesDirty = true;
-  scheduleSave();
+  if (!selectedProject||!val.trim()) return;
+  selectedProject.milestones[mi].subtasks[si].title=val.trim(); milestonesDirty=true; scheduleSave();
 }
-
 function deleteMilestone(mi) {
   if (!selectedProject) return;
-  selectedProject.milestones.splice(mi, 1);
-  milestonesDirty = true;
-  renderMilestones(selectedProject.milestones);
-  updateProgressFromMilestones();
-  scheduleSave();
+  selectedProject.milestones.splice(mi,1); milestonesDirty=true;
+  renderMilestones(selectedProject.milestones); updateProgressFromMilestones(); renderSpend(selectedProject); scheduleSave();
 }
-
 function deleteSubtask(mi, si) {
   if (!selectedProject) return;
-  selectedProject.milestones[mi].subtasks.splice(si, 1);
-  milestonesDirty = true;
-  renderMilestones(selectedProject.milestones);
-  scheduleSave();
+  selectedProject.milestones[mi].subtasks.splice(si,1); milestonesDirty=true;
+  renderMilestones(selectedProject.milestones); scheduleSave();
 }
-
 function addMilestone() {
   if (!selectedProject) return;
-  selectedProject.milestones.push({
-    id: "tmp-" + Date.now(),
-    title: "New milestone",
-    status: "pending", subtasks: [],
-    dueDate: "", completedAt: "",
-    order: selectedProject.milestones.length
-  });
-  milestonesDirty = true;
-  renderMilestones(selectedProject.milestones);
-  // Auto-focus the new milestone title input
-  const list   = document.getElementById("milestone-list");
-  const lastMs = list.lastElementChild;
-  const input  = lastMs?.querySelector(".milestone-title-input");
+  selectedProject.milestones.push({id:"tmp-"+Date.now(),title:"New milestone",status:"pending",subtasks:[],dueDate:"",completedAt:"",order:selectedProject.milestones.length,amount:0,approvalStatus:"pending",revisionNotes:{}});
+  milestonesDirty=true; renderMilestones(selectedProject.milestones);
+  const list=document.getElementById("milestone-list"), lastMs=list.lastElementChild, input=lastMs?.querySelector(".milestone-title-input");
   if (input) { input.focus(); input.select(); }
 }
-
 function addSubtask(mi) {
   if (!selectedProject) return;
-  selectedProject.milestones[mi].subtasks.push({
-    id: "tmp-" + Date.now(),
-    title: "New subtask",
-    status: "pending", completedAt: ""
-  });
-  milestonesDirty = true;
-  renderMilestones(selectedProject.milestones);
-  // Auto-focus
-  const list  = document.getElementById("milestone-list");
-  const msEl  = list?.children[mi];
-  const sub   = msEl?.querySelector(".subtask-list");
-  if (sub) {
-    sub.style.display = "flex";
-    sub.style.flexDirection = "column";
-    msEl.querySelector(".milestone-chevron")?.classList.add("open");
-    const inputs = sub.querySelectorAll(".subtask-title-input");
-    const last   = inputs[inputs.length - 1];
-    if (last) { last.focus(); last.select(); }
-  }
+  selectedProject.milestones[mi].subtasks.push({id:"tmp-"+Date.now(),title:"New subtask",status:"pending",completedAt:""});
+  milestonesDirty=true; renderMilestones(selectedProject.milestones);
+  const list=document.getElementById("milestone-list"), msEl=list?.children[mi], sub=msEl?.querySelector(".subtask-list");
+  if (sub) { sub.style.display="flex"; sub.style.flexDirection="column"; msEl.querySelector(".milestone-chevron")?.classList.add("open"); const inputs=sub.querySelectorAll(".subtask-title-input"); const last=inputs[inputs.length-1]; if (last) { last.focus(); last.select(); } }
 }
-
 function updateProgressFromMilestones() {
   if (!selectedProject) return;
-  const milestones = selectedProject.milestones;
-  const total    = milestones.length;
-  const done     = milestones.filter(m => m.status === "done" || m.approvalStatus === "approved").length;
-  const progress = total > 0 ? Math.round((done / total) * 100) : 0;
-  selectedProject.progress = progress;
-  document.getElementById("detail-progress-num").textContent = progress + "%";
-  document.getElementById("detail-progress-fill").style.width = progress + "%";
-  const idx = allProjects.findIndex(p => p.id === selectedProject.id);
-  if (idx > -1) allProjects[idx].progress = progress;
+  const ms=selectedProject.milestones, total=ms.length, done=ms.filter(m=>m.status==="done"||m.approvalStatus==="approved").length;
+  const progress=total>0?Math.round((done/total)*100):0;
+  selectedProject.progress=progress;
+  document.getElementById("detail-progress-num").textContent=progress+"%";
+  document.getElementById("detail-progress-fill").style.width=progress+"%";
+  const idx=allProjects.findIndex(p=>p.id===selectedProject.id); if(idx>-1) allProjects[idx].progress=progress;
   renderProjects();
 }
-
-// ── Debounced auto-save ───────────────────────────────────
-// Only save after 8 seconds of inactivity to avoid rapid duplicate rows
-let _saveTimer = null;
-function scheduleSave() {
-  clearTimeout(_saveTimer);
-  _saveTimer = setTimeout(saveMilestones, 8000);
+async function markRevisionDone(milestoneId, mi) {
+  try {
+    const res=await ARK.api({action:"clear_revision",token:ARK.getToken(),milestoneId});
+    if (res.success) {
+      if (selectedProject) {
+        const m=selectedProject.milestones[mi];
+        if (m) { if(m.revisionNotes&&typeof m.revisionNotes==="object"){m.revisionNotes.resolved=true;m.revisionNotes.resolvedAt=new Date().toISOString();} m.approvalStatus="pending"; m.status="in-progress"; }
+        milestonesDirty=true; renderMilestones(selectedProject.milestones); saveNow();
+      }
+      ARK.showToast("Revision marked done — awaiting client approval","success");
+    } else ARK.showToast(res.error||"Failed","error");
+  } catch(e) { ARK.showToast("Connection error.","error"); }
 }
 
-// Immediate save — for check/uncheck and close actions only
-function saveNow() {
-  clearTimeout(_saveTimer);
-  saveMilestones();
-}
-
+// ═══════════════════════════════════════════════════════════
+// SAVE (debounced + immediate)
+// ═══════════════════════════════════════════════════════════
+let _saveTimer=null;
+function scheduleSave() { clearTimeout(_saveTimer); _saveTimer=setTimeout(saveMilestones,8000); }
+function saveNow() { clearTimeout(_saveTimer); saveMilestones(); }
 async function saveMilestones() {
-  if (!selectedProject || !milestonesDirty) return;
-  milestonesDirty = false;
+  if (!selectedProject||!milestonesDirty) return;
+  milestonesDirty=false; markFreelancerChange(selectedProject.id);
   try {
-    const res = await ARK.api({ action: "save_milestones", token: ARK.getToken(), projectId: selectedProject.id, milestones: selectedProject.milestones });
+    const res=await ARK.api({action:"save_milestones",token:ARK.getToken(),projectId:selectedProject.id,milestones:selectedProject.milestones});
     if (res.success) {
-      selectedProject.progress = res.progress;
-      document.getElementById("detail-progress-num").textContent = res.progress + "%";
-      document.getElementById("detail-progress-fill").style.width = res.progress + "%";
-      const idx = allProjects.findIndex(p => p.id === selectedProject.id);
-      if (idx > -1) allProjects[idx].progress = res.progress;
+      selectedProject.progress=res.progress;
+      const num=document.getElementById("detail-progress-num"); if(num) num.textContent=res.progress+"%";
+      const fill=document.getElementById("detail-progress-fill"); if(fill) fill.style.width=res.progress+"%";
+      const idx=allProjects.findIndex(p=>p.id===selectedProject.id); if(idx>-1) allProjects[idx].progress=res.progress;
       renderProjects();
     }
-  } catch(e) { milestonesDirty = true; } // retry on next action
+  } catch(e) { milestonesDirty=true; }
 }
+window.addEventListener("beforeunload",()=>{ if(milestonesDirty) saveMilestones(); });
 
-window.addEventListener("beforeunload", () => { if (milestonesDirty) saveMilestones(); });
-
-// ── Edit project ───────────────────────────────────────────
-function editProject() {
-  if (!selectedProject) return;
-  const p = selectedProject;
-  document.getElementById("modal-project-title").textContent = "Edit project";
-  document.getElementById("edit-project-id").value  = p.id;
-  document.getElementById("p-title").value          = p.title;
-  document.getElementById("p-client").value         = p.clientId;
-  document.getElementById("p-desc").value           = p.description || "";
-  document.getElementById("p-type").value           = p.type;
-  document.getElementById("p-due").value            = p.dueDate ? p.dueDate.slice(0,10) : "";
-  document.getElementById("p-budget-type").value    = p.budgetType;
-  document.getElementById("p-budget").value         = p.budgetAmount || "";
-  document.getElementById("save-project-label").textContent = "Save changes";
-  ARK.openModal("modal-new-project");
-}
-
-// ── Save project (create or update) ───────────────────────
-async function saveProject() {
-  const id      = document.getElementById("edit-project-id").value;
-  const title   = document.getElementById("p-title").value.trim();
-  const clientId = document.getElementById("p-client").value;
-  let ok = true;
-  if (!title)    { document.getElementById("err-p-title").style.display = "block"; ok = false; }
-  else             document.getElementById("err-p-title").style.display = "none";
-  if (!clientId) { document.getElementById("err-p-client").style.display = "block"; ok = false; }
-  else             document.getElementById("err-p-client").style.display = "none";
-  if (!ok) return;
-
-  const btn = document.getElementById("save-project-btn");
-  btn.disabled = true;
-  document.getElementById("save-project-label").style.display = "none";
-  document.getElementById("save-project-spinner").style.display = "block";
-
-  const payload = {
-    token: ARK.getToken(),
-    title,
-    clientId,
-    description: document.getElementById("p-desc").value.trim(),
-    type:        document.getElementById("p-type").value,
-    dueDate:     document.getElementById("p-due").value,
-    budgetType:  document.getElementById("p-budget-type").value,
-    budgetAmount: parseFloat(document.getElementById("p-budget").value) || 0,
-    currency:    "USD"
-  };
-
+// ═══════════════════════════════════════════════════════════
+// HOURLY — TIME LOGS
+// ═══════════════════════════════════════════════════════════
+async function loadTimeLogs(projectId) {
+  const list=document.getElementById("time-log-list"), empty=document.getElementById("time-log-empty");
+  list.innerHTML=""; empty.style.display="none";
   try {
-    let res;
-    if (id) {
-      res = await ARK.api({ action: "update_project", projectId: id, ...payload });
-      if (res.success) {
-        const idx = allProjects.findIndex(p => p.id === id);
-        if (idx > -1) Object.assign(allProjects[idx], { title, clientId, description: payload.description, type: payload.type, dueDate: payload.dueDate, budgetType: payload.budgetType, budgetAmount: payload.budgetAmount });
-        const client = allClients.find(c => c.id === clientId);
-        if (idx > -1 && client) allProjects[idx].clientName = client.name;
-        ARK.showToast("Project updated", "success");
-      }
-    } else {
-      res = await ARK.api({ action: "create_project", ...payload });
-      if (res.success) {
-        const client = allClients.find(c => c.id === clientId);
-        res.project.clientName = client?.name || "";
-        res.project.milestones = [];
-        allProjects.unshift(res.project);
-        ARK.showToast("Project created!", "success");
-      }
-    }
+    const res=await ARK.api({action:"get_time_logs",token:ARK.getToken(),projectId});
     if (res.success) {
-      renderProjects();
-      ARK.closeModal("modal-new-project");
-      clearProjectForm();
-    } else {
-      ARK.showToast(res.error || "Failed to save", "error");
+      timeLogs=res.logs||[];
+      renderTimeLogs();
     }
-  } catch(e) { ARK.showToast("Connection error.", "error"); }
-  finally {
-    btn.disabled = false;
-    document.getElementById("save-project-label").style.display = "";
-    document.getElementById("save-project-spinner").style.display = "none";
-    document.getElementById("modal-project-title").textContent = "New project";
-    document.getElementById("save-project-label").textContent = "Create project";
-  }
+  } catch(e) {}
+}
+function renderTimeLogs() {
+  const list=document.getElementById("time-log-list"), empty=document.getElementById("time-log-empty");
+  if (!timeLogs.length) { list.innerHTML=""; empty.style.display=""; return; }
+  empty.style.display="none";
+  const totalHours=timeLogs.reduce((s,l)=>s+l.hours,0);
+  const rate=selectedProject?.budgetAmount||0;
+  const earned=rate>0?totalHours*rate:0;
+  list.innerHTML=`<div style="border:1.5px solid var(--line2);border-radius:var(--r);overflow:hidden;">
+    ${timeLogs.map(l=>`<div class="time-log-row">
+      <div class="time-log-date">${new Date(l.date).toLocaleDateString(undefined,{month:"short",day:"numeric"})}</div>
+      <div class="time-log-hours">${l.hours}h</div>
+      <div class="time-log-desc">${ARK.escHtml(l.description||"—")}</div>
+      ${rate>0?`<div style="font-size:.74rem;font-weight:600;color:var(--accent);flex-shrink:0;">${ARK.fmtCurrency(l.hours*rate,"USD")}</div>`:""}
+    </div>`).join("")}
+    <div class="time-total">
+      <span class="time-total-label">Total logged</span>
+      <div style="text-align:right;"><div class="time-total-val">${totalHours.toFixed(1)}h</div>${earned>0?`<div style="font-size:.72rem;color:var(--accent);font-weight:600;">${ARK.fmtCurrency(earned,"USD")}</div>`:""}</div>
+    </div>
+  </div>`;
+}
+function openLogTimeModal() {
+  document.getElementById("log-date").value=new Date().toISOString().slice(0,10);
+  document.getElementById("log-hours").value="";
+  document.getElementById("log-desc").value="";
+  ARK.openModal("modal-log-time");
+}
+async function saveTimeLog() {
+  const date=document.getElementById("log-date").value, hours=parseFloat(document.getElementById("log-hours").value), desc=document.getElementById("log-desc").value.trim();
+  if (!date||!hours||hours<=0) { ARK.showToast("Please enter a valid date and hours","warn"); return; }
+  const btn=document.getElementById("log-save-label"), spin=document.getElementById("log-save-spin");
+  btn.style.display="none"; spin.style.display="block";
+  try {
+    const res=await ARK.api({action:"log_time",token:ARK.getToken(),projectId:selectedProject.id,date,hours,description:desc});
+    if (res.success) {
+      timeLogs.unshift({date,hours,description:desc,id:res.logId});
+      renderTimeLogs(); ARK.closeModal("modal-log-time"); ARK.showToast("Time logged!","success");
+      // Update progress
+      const estHours=selectedProject.estimatedHours||40, totalH=timeLogs.reduce((s,l)=>s+l.hours,0);
+      selectedProject.progress=Math.min(Math.round((totalH/estHours)*100),100);
+      const idx=allProjects.findIndex(p=>p.id===selectedProject.id); if(idx>-1){allProjects[idx].progress=selectedProject.progress;allProjects[idx].totalHours=totalH;}
+      renderProjects();
+    } else ARK.showToast(res.error||"Failed","error");
+  } catch(e) { ARK.showToast("Connection error.","error"); }
+  finally { btn.style.display=""; spin.style.display="none"; }
 }
 
-function clearProjectForm() {
-  ["p-title","p-client","p-desc","p-due","p-budget","edit-project-id"].forEach(id => {
-    const el = document.getElementById(id); if (el) el.value = "";
+// ═══════════════════════════════════════════════════════════
+// RETAINER
+// ═══════════════════════════════════════════════════════════
+function renderRetainerSection(p) {
+  const now=new Date(), d=new Date(now.getFullYear(),now.getMonth()+retainerPeriodOffset,1);
+  const monthLabel=d.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+  document.getElementById("retainer-period-label").textContent=monthLabel;
+  const milestones=p.milestones||[];
+  const periodMs=milestones.filter(m=>{
+    if (!m.dueDate) return retainerPeriodOffset===0; // current month shows undated ones
+    const md=new Date(m.dueDate); return md.getMonth()===d.getMonth()&&md.getFullYear()===d.getFullYear();
   });
-  document.getElementById("p-type").value = "one-off";
-  document.getElementById("p-budget-type").value = "fixed";
+  const list=document.getElementById("deliverable-list");
+  if (!periodMs.length) { list.innerHTML=`<div style="text-align:center;padding:16px 0;font-size:.78rem;color:var(--ink4);">No deliverables for ${monthLabel}.</div>`; return; }
+  list.innerHTML=periodMs.map((m,i)=>{
+    const mi=milestones.indexOf(m);
+    const isDone=m.status==="done"||m.approvalStatus==="approved";
+    return `<div class="deliverable-item" style="border-color:${isDone?"var(--accent-ln)":"var(--line2)"}">
+      <button class="deliverable-status ${isDone?"done":""}" onclick="toggleMilestone(event,${mi})"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></button>
+      <input style="font-size:.84rem;font-weight:600;color:${isDone?"var(--ink4)":"var(--ink)"};text-decoration:${isDone?"line-through":"none"};background:none;border:none;outline:none;font-family:var(--sans);flex:1;padding:0;border-bottom:1.5px solid transparent;transition:border-color .15s;" onfocus="this.style.borderBottomColor='var(--accent)'" onblur="this.style.borderBottomColor='transparent'" value="${ARK.escHtml(m.title)}" onchange="editMilestoneTitle(${mi},this.value)" onblur="editMilestoneTitle(${mi},this.value)">
+      ${m.amount?`<span style="font-size:.74rem;font-weight:600;color:var(--ink3);">${ARK.fmtCurrency(m.amount,"USD")}</span>`:""}
+      ${m.approvalStatus==="approved"?`<span style="background:#dcfce7;color:#166534;font-size:.6rem;padding:2px 7px;border-radius:999px;font-weight:700;">✓</span>`:""}
+      ${m.approvalStatus==="revision_requested"?`<span style="background:#f5f3ff;color:#7c3aed;font-size:.6rem;padding:2px 7px;border-radius:999px;font-weight:700;">↩</span>`:""}
+    </div>`;
+  }).join("");
+  // Progress for this period
+  const done=periodMs.filter(m=>m.status==="done"||m.approvalStatus==="approved").length;
+  const numEl=document.getElementById("detail-progress-num"); if(numEl) numEl.textContent=periodMs.length>0?Math.round((done/periodMs.length)*100)+"%":"—%";
+  const fillEl=document.getElementById("detail-progress-fill"); if(fillEl) fillEl.style.width=periodMs.length>0?Math.round((done/periodMs.length)*100)+"%":"0%";
+}
+function changeRetainerPeriod(dir) {
+  retainerPeriodOffset+=dir;
+  if (selectedProject) renderRetainerSection(selectedProject);
+}
+function addDeliverable() {
+  if (!selectedProject) return;
+  const now=new Date(), d=new Date(now.getFullYear(),now.getMonth()+retainerPeriodOffset,1);
+  const dueDate=d.toISOString().slice(0,10);
+  selectedProject.milestones.push({id:"tmp-"+Date.now(),title:"New deliverable",status:"pending",subtasks:[],dueDate,completedAt:"",order:selectedProject.milestones.length,amount:0,approvalStatus:"pending",revisionNotes:{}});
+  milestonesDirty=true; renderRetainerSection(selectedProject); scheduleSave();
 }
 
-function toggleBudget() {
-  const t = document.getElementById("p-budget-type").value;
-  document.getElementById("budget-amount-field").style.display = t === "none" ? "none" : "";
+// ═══════════════════════════════════════════════════════════
+// PROJECT FILES
+// ═══════════════════════════════════════════════════════════
+function renderProjectFiles() {
+  const list=document.getElementById("proj-attach-list"), empty=document.getElementById("proj-attach-empty");
+  if (!projectAttachments.length) { list.innerHTML=""; empty.style.display=""; return; }
+  empty.style.display="none";
+  list.innerHTML=projectAttachments.map((a,i)=>`<div class="proj-attach-row">
+    <span class="proj-attach-icon">${getFileIcon(a.type)}</span>
+    <span class="proj-attach-name" title="${ARK.escHtml(a.name)}">${ARK.escHtml(a.name)}</span>
+    ${a.url?`<button class="proj-attach-open" onclick="openAttachment('${ARK.escHtml(a.url)}')">Open</button>`:""}
+    <button onclick="removeProjectFile(${i})" style="width:22px;height:22px;border-radius:5px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink4);transition:all .12s;flex-shrink:0;" onmouseover="this.style.background='var(--bg3)';this.style.color='var(--red)'" onmouseout="this.style.background='none';this.style.color='var(--ink4)'"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>`).join("");
+}
+function toggleProjLinkInput() {
+  const wrap=document.getElementById("proj-link-input-wrap");
+  const isV=wrap.style.display==="flex"; wrap.style.display=isV?"none":"flex"; wrap.style.flexDirection="column";
+  if (!isV) setTimeout(()=>document.getElementById("proj-link-url")?.focus(),50);
+}
+async function saveProjectLink() {
+  const url=document.getElementById("proj-link-url")?.value.trim(), label=document.getElementById("proj-link-label")?.value.trim();
+  if (!url) return; try{new URL(url);}catch(e){ARK.showToast("Invalid URL","warn");return;}
+  projectAttachments.push({type:"link",name:label||url,url,uploadedAt:new Date().toISOString()});
+  renderProjectFiles(); toggleProjLinkInput();
+  document.getElementById("proj-link-url").value=""; document.getElementById("proj-link-label").value="";
+  await saveProjectAttachments(); ARK.showToast("Link saved!","success");
+}
+async function removeProjectFile(i) {
+  projectAttachments.splice(i,1); renderProjectFiles(); await saveProjectAttachments();
+}
+async function saveProjectAttachments() {
+  if (!selectedProject) return;
+  try { await ARK.api({action:"save_project_attachments",token:ARK.getToken(),projectId:selectedProject.id,attachments:projectAttachments}); } catch(e) {}
+}
+function triggerProjectUpload() {
+  const input=document.createElement("input"); input.type="file";
+  input.accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.webp,.zip,.mp4,.mov,.fig,.sketch";
+  input.onchange=e=>handleProjectFile(e.target.files[0]); input.click();
+}
+async function handleProjectFile(file) {
+  if (!file||!selectedProject) return;
+  const user=ARK.getUser(), fname=user?(user.firstName+" "+user.lastName):"Freelancer", cname=selectedProject.clientName||"Client";
+  try {
+    const base64=await fileToBase64(file);
+    const res=await ARK.api({action:"upload_to_drive",token:ARK.getToken(),fileName:`${fname} - ${cname} - ${file.name}`,mimeType:file.type||"application/octet-stream",base64Data:base64,folderId:DRIVE_FOLDER_ID,projectId:selectedProject.id});
+    if (res.success) { projectAttachments.push({type:file.type,name:file.name,url:res.viewUrl,uploadedAt:new Date().toISOString()}); renderProjectFiles(); await saveProjectAttachments(); ARK.showToast("File uploaded!","success"); }
+    else ARK.showToast(res.error||"Upload failed","error");
+  } catch(e) { ARK.showToast("Upload error","error"); }
 }
 
-// ── View toggle ────────────────────────────────────────────
-function setView(v, el) {
-  currentView = v;
-  document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
-  el.classList.add("active");
-  renderProjects();
-}
-
-// ── Filter ─────────────────────────────────────────────────
-function setFilter(f, el) {
-  currentFilter = f;
-  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-  el.classList.add("active");
-  renderProjects();
-}
-
-// ── Badge helper ───────────────────────────────────────────
-function badgeHtml(status) {
-  const map = { active:"badge-active", draft:"badge-draft", paused:"badge-paused", completed:"badge-completed", cancelled:"badge-overdue" };
-  return `<span class="badge ${map[status]||"badge-draft"}"><span class="badge-dot"></span>${status}</span>`;
-}
-
-// ── Milestone link attachments ─────────────────────────────
-function toggleLinkInput(mi) {
-  const wrap = document.getElementById("link-input-" + mi);
-  if (!wrap) return;
-  const isVisible = wrap.style.display === "flex";
-  wrap.style.display = isVisible ? "none" : "flex";
-  wrap.style.flexDirection = "column";
-  if (!isVisible) {
-    setTimeout(() => document.getElementById("link-url-" + mi)?.focus(), 50);
-  }
-}
-
+// ═══════════════════════════════════════════════════════════
+// MILESTONE ATTACHMENTS (existing functions unchanged)
+// ═══════════════════════════════════════════════════════════
+function toggleLinkInput(mi) { const wrap=document.getElementById("link-input-"+mi); if(!wrap)return; const isV=wrap.style.display==="flex"; document.getElementById("note-input-"+mi).style.display="none"; wrap.style.display=isV?"none":"flex"; wrap.style.flexDirection="column"; if(!isV)setTimeout(()=>document.getElementById("link-url-"+mi)?.focus(),50); }
+function toggleNoteInput(mi) { const wrap=document.getElementById("note-input-"+mi); if(!wrap)return; const isV=wrap.style.display==="flex"; document.getElementById("link-input-"+mi).style.display="none"; wrap.style.display=isV?"none":"flex"; wrap.style.flexDirection="column"; if(!isV)setTimeout(()=>document.getElementById("note-text-"+mi)?.focus(),50); }
 function saveMilestoneLink(mi) {
   if (!selectedProject) return;
-  const urlEl   = document.getElementById("link-url-" + mi);
-  const labelEl = document.getElementById("link-label-" + mi);
-  const url     = urlEl?.value.trim();
-  const label   = labelEl?.value.trim();
-  if (!url) { urlEl?.focus(); ARK.showToast("Please enter a URL", "warn"); return; }
-
-  // Basic URL validation
-  try { new URL(url); } catch(e) { ARK.showToast("Please enter a valid URL", "warn"); urlEl?.focus(); return; }
-
-  const m = selectedProject.milestones[mi];
-  if (!m.attachments) m.attachments = [];
-  m.attachments.push({
-    name:       label || url,
-    url:        url,
-    type:       "link",
-    uploadedAt: new Date().toISOString()
-  });
-
-  milestonesDirty = true;
-  renderMilestones(selectedProject.milestones);
-  scheduleSave();
-  ARK.showToast("Link saved!", "success");
+  const url=document.getElementById("link-url-"+mi)?.value.trim(), label=document.getElementById("link-label-"+mi)?.value.trim();
+  if (!url){ARK.showToast("Please enter a URL","warn");return;} try{new URL(url);}catch(e){ARK.showToast("Invalid URL","warn");return;}
+  const m=selectedProject.milestones[mi]; if(!m.attachments)m.attachments=[];
+  m.attachments.push({name:label||url,url,type:"link",uploadedAt:new Date().toISOString()});
+  milestonesDirty=true; renderMilestones(selectedProject.milestones); scheduleSave(); ARK.showToast("Link saved!","success");
 }
-
-// ── Note toggle + save ────────────────────────────────────
-function toggleNoteInput(mi) {
-  const wrap = document.getElementById("note-input-" + mi);
-  if (!wrap) return;
-  const isVisible = wrap.style.display === "flex";
-  // Close link form if open
-  const linkWrap = document.getElementById("link-input-" + mi);
-  if (linkWrap) linkWrap.style.display = "none";
-  wrap.style.display = isVisible ? "none" : "flex";
-  wrap.style.flexDirection = "column";
-  if (!isVisible) {
-    setTimeout(() => document.getElementById("note-text-" + mi)?.focus(), 50);
-  }
-}
-
 function saveMilestoneNote(mi) {
   if (!selectedProject) return;
-  const textEl  = document.getElementById("note-text-" + mi);
-  const content = textEl?.value.trim();
-  if (!content) { textEl?.focus(); ARK.showToast("Please write something first", "warn"); return; }
-
-  const m = selectedProject.milestones[mi];
-  if (!m.attachments) m.attachments = [];
-  m.attachments.push({
-    type:      "note",
-    name:      "Note",
-    content:   content,
-    url:       "",
-    uploadedAt: new Date().toISOString()
-  });
-
-  milestonesDirty = true;
-  renderMilestones(selectedProject.milestones);
-  scheduleSave();
-  ARK.showToast("Note saved!", "success");
+  const content=document.getElementById("note-text-"+mi)?.value.trim();
+  if (!content){ARK.showToast("Please write something first","warn");return;}
+  const m=selectedProject.milestones[mi]; if(!m.attachments)m.attachments=[];
+  m.attachments.push({type:"note",name:"Note",content,url:"",uploadedAt:new Date().toISOString()});
+  milestonesDirty=true; renderMilestones(selectedProject.milestones); scheduleSave(); ARK.showToast("Note saved!","success");
 }
-
-// Also close note input when link input opens
-const _origToggleLinkInput = toggleLinkInput;
-toggleLinkInput = function(mi) {
-  const noteWrap = document.getElementById("note-input-" + mi);
-  if (noteWrap) noteWrap.style.display = "none";
-  _origToggleLinkInput(mi);
-};
-
-document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
-
-
-// ── Milestone file attachments ────────────────────────────
-const DRIVE_FOLDER_ID = "1oaLlUJrnD0uzPtM6CmL4NFWRwbULnxz7";
-
 function triggerMilestoneUpload(mi) {
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.webp,.zip,.mp4,.mov,.avi,.fig,.sketch";
-  input.onchange = (e) => handleMilestoneFile(mi, e.target.files[0]);
-  input.click();
+  const input=document.createElement("input"); input.type="file";
+  input.accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.webp,.zip,.mp4,.mov,.fig,.sketch";
+  input.onchange=e=>handleMilestoneFile(mi,e.target.files[0]); input.click();
+}
+async function handleMilestoneFile(mi, file) {
+  if (!file||!selectedProject) return;
+  const btn=document.querySelector(`[data-attach-mi="${mi}"]`); if(btn){btn.textContent="Uploading…";btn.disabled=true;}
+  try {
+    const base64=await fileToBase64(file), user=ARK.getUser(), fname=user?(user.firstName+" "+user.lastName):"Freelancer", cname=selectedProject.clientName||"Client";
+    const res=await ARK.api({action:"upload_to_drive",token:ARK.getToken(),fileName:`${fname} - ${cname} - ${file.name}`,mimeType:file.type||"application/octet-stream",base64Data:base64,folderId:DRIVE_FOLDER_ID,projectId:selectedProject.id,milestoneId:selectedProject.milestones[mi]?.id||"ms-"+mi});
+    if (res.success) { if(!selectedProject.milestones[mi].attachments)selectedProject.milestones[mi].attachments=[]; selectedProject.milestones[mi].attachments.push({name:file.name,url:res.viewUrl,fileId:res.fileId,type:file.type,uploadedAt:new Date().toISOString()}); milestonesDirty=true; renderMilestones(selectedProject.milestones); scheduleSave(); ARK.showToast("File uploaded!","success"); }
+    else ARK.showToast(res.error||"Upload failed","error");
+  } catch(e) { ARK.showToast("Upload error: "+e.message,"error"); }
+  finally { if(btn){btn.textContent="+ Attach";btn.disabled=false;} }
 }
 
-async function handleMilestoneFile(mi, file) {
-  if (!file || !selectedProject) return;
-  const m = selectedProject.milestones[mi];
-
-  // Show uploading state on the attachment btn
-  const btn = document.querySelector(`[data-attach-mi="${mi}"]`);
-  if (btn) { btn.textContent = "Uploading…"; btn.disabled = true; }
-
+// ═══════════════════════════════════════════════════════════
+// DELETE PROJECT
+// ═══════════════════════════════════════════════════════════
+function confirmDeleteProject() {
+  if (!selectedProject) return;
+  if (selectedProject.status==="active"||selectedProject.status==="completed") { ARK.showToast("Cannot delete active or completed projects. Change status first.","warn"); return; }
+  ARK.openModal("modal-delete");
+}
+async function executeDeleteProject() {
+  if (!selectedProject) return;
+  const btn=document.getElementById("delete-confirm-btn"), lbl=document.getElementById("delete-confirm-label"), spin=document.getElementById("delete-confirm-spin");
+  btn.disabled=true; lbl.style.display="none"; spin.style.display="block";
   try {
-    // Convert file to base64
-    const base64 = await fileToBase64(file);
-
-    // Build prefixed filename: "FreelancerName - ClientName - originalname"
-    const user   = ARK.getUser();
-    const fname  = user ? (user.firstName + " " + user.lastName) : "Freelancer";
-    const cname  = selectedProject.clientName || "Client";
-    const prefixed = `${fname} - ${cname} - ${file.name}`;
-
-    const res = await ARK.api({
-      action:      "upload_to_drive",
-      token:       ARK.getToken(),
-      fileName:    prefixed,
-      mimeType:    file.type || "application/octet-stream",
-      base64Data:  base64,
-      folderId:    DRIVE_FOLDER_ID,
-      projectId:   selectedProject.id,
-      milestoneId: m.id || ("ms-" + mi)
-    });
-
+    const res=await ARK.api({action:"delete_project",token:ARK.getToken(),projectId:selectedProject.id});
     if (res.success) {
-      if (!m.attachments) m.attachments = [];
-      m.attachments.push({ name: file.name, url: res.viewUrl, fileId: res.fileId, type: file.type, uploadedAt: new Date().toISOString() });
-      milestonesDirty = true;
-      renderMilestones(selectedProject.milestones);
-      scheduleSave();
-      ARK.showToast("File uploaded!", "success");
-    } else {
-      ARK.showToast(res.error || "Upload failed", "error");
-    }
-  } catch(e) {
-    ARK.showToast("Upload error: " + e.message, "error");
-  } finally {
-    if (btn) { btn.textContent = "+ Attach"; btn.disabled = false; }
+      allProjects=allProjects.filter(p=>p.id!==selectedProject.id);
+      ARK.closeModal("modal-delete"); closeDetail(); renderProjects(); updateStats();
+      ARK.showToast("Project deleted","success");
+    } else ARK.showToast(res.error||"Cannot delete","error");
+  } catch(e) { ARK.showToast("Connection error.","error"); }
+  finally { btn.disabled=false; lbl.style.display=""; spin.style.display="none"; }
+}
+
+// ═══════════════════════════════════════════════════════════
+// EDIT PROJECT
+// ═══════════════════════════════════════════════════════════
+function editProject() {
+  if (!selectedProject) return;
+  const p=selectedProject;
+  document.getElementById("edit-project-id").value=p.id;
+  document.getElementById("ep-title").value=p.title;
+  document.getElementById("ep-desc").value=p.description||"";
+  document.getElementById("ep-due").value=p.dueDate?p.dueDate.slice(0,10):"";
+  document.getElementById("ep-budget").value=p.budgetAmount||"";
+  document.getElementById("ep-hours-field").style.display=p.type==="hourly"?"":"none";
+  document.getElementById("ep-rate-field").style.display=p.type==="hourly"?"":"none";
+  document.getElementById("ep-hours").value=p.estimatedHours||"";
+  document.getElementById("ep-rate").value=p.type==="hourly"?(p.budgetAmount||""):"";
+  ARK.openModal("modal-edit-project");
+}
+async function saveEditProject() {
+  const id=document.getElementById("edit-project-id").value, title=document.getElementById("ep-title").value.trim();
+  if (!title) { document.getElementById("err-ep-title").style.display="block"; return; }
+  document.getElementById("err-ep-title").style.display="none";
+  const btn=document.getElementById("ep-save-label"), spin=document.getElementById("ep-save-spin");
+  btn.style.display="none"; spin.style.display="block";
+  const payload={token:ARK.getToken(),projectId:id,title,description:document.getElementById("ep-desc").value.trim(),dueDate:document.getElementById("ep-due").value,budgetAmount:parseFloat(document.getElementById("ep-budget").value)||0};
+  if (selectedProject?.type==="hourly") { payload.estimatedHours=parseFloat(document.getElementById("ep-hours").value)||40; }
+  try {
+    const res=await ARK.api({action:"update_project",...payload});
+    if (res.success) {
+      const idx=allProjects.findIndex(p=>p.id===id);
+      if (idx>-1) Object.assign(allProjects[idx],{title,description:payload.description,dueDate:payload.dueDate,budgetAmount:payload.budgetAmount});
+      if (selectedProject?.id===id) Object.assign(selectedProject,{title,description:payload.description,dueDate:payload.dueDate,budgetAmount:payload.budgetAmount});
+      document.getElementById("detail-title").textContent=title;
+      document.getElementById("detail-budget").textContent=payload.budgetAmount>0?ARK.fmtCurrency(payload.budgetAmount,"USD")+(selectedProject?.type==="hourly"?"/hr":""):"—";
+      document.getElementById("detail-due").textContent=payload.dueDate?ARK.fmtDate(payload.dueDate):"—";
+      ARK.closeModal("modal-edit-project"); renderProjects(); ARK.showToast("Project updated","success");
+    } else ARK.showToast(res.error||"Failed","error");
+  } catch(e) { ARK.showToast("Connection error.","error"); }
+  finally { btn.style.display=""; spin.style.display="none"; }
+}
+
+// ═══════════════════════════════════════════════════════════
+// NEW PROJECT WIZARD
+// ═══════════════════════════════════════════════════════════
+function openWizard() {
+  wizard={ step:1, totalSteps:3, type:"one-off", data:{} };
+  renderWizardStep();
+  document.getElementById("wizard-overlay").classList.add("open");
+}
+function closeWizard() {
+  document.getElementById("wizard-overlay").classList.remove("open");
+}
+function renderWizardStep() {
+  const labels=["What type of project?","Project details","Client & terms"];
+  const subtitles=["Choose how this project will be structured and billed.","Add the key project information.","Assign a client and set the financial terms."];
+  document.getElementById("wizard-step-label").textContent=`Step ${wizard.step} of ${wizard.totalSteps}`;
+  document.getElementById("wizard-title").textContent=labels[wizard.step-1];
+  document.getElementById("wizard-subtitle").textContent=subtitles[wizard.step-1];
+  document.getElementById("wizard-back-btn").style.display=wizard.step>1?"":"none";
+  document.getElementById("wizard-next-label").textContent=wizard.step===wizard.totalSteps?"Create project":"Continue";
+  for (let i=1;i<=3;i++) {
+    const dot=document.getElementById("wdot-"+i);
+    dot.classList.toggle("active",i===wizard.step);
+    dot.classList.toggle("done",i<wizard.step);
+  }
+  const body=document.getElementById("wizard-body");
+  if (wizard.step===1) {
+    body.innerHTML=`<div class="type-grid">
+      <div class="type-card ${wizard.type==="one-off"?"selected":""}" onclick="selectType('one-off',this)">
+        <span class="type-card-icon">🎯</span>
+        <div class="type-card-name">One-off / Fixed</div>
+        <div class="type-card-desc">Defined scope with milestones. Client approves each milestone before payment.</div>
+      </div>
+      <div class="type-card ${wizard.type==="hourly"?"selected":""}" onclick="selectType('hourly',this)">
+        <span class="type-card-icon">⏱️</span>
+        <div class="type-card-name">Hourly</div>
+        <div class="type-card-desc">Bill by the hour. Log time daily. Great for ongoing or scope-uncertain work.</div>
+      </div>
+      <div class="type-card ${wizard.type==="retainer"?"selected":""}" onclick="selectType('retainer',this)">
+        <span class="type-card-icon">🔄</span>
+        <div class="type-card-name">Retainer</div>
+        <div class="type-card-desc">Recurring monthly deliverables. Consistent income with defined monthly scope.</div>
+      </div>
+    </div>`;
+  } else if (wizard.step===2) {
+    const isHourly=wizard.type==="hourly", isRetainer=wizard.type==="retainer";
+    body.innerHTML=`
+      <div class="field"><label class="field-label">Project title *</label><input class="field-input" type="text" id="w-title" value="${ARK.escHtml(wizard.data.title||"")}" placeholder="e.g. ${isHourly?"Website development":"Airbnb Automation"}" autocomplete="off"><span id="err-w-title" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
+      <div class="field"><label class="field-label">Description</label><textarea class="field-input field-textarea" id="w-desc" rows="2" style="height:auto;padding:10px 12px;resize:vertical;" placeholder="Brief overview of the project scope…">${ARK.escHtml(wizard.data.desc||"")}</textarea></div>
+      ${!isRetainer?`<div class="field"><label class="field-label">Due date</label><input class="field-input" type="date" id="w-due" value="${wizard.data.due||""}"></div>`:`<div class="field"><label class="field-label">Contract start date</label><input class="field-input" type="date" id="w-due" value="${wizard.data.due||""}"></div>`}
+      ${isHourly?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div class="field"><label class="field-label">Estimated hours</label><input class="field-input" type="number" id="w-hours" value="${wizard.data.hours||""}" placeholder="e.g. 40"></div></div>`:""}`;
+  } else if (wizard.step===3) {
+    const isHourly=wizard.type==="hourly", isRetainer=wizard.type==="retainer";
+    const clientOpts=allClients.filter(c=>c.status==="active").map(c=>`<option value="${c.id}" ${wizard.data.clientId===c.id?"selected":""}>${ARK.escHtml(c.name)}${c.company?" · "+ARK.escHtml(c.company):""}</option>`).join("");
+    body.innerHTML=`
+      <div class="field"><label class="field-label">Client *</label><select class="field-input field-select" id="w-client"><option value="">Select client…</option>${clientOpts}</select><span id="err-w-client" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
+      ${isHourly?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="field"><label class="field-label">Hourly rate ($)</label><input class="field-input" type="number" id="w-rate" value="${wizard.data.rate||""}" placeholder="e.g. 75"></div>
+        <div class="field"><label class="field-label">Currency</label><select class="field-input field-select" id="w-currency"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div>
+      </div>`:isRetainer?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="field"><label class="field-label">Monthly retainer ($)</label><input class="field-input" type="number" id="w-budget" value="${wizard.data.budget||""}" placeholder="e.g. 2000"></div>
+        <div class="field"><label class="field-label">Currency</label><select class="field-input field-select" id="w-currency"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div>
+      </div>``:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="field"><label class="field-label">Project budget ($)</label><input class="field-input" type="number" id="w-budget" value="${wizard.data.budget||""}" placeholder="e.g. 5000"></div>
+        <div class="field"><label class="field-label">Currency</label><select class="field-input field-select" id="w-currency"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div>
+      </div>`}
+      <div style="margin-top:4px;padding:12px;background:var(--bg2);border-radius:var(--r);border:1px solid var(--line2);">
+        <div style="font-size:.73rem;color:var(--ink4);margin-bottom:4px;">📋 Summary</div>
+        <div style="font-size:.82rem;color:var(--ink2);line-height:1.6;">${wizard.data.title||"Untitled"} · ${wizard.type==="hourly"?"Hourly":wizard.type==="retainer"?"Retainer":"Fixed price"} · ${wizard.data.due?"Due "+ARK.fmtDate(wizard.data.due):"No due date"}</div>
+      </div>`;
   }
 }
-
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload  = () => resolve(reader.result.split(",")[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
+function selectType(type, el) {
+  wizard.type=type;
+  document.querySelectorAll(".type-card").forEach(c=>c.classList.remove("selected"));
+  el.classList.add("selected");
+}
+async function wizardNext() {
+  if (wizard.step===2) {
+    const title=document.getElementById("w-title")?.value.trim();
+    if (!title) { document.getElementById("err-w-title").style.display="block"; return; }
+    document.getElementById("err-w-title").style.display="none";
+    wizard.data.title=title;
+    wizard.data.desc=document.getElementById("w-desc")?.value.trim()||"";
+    wizard.data.due=document.getElementById("w-due")?.value||"";
+    wizard.data.hours=document.getElementById("w-hours")?.value||"";
+  }
+  if (wizard.step===3) {
+    const clientId=document.getElementById("w-client")?.value;
+    if (!clientId) { document.getElementById("err-w-client").style.display="block"; return; }
+    document.getElementById("err-w-client").style.display="none";
+    wizard.data.clientId=clientId;
+    wizard.data.budget=document.getElementById("w-budget")?.value||"";
+    wizard.data.rate=document.getElementById("w-rate")?.value||"";
+    wizard.data.currency=document.getElementById("w-currency")?.value||"USD";
+    await createProject(); return;
+  }
+  wizard.step++; renderWizardStep();
+}
+function wizardBack() { if (wizard.step>1) { wizard.step--; renderWizardStep(); } }
+async function createProject() {
+  const btn=document.getElementById("wizard-next-btn"), lbl=document.getElementById("wizard-next-label"), spin=document.getElementById("wizard-next-spin");
+  btn.disabled=true; lbl.style.display="none"; spin.style.display="block";
+  const isHourly=wizard.type==="hourly";
+  const budgetAmount=isHourly?(parseFloat(wizard.data.rate)||0):(parseFloat(wizard.data.budget)||0);
+  const payload={token:ARK.getToken(),title:wizard.data.title,clientId:wizard.data.clientId,description:wizard.data.desc,type:wizard.type==="one-off"?"one-off":wizard.type,dueDate:wizard.data.due,budgetType:isHourly?"hourly":"fixed",budgetAmount,currency:wizard.data.currency||"USD",estimatedHours:parseFloat(wizard.data.hours)||40};
+  try {
+    const res=await ARK.api({action:"create_project",...payload});
+    if (res.success) {
+      const client=allClients.find(c=>c.id===wizard.data.clientId);
+      res.project.clientName=client?.name||""; res.project.milestones=[];
+      allProjects.unshift(res.project);
+      closeWizard(); renderProjects(); updateStats();
+      ARK.showToast("Project created! 🎉","success");
+      // Auto open detail
+      setTimeout(()=>openDetail(res.project.id),300);
+    } else ARK.showToast(res.error||"Failed to create","error");
+  } catch(e) { ARK.showToast("Connection error.","error"); }
+  finally { btn.disabled=false; lbl.style.display=""; spin.style.display="none"; }
 }
 
-function getFileIcon(type) {
-  if (!type) return "📎";
-  if (type === "link") return "🔗";
-  if (type.includes("pdf"))   return "📄";
-  if (type.includes("image")) return "🖼️";
-  if (type.includes("video")) return "🎥";
-  if (type.includes("sheet") || type.includes("excel") || type.includes("csv")) return "📊";
-  if (type.includes("word")  || type.includes("document")) return "📝";
-  if (type.includes("presentation") || type.includes("powerpoint")) return "📑";
-  if (type.includes("zip")   || type.includes("archive")) return "🗜️";
-  return "📎";
+// ═══════════════════════════════════════════════════════════
+// VIEW / FILTER / HELPERS
+// ═══════════════════════════════════════════════════════════
+function setView(v, el) { currentView=v; document.querySelectorAll(".view-btn").forEach(b=>b.classList.remove("active")); el.classList.add("active"); renderProjects(); }
+function setFilter(f, el) { currentFilter=f; document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active")); el.classList.add("active"); renderProjects(); }
+function badgeHtml(status) {
+  const map={active:"badge-active",draft:"badge-draft",paused:"badge-paused",completed:"badge-completed",cancelled:"badge-overdue"};
+  return `<span class="badge ${map[status]||"badge-draft"}"><span class="badge-dot"></span>${status}</span>`;
 }
-
-function openAttachment(url, type) {
-  // All files open in new tab — Drive handles preview for PDFs, images, docs
-  // Zip/unknown files will prompt download from Drive
-  window.open(url, "_blank", "noopener");
-}
-
-document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
+function fileToBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(",")[1]);r.onerror=rej;r.readAsDataURL(file);});}
+function getFileIcon(type){if(!type)return"📎";if(type==="link")return"🔗";if(type.includes("pdf"))return"📄";if(type.includes("image"))return"🖼️";if(type.includes("video"))return"🎥";if(type.includes("sheet")||type.includes("excel"))return"📊";if(type.includes("word")||type.includes("document"))return"📝";if(type.includes("presentation")||type.includes("powerpoint"))return"📑";if(type.includes("zip"))return"🗜️";return"📎";}
+function openAttachment(url){window.open(url,"_blank","noopener");}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeDetail();closeWizard();}});
 </script>
+</body>
+</html>
