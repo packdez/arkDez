@@ -1493,18 +1493,26 @@ function renderWizardStep() {
   } else if (wizard.step===3) {
     const isHourly=wizard.type==="hourly", isRetainer=wizard.type==="retainer";
     const clientOpts=allClients.filter(c=>c.status==="active").map(c=>`<option value="${c.id}" ${wizard.data.clientId===c.id?"selected":""}>${ARK.escHtml(c.name)}${c.company?" · "+ARK.escHtml(c.company):""}</option>`).join("");
-    body.innerHTML=`
-      <div class="field"><label class="field-label">Client *</label><select class="field-input field-select" id="w-client"><option value="">Select client…</option>${clientOpts}</select><span id="err-w-client" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
-      ${isHourly?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+    let billingHtml="";
+    if (isHourly) {
+      billingHtml=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
         <div class="field"><label class="field-label">Hourly rate ($)</label><input class="field-input" type="number" id="w-rate" value="${wizard.data.rate||""}" placeholder="e.g. 75"></div>
         <div class="field"><label class="field-label">Currency</label><select class="field-input field-select" id="w-currency"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div>
-      </div>`:isRetainer?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      </div>`;
+    } else if (isRetainer) {
+      billingHtml=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
         <div class="field"><label class="field-label">Monthly retainer ($)</label><input class="field-input" type="number" id="w-budget" value="${wizard.data.budget||""}" placeholder="e.g. 2000"></div>
         <div class="field"><label class="field-label">Currency</label><select class="field-input field-select" id="w-currency"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div>
-      </div>``:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      </div>`;
+    } else {
+      billingHtml=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
         <div class="field"><label class="field-label">Project budget ($)</label><input class="field-input" type="number" id="w-budget" value="${wizard.data.budget||""}" placeholder="e.g. 5000"></div>
         <div class="field"><label class="field-label">Currency</label><select class="field-input field-select" id="w-currency"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div>
-      </div>`}
+      </div>`;
+    }
+    body.innerHTML=`
+      <div class="field"><label class="field-label">Client *</label><select class="field-input field-select" id="w-client"><option value="">Select client…</option>${clientOpts}</select><span id="err-w-client" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
+      ${billingHtml}
       <div style="margin-top:4px;padding:12px;background:var(--bg2);border-radius:var(--r);border:1px solid var(--line2);">
         <div style="font-size:.73rem;color:var(--ink4);margin-bottom:4px;">📋 Summary</div>
         <div style="font-size:.82rem;color:var(--ink2);line-height:1.6;">${wizard.data.title||"Untitled"} · ${wizard.type==="hourly"?"Hourly":wizard.type==="retainer"?"Retainer":"Fixed price"} · ${wizard.data.due?"Due "+ARK.fmtDate(wizard.data.due):"No due date"}</div>
