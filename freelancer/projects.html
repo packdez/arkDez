@@ -172,16 +172,16 @@
 .status-opt[data-s="cancelled"] { background: #fee2e2;         color: #991b1b; }
 
 /* ── Kanban view ── */
-.kanban-board { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 8px; }
-.kanban-col { flex-shrink: 0; width: 260px; }
+.kanban-board { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; align-items: start; }
+.kanban-col { min-width: 0; }
 .kanban-col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; padding: 0 4px; }
 .kanban-col-title { font-size: .74rem; font-weight: 700; color: var(--ink3); letter-spacing: .06em; text-transform: uppercase; }
 .kanban-col-count { font-size: .68rem; color: var(--ink4); background: var(--bg3); padding: 1px 7px; border-radius: 999px; }
 .kanban-col-body { display: flex; flex-direction: column; gap: 8px; }
-.kanban-card { background: var(--bg); border: 1.5px solid var(--line2); border-radius: var(--r); padding: 12px 14px; cursor: pointer; transition: all .18s; }
+.kanban-card { background: var(--bg); border: 1.5px solid var(--line2); border-radius: var(--r); padding: 12px 14px; cursor: pointer; transition: all .18s; display: flex; flex-direction: column; }
 .kanban-card:hover { border-color: var(--accent-ln); box-shadow: var(--sh); transform: translateY(-1px); }
 .kanban-card-title { font-size: .82rem; font-weight: 700; color: var(--ink); margin-bottom: 4px; line-height: 1.3; }
-.kanban-card-client { font-size: .7rem; color: var(--ink4); margin-bottom: 8px; }
+.kanban-card-client { font-size: .7rem; color: var(--ink4); margin-bottom: 8px; flex: 1; }
 .kanban-card-footer { display: flex; align-items: center; justify-content: space-between; }
 
 /* ── Inline milestone editing ── */
@@ -221,8 +221,17 @@
 
 @media (max-width:768px) {
   .project-row-client,.project-row-type,.project-row-budget,.project-row-progress { display:none; }
-  #project-detail { width: 100vw; }
+  #project-detail { width: 100vw; max-width: 100vw; }
   .projects-grid { grid-template-columns: 1fr; }
+  .kanban-board { grid-template-columns: 1fr 1fr; }
+  .projects-toolbar { gap: 6px; }
+  .filter-btn { padding: 0 10px; font-size: .76rem; }
+}
+@media (max-width:480px) {
+  .kanban-board { grid-template-columns: 1fr; }
+  .projects-toolbar { flex-wrap: wrap; }
+  .search-wrap { min-width: 100%; order: -1; }
+  .view-toggle { margin-left: 0; }
 }
 </style>
 </head>
@@ -302,7 +311,7 @@
         <div class="projects-toolbar">
           <div class="search-wrap">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input class="search-input" type="text" id="search-input" placeholder="Search projects…" oninput="renderProjects()">
+            <input class="search-input" type="text" id="search-input" placeholder="Search projects…" oninput="handleSearch()" onkeyup="handleSearch()">
           </div>
           <button class="filter-btn active" id="filter-all" onclick="setFilter('all',this)">All</button>
           <button class="filter-btn" id="filter-active" onclick="setFilter('active',this)">Active</button>
@@ -520,13 +529,31 @@ function populateClientDropdown() {
   });
 }
 
+// ── Search: fuzzy match + debounce ──────────────────────────
+function fuzzyMatch(str, pattern) {
+  if (!pattern) return true;
+  str = str.toLowerCase().trim(); pattern = pattern.toLowerCase().trim();
+  if (!pattern) return true;
+  if (str.includes(pattern)) return true;
+  const words = str.split(/[\s\-_]+/);
+  if (words.some(w => w.startsWith(pattern))) return true;
+  const tokens = pattern.split(/\s+/).filter(Boolean);
+  if (tokens.length > 1) return tokens.every(tok => words.some(w => w.startsWith(tok)));
+  return false;
+}
+let _searchTimer = null;
+function handleSearch() {
+  clearTimeout(_searchTimer);
+  _searchTimer = setTimeout(() => renderProjects(), 150);
+}
+
 // ── Render ─────────────────────────────────────────────────
 function renderProjects() {
   const q = document.getElementById("search-input").value.toLowerCase();
   const filtered = allProjects.filter(p => {
     if (p.status === "deleted") return false;
     if (currentFilter !== "all" && p.status !== currentFilter) return false;
-    if (q && !p.title.toLowerCase().includes(q) && !(p.clientName||"").toLowerCase().includes(q)) return false;
+    if (q && !fuzzyMatch(p.title, q) && !fuzzyMatch(p.clientName||"", q) && !fuzzyMatch(p.type||"", q)) return false;
     return true;
   });
 
@@ -551,9 +578,9 @@ function renderCardView(projects) {
   return `<div class="projects-grid">${projects.map((p, i) => {
     const due    = p.dueDate ? new Date(p.dueDate) : null;
     const isOver = due && due < new Date() && p.status !== "completed";
-    const doneM  = (p.milestones||[]).filter(m => m.status === "done").length;
+    const doneM  = (p.milestones||[]).filter(m => m.status === "done" || m.approvalStatus === "approved").length;
     const totalM = (p.milestones||[]).length;
-    return `<div class="project-card" onclick="openDetail('${p.id}')" style="animation-delay:${Math.min(i*40,300)}ms">
+    return `<div class="project-card" onclick="openDetail('${p.id}')" >
       <div class="project-card-header">
         <div class="project-card-title">${ARK.escHtml(p.title)}</div>
         ${badgeHtml(p.status)}
@@ -571,6 +598,16 @@ function renderCardView(projects) {
         <div class="progress-bar"><div class="progress-fill" style="width:${p.progress||0}%"></div></div>
         <div class="progress-label"><span>${totalM > 0 ? doneM+"/"+totalM+" milestones" : "No milestones"}</span><span>${p.progress||0}%</span></div>
       </div>
+      ${p.requestStatus==="pending"?`<div style="display:flex;align-items:center;gap:6px;padding:7px 9px;background:#fffbeb;border:1px solid #fde68a;border-radius:7px;font-size:.7rem;color:#92400e;font-weight:600;margin-top:10px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Client project request
+        <button onclick="event.stopPropagation();respondToRequest('${p.id}','accepted')" style="margin-left:auto;height:22px;padding:0 8px;background:var(--accent);color:#fff;border:none;border-radius:5px;font-size:.67rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Accept</button>
+        <button onclick="event.stopPropagation();respondToRequest('${p.id}','declined')" style="height:22px;padding:0 8px;background:#fee2e2;color:#991b1b;border:none;border-radius:5px;font-size:.67rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Decline</button>
+      </div>`:""}
+      ${(p.milestones||[]).some(m=>m.approvalStatus==="revision_requested")?`<div style="display:flex;align-items:center;gap:6px;padding:6px 9px;background:var(--purple-bg,#f5f3ff);border:1px solid var(--purple-ln,#ddd6fe);border-radius:7px;font-size:.7rem;color:#7c3aed;font-weight:600;margin-top:8px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;flex-shrink:0;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+        Client requested a revision
+      </div>`:""}
     </div>`;
   }).join("")}</div>`;
 }
@@ -702,6 +739,46 @@ async function changeStatus(status) {
   } catch(e) { ARK.showToast("Connection error.", "error"); }
 }
 
+// ── Respond to client project request ─────────────────────
+async function respondToRequest(projectId, response) {
+  try {
+    const res = await ARK.api({ action: "respond_to_project_request", token: ARK.getToken(), projectId, response });
+    if (res.success) {
+      const idx = allProjects.findIndex(p => p.id === projectId);
+      if (idx > -1) {
+        allProjects[idx].requestStatus = response;
+        allProjects[idx].status = response === "accepted" ? "active" : "cancelled";
+      }
+      ARK.showToast(response === "accepted" ? "Project accepted!" : "Project declined", "success");
+      renderProjects();
+    } else { ARK.showToast(res.error || "Failed", "error"); }
+  } catch(e) { ARK.showToast("Connection error.", "error"); }
+}
+
+// ── Mark revision done (freelancer side) ───────────────────
+async function markRevisionDone(milestoneId, mi) {
+  try {
+    const res = await ARK.api({ action: "clear_revision", token: ARK.getToken(), milestoneId });
+    if (res.success) {
+      if (selectedProject) {
+        const m = selectedProject.milestones[mi];
+        if (m) {
+          if (m.revisionNotes && typeof m.revisionNotes === "object") {
+            m.revisionNotes.resolved = true;
+            m.revisionNotes.resolvedAt = new Date().toISOString();
+          }
+          m.approvalStatus = "pending";
+          m.status = "in-progress";
+        }
+        milestonesDirty = true;
+        renderMilestones(selectedProject.milestones);
+        saveNow();
+      }
+      ARK.showToast("Revision marked done — awaiting client approval", "success");
+    } else { ARK.showToast(res.error || "Failed", "error"); }
+  } catch(e) { ARK.showToast("Connection error.", "error"); }
+}
+
 // ── Milestones — inline editing, no duplicates ────────────
 function renderMilestones(milestones) {
   const list = document.getElementById("milestone-list");
@@ -717,13 +794,18 @@ function renderMilestones(milestones) {
   });
 
   list.innerHTML = milestones.map((m, mi) => {
-    const isDone   = m.status === "done";
+    const ap       = m.approvalStatus || "pending";
+    const isDone   = m.status === "done" || ap === "approved";
     const subtasks = m.subtasks || [];
+    const revNotes = m.revisionNotes || {};
     const isOpen   = openStates[mi] || false;
+    let bcolor = "var(--line2)";
+    if (ap === "approved") bcolor = "var(--accent-ln,#bbf7d0)";
+    if (ap === "revision_requested") bcolor = "#ddd6fe";
     return `
-    <div class="milestone-item ${isDone ? "done" : ""}">
+    <div class="milestone-item ${isDone ? "done" : ""}" style="border-color:${bcolor}">
       <div class="milestone-header" onclick="toggleMilestoneOpen(this)">
-        <button class="milestone-check ${isDone ? "done" : ""}" onclick="toggleMilestone(event,${mi})" title="${isDone ? "Mark incomplete" : "Mark done"}">
+        <button class="milestone-check ${isDone || ap==="approved" ? "done" : ""}" onclick="toggleMilestone(event,${mi})" title="${isDone ? "Mark incomplete" : "Mark done"}">
           <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
         </button>
         <input class="milestone-title-input ${isDone ? "done" : ""}" value="${ARK.escHtml(m.title)}"
@@ -731,6 +813,9 @@ function renderMilestones(milestones) {
           onchange="editMilestoneTitle(${mi}, this.value)"
           onblur="editMilestoneTitle(${mi}, this.value)"
           placeholder="Milestone title">
+        ${ap==="approved"?`<span style="background:#dcfce7;color:#166534;font-size:.6rem;flex-shrink:0;padding:2px 7px;border-radius:999px;font-weight:700;white-space:nowrap;">✓ Approved</span>`:""}
+        ${ap==="revision_requested"?`<span style="background:#f5f3ff;color:#7c3aed;font-size:.6rem;flex-shrink:0;padding:2px 7px;border-radius:999px;font-weight:700;white-space:nowrap;">↩ Revision</span>`:""}
+        ${revNotes&&revNotes.resolved?`<span style="background:#dcfce7;color:#166534;font-size:.6rem;flex-shrink:0;padding:2px 7px;border-radius:999px;font-weight:700;white-space:nowrap;">✓ Resolved</span>`:""}
         <div class="milestone-actions">
           <button class="ms-action-btn" onclick="event.stopPropagation();deleteMilestone(${mi})" title="Delete milestone">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
@@ -806,19 +891,45 @@ function renderMilestones(milestones) {
             <button onclick="toggleNoteInput(${mi})" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button>
           </div>
         </div>
+
+        ${ap==="revision_requested"?`<div style="margin-top:8px;padding:10px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:var(--r);">
+          <div style="font-size:.74rem;font-weight:700;color:#7c3aed;margin-bottom:6px;display:flex;align-items:center;gap:5px;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            Client requested revision
+          </div>
+          ${(revNotes.checklist||[]).length?`<div style="font-size:.73rem;color:#5b21b6;margin-bottom:4px;">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}</div>`:""}
+          ${revNotes.notes?`<div style="font-size:.73rem;color:#5b21b6;font-style:italic;">${ARK.escHtml(revNotes.notes)}</div>`:""}
+          <button onclick="markRevisionDone('${m.id}',${mi})" style="margin-top:8px;display:flex;align-items:center;gap:5px;height:30px;padding:0 12px;background:#f0fdf4;color:#166534;border:1.5px solid #bbf7d0;border-radius:var(--r);font-size:.73rem;font-weight:700;cursor:pointer;font-family:var(--sans);">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Mark revision done
+          </button>
+        </div>`:""}
+        ${revNotes&&revNotes.resolved?`<div style="margin-top:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--r);font-size:.73rem;color:#166534;">
+          <strong>Revision resolved</strong>${revNotes.resolvedAt?" · "+new Date(revNotes.resolvedAt).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):""}
+          ${(revNotes.checklist||[]).length?`<div style="margin-top:4px;opacity:.7;">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}</div>`:""}
+        </div>`:""}
       </div>
     </div>`;
   }).join("");
 }
 
 function toggleMilestoneOpen(headerEl) {
+  const list = document.getElementById("milestone-list");
+  const allSubs  = list.querySelectorAll(".subtask-list");
+  const allChevs = list.querySelectorAll(".milestone-chevron");
   const sub  = headerEl.parentElement.querySelector(".subtask-list");
   const chev = headerEl.querySelector(".milestone-chevron");
   if (!sub) return;
   const isOpen = sub.style.display !== "none";
-  sub.style.display = isOpen ? "none" : "flex";
-  sub.style.flexDirection = "column";
-  chev?.classList.toggle("open", !isOpen);
+  // Close all first
+  allSubs.forEach(s => { s.style.display = "none"; });
+  allChevs.forEach(c => c.classList.remove("open"));
+  // Open this if it was closed
+  if (!isOpen) {
+    sub.style.display = "flex";
+    sub.style.flexDirection = "column";
+    chev?.classList.add("open");
+  }
 }
 
 function toggleMilestone(e, mi) {
@@ -932,7 +1043,7 @@ function updateProgressFromMilestones() {
   if (!selectedProject) return;
   const milestones = selectedProject.milestones;
   const total    = milestones.length;
-  const done     = milestones.filter(m => m.status === "done").length;
+  const done     = milestones.filter(m => m.status === "done" || m.approvalStatus === "approved").length;
   const progress = total > 0 ? Math.round((done / total) * 100) : 0;
   selectedProject.progress = progress;
   document.getElementById("detail-progress-num").textContent = progress + "%";
@@ -1266,5 +1377,3 @@ function openAttachment(url, type) {
 
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
 </script>
-</body>
-</html>
