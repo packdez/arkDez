@@ -165,10 +165,10 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
 .kanban-col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 4px;}
 .kanban-col-title{font-size:.73rem;font-weight:700;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase;}
 .kanban-col-count{font-size:.67rem;color:var(--ink4);background:var(--bg3);padding:1px 7px;border-radius:999px;}
-.kanban-card{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:all .18s;margin-bottom:8px;display:flex;flex-direction:column;}
+.kanban-card{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:all .18s;margin-bottom:8px;display:flex;flex-direction:column;min-height:100px;}
 .kanban-card:hover{border-color:var(--accent-ln);box-shadow:var(--sh);transform:translateY(-1px);}
 .kanban-card-title{font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:4px;line-height:1.3;}
-.kanban-card-fl{font-size:.7rem;color:var(--ink4);margin-bottom:8px;}
+.kanban-card-fl{font-size:.7rem;color:var(--ink4);margin-bottom:8px;flex:1;}
 .kanban-card-footer{display:flex;align-items:center;justify-content:space-between;}
 
 /* ── Card notices ── */
@@ -793,7 +793,8 @@ const API_KEY    = "d29bb7407783daa176e5f6cf8dfc6677940df38fda145b06";
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsjcZmIhwJF5DslXrFTPZJENckjKB_3re9qK73dewpLCCUNBcEi4-_iHBr6UvhVCSQpA/exec";
 const LOGIN_URL  = "/client/login.html";
 const CACHE_KEY  = "ark_client_projects_v2";
-const SEEN_KEY   = "ark_client_projects_seen";
+const SEEN_KEY       = "ark_client_projects_seen";   // tracks freelancer-change seen state
+const CLIENT_KEY     = "ark_client_projects_client";  // tracks client's own last-change timestamps
 const DRIVE_FOLDER_ID = "1oaLlUJrnD0uzPtM6CmL4NFWRwbULnxz7";
 
 let allProjects=[], allFreelancers=[], currentFilter="all", currentView="card";
@@ -819,8 +820,26 @@ function saveToCache(){
   try{sessionStorage.setItem(CACHE_KEY,JSON.stringify({projects:allProjects,freelancers:allFreelancers,ts:Date.now()}));}catch(e){}
 }
 function getSeenMap(){try{return JSON.parse(localStorage.getItem(SEEN_KEY)||"{}");}catch(e){return {};}}
-function markProjectSeen(id,updatedAt){const m=getSeenMap();m[id]=String(updatedAt);localStorage.setItem(SEEN_KEY,JSON.stringify(m));}
-function projectHasChanges(p){const s=getSeenMap();return s[p.id]&&s[p.id]!==String(p.updatedAt);}
+function getClientMap(){try{return JSON.parse(localStorage.getItem(CLIENT_KEY)||"{}");}catch(e){return {};}}
+
+// Called when client opens a project — marks it as seen at current updatedAt
+function markProjectSeen(id,updatedAt){
+  const m=getSeenMap();m[id]=String(updatedAt);localStorage.setItem(SEEN_KEY,JSON.stringify(m));
+}
+// Called immediately before client makes any change — pre-marks so dot never shows for own edits
+function markClientChange(id){
+  const cm=getClientMap();cm[id]=Date.now();localStorage.setItem(CLIENT_KEY,JSON.stringify(cm));
+  // Also update seen so any subsequent poll won't flag it
+  const sm=getSeenMap();sm[id]="client-pending-"+Date.now();localStorage.setItem(SEEN_KEY,JSON.stringify(sm));
+}
+// Dot shows ONLY when: seen[id] exists AND seen[id] != updatedAt AND client didn't just change it
+function projectHasChanges(p){
+  const seen=getSeenMap();
+  if(!seen[p.id]) return false;
+  if(seen[p.id]===String(p.updatedAt)) return false;
+  if(seen[p.id].startsWith("client-pending-")) return false;
+  return true;
+}
 function countChangedProjects(){return allProjects.filter(p=>projectHasChanges(p)).length;}
 
 async function boot(){
@@ -847,7 +866,19 @@ function startPolling(){
   },30000);
 }
 
-function detectChanges(incoming){const seen=getSeenMap();incoming.forEach(p=>{if(!seen[p.id])markProjectSeen(p.id,p.updatedAt);});}
+function detectChanges(incoming){
+  const seen=getSeenMap();
+  incoming.forEach(p=>{
+    if(!seen[p.id]){
+      // First time seeing — mark as seen (no dot on first load)
+      markProjectSeen(p.id,p.updatedAt);
+    } else if(seen[p.id].startsWith("client-pending-")){
+      // Client just made a change — now that we see the new updatedAt, update seen to match
+      markProjectSeen(p.id,p.updatedAt);
+    }
+    // Otherwise leave seen as-is — if it differs from p.updatedAt, freelancer changed it
+  });
+}
 function updateChangeBadges(){const count=countChangedProjects();const b=document.getElementById("nav-projects-badge");if(b){b.style.display=count>0?"inline-block":"none";}}
 function showChangeBanner(count){ /* dot only — no banner */ }
 
@@ -885,11 +916,20 @@ function setFreelancer(id,el){activeFreelancer=id;document.querySelectorAll(".fl
 
 function fuzzyMatch(str, pattern) {
   if (!pattern) return true;
-  str = str.toLowerCase(); pattern = pattern.toLowerCase();
+  str = str.toLowerCase().trim();
+  pattern = pattern.toLowerCase().trim();
+  if (!pattern) return true;
+  // Direct substring match (most common case)
   if (str.includes(pattern)) return true;
-  let si = 0, pi = 0;
-  while (si < str.length && pi < pattern.length) { if (str[si] === pattern[pi]) pi++; si++; }
-  return pi === pattern.length;
+  // Word-start match: each word in str that starts with any part of pattern
+  const words = str.split(/[\s\-_]+/);
+  if (words.some(w => w.startsWith(pattern))) return true;
+  // Multi-word: each search token must match start of some word
+  const tokens = pattern.split(/\s+/).filter(Boolean);
+  if (tokens.length > 1) {
+    return tokens.every(tok => words.some(w => w.startsWith(tok)));
+  }
+  return false;
 }
 
 let _searchTimer = null;
@@ -1016,6 +1056,7 @@ function renderStatusSelector(current){
 }
 async function changeProjectStatus(status){
   if(!selectedProject)return;
+  markClientChange(selectedProject.id); // own change — never show dot
   const old=selectedProject.status;selectedProject.status=status;renderStatusSelector(status);
   const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].status=status;renderProjects();
   try{
@@ -1080,7 +1121,7 @@ function renderMilestones(milestones){
           <div class="inline-form-btns"><button class="inline-save" onclick="saveMsNote(${mi})">Save note</button><button class="inline-cancel" onclick="toggleMsNoteForm(${mi})">Cancel</button></div>
         </div>
         ${ap==="approved"?`<div class="approved-stamp"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Approved${m.approvedAt?" · "+fmtDate(m.approvedAt):""}</div>`:""}
-        ${ap==="revision_requested"?`<div class="revision-stamp"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Revision requested</div>${(revNotes.checklist?.length||revNotes.notes)?`<div class="revision-notes-box">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}${revNotes.notes?"<br>"+escHtml(revNotes.notes):""}</div>`:""}`:""}
+        ${ap==="revision_requested"?`<div class="revision-stamp"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Revision requested</div>${(revNotes.checklist?.length||revNotes.notes)?`<div class="revision-notes-box">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}${revNotes.notes?"<br>"+escHtml(revNotes.notes):""}</div>`:""}<button onclick="clearRevision('${m.id}',${mi})" style="margin-top:8px;display:flex;align-items:center;gap:5px;height:32px;padding:0 12px;background:#f0fdf4;color:#166534;border:1.5px solid #bbf7d0;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:background .15s;" onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Mark revision done</button>`:""}
         ${m.status==="done"&&ap==="pending"?`<div class="approval-actions">
           <button class="btn-approve" onclick="approveMilestone('${m.id}',${mi})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Approve</button>
           <button class="btn-revision" onclick="openRevisionModal('${m.id}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Request revision</button>
@@ -1116,12 +1157,13 @@ function saveProjectNote(){if(!selectedProject)return;const content=document.get
 
 let _projSaveTimer=null;
 function scheduleProjectSave(){clearTimeout(_projSaveTimer);_projSaveTimer=setTimeout(saveProjectMilestones,5000);}
-async function saveProjectMilestones(){if(!selectedProject||!projectsDirty)return;projectsDirty=false;try{const res=await api({action:"save_milestones",token:getToken(),projectId:selectedProject.id,milestones:selectedProject.milestones});if(res.success){selectedProject.progress=res.progress;document.getElementById("detail-progress-num").textContent=res.progress+"%";document.getElementById("detail-progress-fill").style.width=res.progress+"%";const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1){allProjects[idx].progress=res.progress;// Mark as seen with new updatedAt so our own saves don't show dot
+async function saveProjectMilestones(){if(!selectedProject||!projectsDirty)return;markClientChange(selectedProject.id);projectsDirty=false;try{const res=await api({action:"save_milestones",token:getToken(),projectId:selectedProject.id,milestones:selectedProject.milestones});if(res.success){selectedProject.progress=res.progress;document.getElementById("detail-progress-num").textContent=res.progress+"%";document.getElementById("detail-progress-fill").style.width=res.progress+"%";const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1){allProjects[idx].progress=res.progress;// Mark as seen with new updatedAt so our own saves don't show dot
 markProjectSeen(selectedProject.id,allProjects[idx].updatedAt||selectedProject.updatedAt);}saveToCache();updateChangeBadges();renderProjects();}}catch(e){projectsDirty=true;}}
 window.addEventListener("beforeunload",()=>{if(projectsDirty)saveProjectMilestones();});
 
 async function approveMilestone(milestoneId,mi){
-  const btns=document.querySelectorAll(".btn-approve");btns.forEach(b=>{b.disabled=true;b.textContent="Approving…";});
+  if(selectedProject)markClientChange(selectedProject.id);
+  const btns=document.querySelectorAll(".btn-approve");btns.forEach(b=>{b.disabled=true;b.textContent="Approving…";}); 
   try{const res=await api({action:"approve_milestone",token:getToken(),milestoneId});
   if(res.success){if(selectedProject){const m=selectedProject.milestones[mi];if(m){m.approvalStatus="approved";m.approvedAt=new Date().toISOString();m.status="done";}updateLocalProgress();renderMilestones(selectedProject.milestones);if(res.projectCompleted){selectedProject.status="completed";const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].status="completed";renderStatusSelector("completed");renderProjects();promptRating(selectedProject);}saveToCache();}showToast(res.projectCompleted?"🎉 All milestones approved! Project complete.":"Milestone approved!","success");}else showToast(res.error||"Failed","error");}catch(e){showToast("Connection error.","error");}
 }
@@ -1134,9 +1176,25 @@ async function submitRevision(){
   if(!checklist.length&&!notes){showToast("Select at least one issue or add a note","warn");return;}
   const btn=document.getElementById("revision-btn"),lbl=document.getElementById("revision-lbl"),spin=document.getElementById("revision-spin");
   btn.disabled=true;lbl.style.display="none";spin.style.display="block";
+  if(selectedProject)markClientChange(selectedProject.id);
   try{const res=await api({action:"request_revision",token:getToken(),milestoneId,checklist,notes});
   if(res.success){if(selectedProject){const m=selectedProject.milestones.find(ms=>ms.id===milestoneId);if(m){m.approvalStatus="revision_requested";m.revisionNotes={checklist,notes,requestedAt:new Date().toISOString()};}renderMilestones(selectedProject.milestones);}closeModal("modal-revision");showToast("Revision request sent!","success");saveToCache();}else showToast(res.error||"Failed","error");}catch(e){showToast("Connection error.","error");}
   finally{btn.disabled=false;lbl.style.display="";spin.style.display="none";}
+}
+
+async function clearRevision(milestoneId, mi){
+  if(!selectedProject)return;
+  markClientChange(selectedProject.id);
+  try{
+    const res=await api({action:"clear_revision",token:getToken(),milestoneId});
+    if(res.success){
+      const m=selectedProject.milestones[mi];
+      if(m){m.approvalStatus="pending";m.status="in-progress";m.revisionNotes={};}
+      renderMilestones(selectedProject.milestones);
+      showToast("Revision marked as done","success");
+      saveToCache();
+    }else showToast(res.error||"Failed","error");
+  }catch(e){showToast("Connection error.","error");}
 }
 
 function promptRating(project){setTimeout(()=>{document.getElementById("rating-project-name").textContent=project.title;document.getElementById("rating-project-id").value=project.id;document.getElementById("rating-freelancer-id").value=project.freelancerId||"";document.getElementById("review-text").value="";setRating(0);openModal("modal-rating");},1000);}
