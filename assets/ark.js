@@ -7,7 +7,7 @@ const ARK = (function () {
 
   // ── Config ─────────────────────────────────────────────────
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsjcZmIhwJF5DslXrFTPZJENckjKB_3re9qK73dewpLCCUNBcEi4-_iHBr6UvhVCSQpA/exec";
-  const LOGIN_URL  = "/freelancer/login";
+  const LOGIN_URL  = "/freelancer/login.html";
   const API_KEY    = "d29bb7407783daa176e5f6cf8dfc6677940df38fda145b06";
 
   // ── API ────────────────────────────────────────────────────
@@ -53,13 +53,23 @@ const ARK = (function () {
       return;
     }
 
+    // Add timeout: if API takes >12s, use cached user
+    let apiTimedOut = false;
+    const timeoutId = setTimeout(() => { apiTimedOut = true; }, 12000);
     try {
       const res = await api({ action: "validate_token", token });
-      if (!res.success) return redirect();
+      clearTimeout(timeoutId);
+      if (!res.success) {
+        // Token invalid — try cached user before redirecting
+        const cached = getUser();
+        if (cached) { onSuccess(cached); return; }
+        return redirect();
+      }
       setUser(res.user);
       onSuccess(res.user);
     } catch(e) {
-      // Offline fallback
+      clearTimeout(timeoutId);
+      // Network error or JSON parse failure — use cached user
       const user = getUser();
       if (user) { onSuccess(user); return; }
       redirect();
