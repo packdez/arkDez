@@ -1093,7 +1093,10 @@ function renderMilestones(milestones) {
           <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
         </button>
         <input class="milestone-title-input ${isDone?"done":""}" value="${ARK.escHtml(m.title)}" onclick="event.stopPropagation()" onchange="editMilestoneTitle(${mi},this.value)" onblur="editMilestoneTitle(${mi},this.value)" placeholder="Milestone title">
-        <input class="ms-amount-input" type="number" value="${m.amount||""}" placeholder="$" min="0" step="0.01" onclick="event.stopPropagation()" onchange="editMilestoneAmount(${mi},this.value)" onblur="editMilestoneAmount(${mi},this.value)" title="Milestone amount">
+          <div style="display:flex;align-items:center;gap:2px;flex-shrink:0;">
+            <span style="font-size:.72rem;color:var(--ink4);font-weight:600;">${selectedProject?.currency==="EUR"?"€":selectedProject?.currency==="GBP"?"£":"$"}</span>
+            <input class="ms-amount-input" type="number" value="${m.amount||""}" placeholder="0" min="0" step="0.01" onclick="event.stopPropagation()" onchange="editMilestoneAmount(${mi},this.value)" onblur="editMilestoneAmount(${mi},this.value)" title="Milestone amount">
+          </div>
         ${ap==="approved"?`<span style="background:#dcfce7;color:#166634;font-size:.6rem;flex-shrink:0;padding:2px 6px;border-radius:999px;font-weight:700;">✓ Approved</span>`:""}
         ${ap==="revision_requested"?`<span style="background:#f5f3ff;color:#7c3aed;font-size:.6rem;flex-shrink:0;padding:2px 6px;border-radius:999px;font-weight:700;">↩ Revision</span>`:""}
         ${revNotes&&revNotes.resolved?`<span style="background:#dcfce7;color:#166634;font-size:.6rem;flex-shrink:0;padding:2px 6px;border-radius:999px;font-weight:700;">✓ Resolved</span>`:""}
