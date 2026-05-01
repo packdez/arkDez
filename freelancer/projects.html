@@ -621,13 +621,20 @@ let wizard = { step: 1, totalSteps: 3, type: "one-off", data: {} };
 // BOOT
 // ═══════════════════════════════════════════════════════════
 ARK.requireAuth(async function(user) {
-  ARK.bootSidebar(user);
+  try {
+    ARK.bootSidebar(user);
+  } catch(e) {}
   document.getElementById("auth-gate").classList.add("hidden");
   document.getElementById("app").classList.add("ready");
-  await Promise.all([loadProjects(), loadClients()]);
-  startPolling();
-  // Pre-fill today's date in log modal
-  document.getElementById("log-date").value = new Date().toISOString().slice(0,10);
+  try {
+    await Promise.all([loadProjects(), loadClients()]);
+    startPolling();
+    const logDate = document.getElementById("log-date");
+    if (logDate) logDate.value = new Date().toISOString().slice(0,10);
+  } catch(e) {
+    ARK.showToast("Something went wrong loading projects.", "error");
+    document.getElementById("projects-loading").style.display = "none";
+  }
 });
 
 async function loadProjects() {
