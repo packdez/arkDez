@@ -235,6 +235,10 @@
 .field-textarea{height:auto;padding:10px 12px;resize:vertical;min-height:80px;}
 .field-select{cursor:pointer;}
 
+.word-counter{font-size:.68rem;color:var(--ink4);text-align:right;margin-top:3px;}
+.word-counter.warn{color:#d97706;}
+.word-counter.over{color:var(--red);font-weight:600;}
+  
 /* ── Skeleton (static, no animation) ── */
 .skeleton{background:var(--bg3);border-radius:6px;}
 
@@ -585,8 +589,8 @@
     <div class="modal-body">
       <input type="hidden" id="edit-project-id">
       <div class="field"><label class="field-label">Project title *</label><input class="field-input" type="text" id="ep-title" placeholder="e.g. Airbnb Automation System" autocomplete="off"><span id="err-ep-title" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
-      <div class="field"><label class="field-label">Description</label><textarea class="field-input field-textarea" id="ep-desc" rows="2" style="height:auto;padding:10px 12px;resize:vertical;" placeholder="What does this project involve?"></textarea></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div class="field"><label class="field-label">Description <span style="font-weight:400;color:var(--ink4);">(max 70 words)</span></label><textarea class="field-input field-textarea" id="ep-desc" rows="2" style="height:auto;padding:10px 12px;resize:vertical;" placeholder="What does this project involve?" oninput="updateWordCount('ep-desc','ep-desc-count')"></textarea><div class="word-counter" id="ep-desc-count">0 / 70</div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
         <div class="field"><label class="field-label">Due date</label><input class="field-input" type="date" id="ep-due"></div>
         <div class="field"><label class="field-label">Amount ($)</label><input class="field-input" type="number" id="ep-budget" placeholder="0" min="0"></div>
       </div>
@@ -621,6 +625,26 @@ const DRIVE_FOLDER_ID = "1oaLlUJrnD0uzPtM6CmL4NFWRwbULnxz7";
 // Wizard state
 let wizard = { step: 1, totalSteps: 3, type: "one-off", data: {} };
 
+
+function countWords(str) {
+  return str.trim() === "" ? 0 : str.trim().split(/\s+/).length;
+}
+function updateWordCount(textareaId, counterId) {
+  const ta = document.getElementById(textareaId);
+  const counter = document.getElementById(counterId);
+  if (!ta || !counter) return;
+  const words = countWords(ta.value);
+  counter.textContent = words + " / 70";
+  counter.className = "word-counter" + (words > 70 ? " over" : words > 60 ? " warn" : "");
+  if (words > 70) {
+    // Trim to 70 words
+    const trimmed = ta.value.trim().split(/\s+/).slice(0, 70).join(" ");
+    ta.value = trimmed + " ";
+    counter.textContent = "70 / 70";
+    counter.className = "word-counter over";
+  }
+}
+  
 // ═══════════════════════════════════════════════════════════
 // BOOT
 // ═══════════════════════════════════════════════════════════
@@ -970,7 +994,7 @@ function closeDetail() {
 // ═══════════════════════════════════════════════════════════
 function renderStatusSelector(current) {
   const p = selectedProject;
-  const blockedActive = p && (p.requestStatus==="pending_client");
+  const blockedActive = p && p.requestStatus !== "accepted" && p.status !== "active";
   document.getElementById("detail-status-wrap").innerHTML=["draft","active","paused","completed","cancelled"].map(s=>{
     const isBlocked = s==="active" && blockedActive;
     return `<div class="status-opt ${s===current?"active":""} ${isBlocked?"blocked":""}" data-s="${s}"
@@ -993,7 +1017,7 @@ async function changeStatus(status) {
   try {
     const res=await ARK.api({action:"update_project",token:ARK.getToken(),projectId:selectedProject.id,status});
     if (!res.success) { selectedProject.status=old; ARK.showToast(res.error||"Failed","error"); }
-    else ARK.showToast("Status updated","success");
+    else { ARK.showToast("Status updated","success"); if(res.updatedAt) syncSeenAfterSave(selectedProject.id,res.updatedAt); else syncSeenAfterSave(selectedProject.id,new Date().toISOString()); }
   } catch(e) { ARK.showToast("Connection error.","error"); }
 }
 
@@ -1499,6 +1523,7 @@ async function saveEditProject() {
       document.getElementById("detail-budget").textContent=payload.budgetAmount>0?ARK.fmtCurrency(payload.budgetAmount,"USD")+(selectedProject?.type==="hourly"?"/hr":""):"—";
       document.getElementById("detail-due").textContent=payload.dueDate?ARK.fmtDate(payload.dueDate):"—";
       ARK.closeModal("modal-edit-project"); renderProjects(); ARK.showToast("Project updated","success");
+      if(res.updatedAt) syncSeenAfterSave(id,res.updatedAt); else syncSeenAfterSave(id,new Date().toISOString());
     } else ARK.showToast(res.error||"Failed","error");
   } catch(e) { ARK.showToast("Connection error.","error"); }
   finally { btn.style.display=""; spin.style.display="none"; }
@@ -1551,7 +1576,7 @@ function renderWizardStep() {
     const isHourly=wizard.type==="hourly", isRetainer=wizard.type==="retainer";
     body.innerHTML=`
       <div class="field"><label class="field-label">Project title *</label><input class="field-input" type="text" id="w-title" value="${ARK.escHtml(wizard.data.title||"")}" placeholder="e.g. ${isHourly?"Website development":"Airbnb Automation"}" autocomplete="off"><span id="err-w-title" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
-      <div class="field"><label class="field-label">Description (70 words)</label><textarea class="field-input field-textarea" id="w-desc" rows="2" style="height:auto;padding:10px 12px;resize:vertical;" placeholder="Brief overview of the project scope…">${ARK.escHtml(wizard.data.desc||"")}</textarea></div>
+      <div class="field"><label class="field-label">Description <span style="font-weight:400;color:var(--ink4);">(max 70 words)</span></label><textarea class="field-input field-textarea" id="w-desc" rows="2" style="height:auto;padding:10px 12px;resize:vertical;" placeholder="Brief overview of the project scope…" oninput="updateWordCount('w-desc','w-desc-count')">${ARK.escHtml(wizard.data.desc||"")}</textarea><div class="word-counter" id="w-desc-count">0 / 70</div></div>
       ${!isRetainer?`<div class="field"><label class="field-label">Due date</label><input class="field-input" type="date" id="w-due" value="${wizard.data.due||""}"></div>`:`<div class="field"><label class="field-label">Contract start date</label><input class="field-input" type="date" id="w-due" value="${wizard.data.due||""}"></div>`}
       ${isHourly?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div class="field"><label class="field-label">Estimated hours</label><input class="field-input" type="number" id="w-hours" value="${wizard.data.hours||""}" placeholder="e.g. 40"></div></div>`:""}`;
   } else if (wizard.step===3) {
