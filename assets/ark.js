@@ -42,38 +42,38 @@ const ARK = (function () {
   // ── Auth guard ─────────────────────────────────────────────
   // Call at the top of every protected page
   async function requireAuth(onSuccess) {
-  const token = getToken();
-  if (!token) {
-    // No token at all — use cached user or redirect
-    const cached = getUser();
-    if (cached) { onSuccess(cached); return; }
-    return redirect();
-  }
+    const token = getToken();
+    if (!token) {
+      // No token — use cached user or redirect
+      const cached = getUser();
+      if (cached) { onSuccess(cached); return; }
+      return redirect();
+    }
 
-  // Try to validate — but always fall back to cached user on any failure
-  try {
-    const controller = new AbortController();
-    const tid = setTimeout(() => controller.abort(), 10000);
-    const body = new Blob([JSON.stringify({ action: "validate_token", token, apiKey: API_KEY })], { type: "text/plain" });
-    const fetchRes = await fetch(SCRIPT_URL, { method: "POST", body, signal: controller.signal });
-    clearTimeout(tid);
-    const res = await fetchRes.json();
-    if (res.success) {
-      setUser(res.user);
-      onSuccess(res.user);
-    } else {
-      // Server rejected token — use cached user if available, else redirect
+    // Try to validate with 10s timeout — always fall back to cached user on any failure
+    try {
+      const controller = new AbortController();
+      const tid = setTimeout(() => controller.abort(), 10000);
+      const body = new Blob([JSON.stringify({ action: "validate_token", token, apiKey: API_KEY })], { type: "text/plain" });
+      const fetchRes = await fetch(SCRIPT_URL, { method: "POST", body, signal: controller.signal });
+      clearTimeout(tid);
+      const res = await fetchRes.json();
+      if (res.success) {
+        setUser(res.user);
+        onSuccess(res.user);
+      } else {
+        // Server rejected token — use cached user if available, else redirect
+        const cached = getUser();
+        if (cached) { onSuccess(cached); return; }
+        redirect();
+      }
+    } catch(e) {
+      // Timeout, network error, or JSON parse failure — use cached user
       const cached = getUser();
       if (cached) { onSuccess(cached); return; }
       redirect();
     }
-  } catch(e) {
-    // Timeout, network error, or JSON failure — use cached user
-    const cached = getUser();
-    if (cached) { onSuccess(cached); return; }
-    redirect();
   }
-}
 
   function redirect() {
     window.location.href = LOGIN_URL;
