@@ -632,19 +632,17 @@ const _bootTimeout = setTimeout(() => {
 }, 15000);
 
 ARK.requireAuth(async function(user) {
-  clearTimeout(_bootTimeout);
   try { ARK.bootSidebar(user); } catch(e) {}
   document.getElementById("auth-gate").classList.add("hidden");
   document.getElementById("app").classList.add("ready");
   try {
     await Promise.all([loadProjects(), loadClients()]);
     startPolling();
-    const logDate = document.getElementById("log-date");
-    if (logDate) logDate.value = new Date().toISOString().slice(0,10);
+    const d = document.getElementById("log-date");
+    if (d) d.value = new Date().toISOString().slice(0,10);
   } catch(e) {
-    ARK.showToast("Something went wrong loading projects.", "error");
-    const el = document.getElementById("projects-loading");
-    if (el) el.style.display = "none";
+    const l = document.getElementById("projects-loading");
+    if (l) l.style.display = "none";
   }
 });
 
