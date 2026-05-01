@@ -27,6 +27,10 @@
 /* ── Project chips ── */
 .proj-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:999px;font-size:.74rem;font-weight:700;border:1.5px solid transparent;}
 
+.type-card-icon svg{width:36px;height:36px;color:var(--ink3);}
+.type-card.selected .type-card-icon svg{color:var(--accent);}
+
+  
 /* ── Card view ── */
 .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
 .project-card{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);padding:18px;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .2s;position:relative;overflow:hidden;}
@@ -1528,17 +1532,17 @@ function renderWizardStep() {
   if (wizard.step===1) {
     body.innerHTML=`<div class="type-grid">
       <div class="type-card ${wizard.type==="one-off"?"selected":""}" onclick="selectType('one-off',this)">
-        <span class="type-card-icon">🎯</span>
+        <span class="type-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
         <div class="type-card-name">One-off / Fixed</div>
         <div class="type-card-desc">Defined scope with milestones. Client approves each milestone before payment.</div>
       </div>
       <div class="type-card ${wizard.type==="hourly"?"selected":""}" onclick="selectType('hourly',this)">
-        <span class="type-card-icon">⏱️</span>
+        <span class="type-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9.5 2.5h5M12 2.5v2"/></svg></span>
         <div class="type-card-name">Hourly</div>
         <div class="type-card-desc">Bill by the hour. Log time daily. Great for ongoing or scope-uncertain work.</div>
       </div>
       <div class="type-card ${wizard.type==="retainer"?"selected":""}" onclick="selectType('retainer',this)">
-        <span class="type-card-icon">🔄</span>
+        <span class="type-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg></span>
         <div class="type-card-name">Retainer</div>
         <div class="type-card-desc">Recurring monthly deliverables. Consistent income with defined monthly scope.</div>
       </div>
