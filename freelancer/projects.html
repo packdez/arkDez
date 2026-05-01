@@ -620,10 +620,20 @@ let wizard = { step: 1, totalSteps: 3, type: "one-off", data: {} };
 // ═══════════════════════════════════════════════════════════
 // BOOT
 // ═══════════════════════════════════════════════════════════
+// Hard failsafe: if auth hangs for 15s, show page anyway
+const _bootTimeout = setTimeout(() => {
+  const gate = document.getElementById("auth-gate");
+  if (gate && !gate.classList.contains("hidden")) {
+    gate.classList.add("hidden");
+    document.getElementById("app")?.classList.add("ready");
+    document.getElementById("projects-loading").style.display = "none";
+    document.getElementById("projects-empty").style.display = "";
+  }
+}, 15000);
+
 ARK.requireAuth(async function(user) {
-  try {
-    ARK.bootSidebar(user);
-  } catch(e) {}
+  clearTimeout(_bootTimeout);
+  try { ARK.bootSidebar(user); } catch(e) {}
   document.getElementById("auth-gate").classList.add("hidden");
   document.getElementById("app").classList.add("ready");
   try {
@@ -633,7 +643,8 @@ ARK.requireAuth(async function(user) {
     if (logDate) logDate.value = new Date().toISOString().slice(0,10);
   } catch(e) {
     ARK.showToast("Something went wrong loading projects.", "error");
-    document.getElementById("projects-loading").style.display = "none";
+    const el = document.getElementById("projects-loading");
+    if (el) el.style.display = "none";
   }
 });
 
