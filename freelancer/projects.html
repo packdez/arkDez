@@ -6,6 +6,15 @@
 <title>Projects — ArkDez</title>
 <link rel="stylesheet" href="../assets/ark.css">
 <style>
+/* ══════════════════════════════════════════════════════════
+   PROJECTS PAGE — REVAMP
+   Sidebar z-index fixed so detail panel overlay sits above it
+══════════════════════════════════════════════════════════ */
+
+/* Override sidebar z-index so overlay covers it */
+#sidebar { z-index: 100 !important; }
+#sidebar-overlay { z-index: 99 !important; }
+
 /* ── View toggle ── */
 .view-toggle{display:flex;gap:2px;background:var(--bg3);border-radius:8px;padding:3px;}
 .view-btn{width:30px;height:28px;border-radius:6px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink4);transition:all .15s;}
@@ -25,15 +34,12 @@
 .filter-btn.active{border-color:var(--accent);color:var(--accent);background:var(--accent-bg);}
 
 /* ── Project chips ── */
-.proj-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:999px;font-size:.74rem;font-weight:700;border:1.5px solid transparent;}
+.proj-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:999px;font-size:.74rem;font-weight:700;border:1.5px solid transparent;cursor:pointer;transition:opacity .15s;}
+.proj-chip:hover{opacity:.75;}
 
-.type-card-icon svg{width:36px;height:36px;color:var(--ink3);}
-.type-card.selected .type-card-icon svg{color:var(--accent);}
-
-  
 /* ── Card view ── */
 .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
-.project-card{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);padding:18px;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .2s;position:relative;overflow:hidden;}
+.project-card{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r-lg);padding:18px;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .2s;position:relative;overflow:hidden;animation:cardIn .3s var(--ease) both;}
 .project-card:hover{border-color:var(--accent-ln);box-shadow:var(--sh-md);transform:translateY(-2px);}
 .project-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px;}
 .project-card-title{font-size:.9rem;font-weight:700;color:var(--ink);line-height:1.3;flex:1;}
@@ -50,11 +56,7 @@
 .progress-bar{height:4px;background:var(--line2);border-radius:2px;overflow:hidden;}
 .progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s var(--ease);}
 .progress-label{display:flex;justify-content:space-between;font-size:.67rem;color:var(--ink4);margin-top:4px;}
-
-/* Red dot for client changes */
 .change-dot{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;margin-left:6px;vertical-align:middle;flex-shrink:0;}
-
-/* Card notices */
 .card-notice{display:flex;align-items:center;gap:6px;padding:6px 9px;border-radius:7px;font-size:.7rem;font-weight:600;margin-top:10px;}
 .card-notice svg{width:11px;height:11px;flex-shrink:0;}
 .card-notice.pending{background:#fffbeb;border:1px solid #fde68a;color:#92400e;}
@@ -80,44 +82,149 @@
 .kanban-col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 4px;}
 .kanban-col-title{font-size:.74rem;font-weight:700;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase;}
 .kanban-col-count{font-size:.68rem;color:var(--ink4);background:var(--bg3);padding:1px 7px;border-radius:999px;}
-.kanban-card{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;}
+.kanban-card{background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;margin-bottom:8px;}
 .kanban-card:hover{border-color:var(--accent-ln);box-shadow:var(--sh);transform:translateY(-1px);}
 .kanban-card-title{font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:4px;line-height:1.3;}
 .kanban-card-client{font-size:.7rem;color:var(--ink4);margin-bottom:8px;flex:1;}
 .kanban-card-footer{display:flex;align-items:center;justify-content:space-between;}
 
-/* ── Detail panel ── */
-#project-detail{position:fixed;top:0;right:0;bottom:0;width:460px;max-width:100vw;background:var(--bg);border-left:1px solid var(--line2);z-index:150;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s var(--ease);box-shadow:-8px 0 40px rgba(0,0,0,.07);height:100vh;overflow:hidden;}
+/* ══════════════════════════════════════
+   DETAIL PANEL — above sidebar overlay
+══════════════════════════════════════ */
+#project-detail{
+  position:fixed;top:0;right:0;bottom:0;width:480px;max-width:100vw;
+  background:var(--bg);border-left:1px solid var(--line2);
+  z-index:300; /* above sidebar z:100 */
+  display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .35s var(--ease);
+  box-shadow:-12px 0 48px rgba(0,0,0,.1);height:100vh;overflow:hidden;
+}
 #project-detail.open{transform:translateX(0);}
-#detail-overlay{position:fixed;inset:0;z-index:149;background:rgba(0,0,0,.65);opacity:0;pointer-events:none;transition:opacity .3s;}
+#detail-overlay{
+  position:fixed;inset:0;z-index:299;
+  background:rgba(0,0,0,.5);
+  opacity:0;pointer-events:none;transition:opacity .35s;
+  backdrop-filter:blur(2px);
+}
 #detail-overlay.open{opacity:1;pointer-events:all;}
-.detail-topbar{height:56px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0;}
-.detail-topbar-title{font-size:.86rem;font-weight:700;color:var(--ink);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.detail-topbar-actions{display:flex;align-items:center;gap:6px;}
-.detail-close{width:28px;height:28px;border-radius:7px;background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;justify-content:center;transition:background .15s;}
+
+/* ── Detail topbar — icon actions ── */
+.detail-topbar{
+  height:58px;border-bottom:1px solid var(--line2);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;flex-shrink:0;gap:10px;
+}
+.detail-topbar-title{font-size:.88rem;font-weight:700;color:var(--ink);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.detail-topbar-actions{display:flex;align-items:center;gap:4px;}
+
+/* Send to client button — text */
+.detail-send-btn{
+  height:30px;padding:0 12px;
+  background:var(--accent);color:#fff;border:none;border-radius:8px;
+  font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);
+  display:flex;align-items:center;gap:5px;
+  transition:background .15s,transform .12s,opacity .2s;
+  white-space:nowrap;
+}
+.detail-send-btn:hover{background:#155c33;}
+.detail-send-btn:active{transform:scale(.96);}
+.detail-send-btn:disabled{opacity:.6;pointer-events:none;}
+
+/* Icon buttons */
+.detail-icon-btn{
+  width:32px;height:32px;border-radius:8px;
+  background:none;border:1.5px solid var(--line2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink3);transition:all .15s;flex-shrink:0;
+}
+.detail-icon-btn:hover{background:var(--bg3);border-color:var(--line);color:var(--ink);}
+.detail-icon-btn.danger:hover{background:#fee2e2;border-color:#fecaca;color:var(--red);}
+.detail-icon-btn svg{width:14px;height:14px;}
+.detail-close{
+  width:32px;height:32px;border-radius:8px;
+  background:none;border:none;cursor:pointer;color:var(--ink4);
+  display:flex;align-items:center;justify-content:center;transition:background .15s;
+}
 .detail-close:hover{background:var(--bg3);}
+
+/* ── Detail scroll ── */
 .detail-scroll{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line2) transparent;}
 .detail-scroll::-webkit-scrollbar{width:3px;}
 .detail-scroll::-webkit-scrollbar-thumb{background:var(--line2);border-radius:2px;}
+
+/* ── Detail tabs ── */
+.detail-tabs{
+  display:flex;border-bottom:1px solid var(--line2);
+  padding:0 16px;background:var(--bg);flex-shrink:0;
+  gap:0;overflow-x:auto;scrollbar-width:none;
+}
+.detail-tabs::-webkit-scrollbar{display:none;}
+.detail-tab{
+  height:42px;padding:0 14px;border-bottom:2px solid transparent;
+  font-size:.78rem;font-weight:600;color:var(--ink4);cursor:pointer;
+  background:none;border-top:none;border-left:none;border-right:none;
+  font-family:var(--sans);white-space:nowrap;transition:color .15s,border-color .15s;
+  display:flex;align-items:center;gap:5px;
+}
+.detail-tab:hover{color:var(--ink2);}
+.detail-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.detail-tab-badge{
+  font-size:.6rem;font-weight:700;padding:1px 5px;
+  border-radius:999px;background:var(--bg3);color:var(--ink4);
+}
+.detail-tab.active .detail-tab-badge{background:var(--accent-bg);color:var(--accent);}
+
 .detail-section{padding:16px 18px;border-bottom:1px solid var(--line2);}
 .detail-section:last-child{border-bottom:none;padding-bottom:40px;}
 .detail-section-title{font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;}
 .detail-field{margin-bottom:12px;}
 .detail-field-label{font-size:.72rem;color:var(--ink4);margin-bottom:3px;}
 .detail-field-val{font-size:.84rem;color:var(--ink);font-weight:500;}
-.detail-progress-num{font-family:var(--serif);font-size:2rem;color:var(--ink);line-height:1;margin-bottom:6px;}
+.detail-progress-num{font-family:var(--serif);font-size:2.2rem;color:var(--ink);line-height:1;margin-bottom:6px;}
 .detail-progress-bar{height:6px;background:var(--line2);border-radius:3px;overflow:hidden;}
 .detail-progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s var(--ease);}
 
-/* ── Status selector ── */
-.status-select-wrap{display:flex;gap:6px;flex-wrap:wrap;}
-.status-opt{padding:5px 12px;border-radius:999px;font-size:.74rem;font-weight:700;cursor:pointer;border:1.5px solid transparent;transition:all .15s;}
-.status-opt.active{border-color:currentColor;}
-.status-opt[data-s="draft"]{background:var(--bg3);color:var(--ink3);}
-.status-opt[data-s="active"]{background:#dcfce7;color:#166534;}
-.status-opt[data-s="paused"]{background:#f3f4f6;color:#374151;}
-.status-opt[data-s="completed"]{background:#dbeafe;color:#1e40af;}
-.status-opt[data-s="cancelled"]{background:#fee2e2;color:#991b1b;}
+/* ══════════════════════════════════════
+   STATUS DROPDOWN (replaces pills)
+══════════════════════════════════════ */
+.status-dropdown-wrap{position:relative;display:inline-block;}
+.status-dropdown-trigger{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:6px 12px;border-radius:8px;cursor:pointer;
+  border:1.5px solid var(--line2);background:var(--bg);
+  font-size:.8rem;font-weight:600;font-family:var(--sans);
+  transition:all .15s;user-select:none;min-width:120px;
+}
+.status-dropdown-trigger:hover{border-color:var(--line);background:var(--bg2);}
+.status-dropdown-trigger .sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.status-dropdown-trigger .stext{flex:1;}
+.status-dropdown-trigger .schev{width:12px;height:12px;color:var(--ink4);flex-shrink:0;transition:transform .2s;}
+.status-dropdown-trigger.open .schev{transform:rotate(180deg);}
+.status-dropdown-menu{
+  position:absolute;top:calc(100% + 6px);left:0;
+  background:var(--bg);border:1.5px solid var(--line2);
+  border-radius:var(--r-lg);box-shadow:var(--sh-md);
+  z-index:400;min-width:180px;overflow:hidden;
+  opacity:0;pointer-events:none;transform:translateY(-8px);
+  transition:opacity .2s var(--ease),transform .2s var(--ease);
+}
+.status-dropdown-menu.open{opacity:1;pointer-events:all;transform:translateY(0);}
+.status-opt{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 14px;font-size:.82rem;font-weight:500;cursor:pointer;
+  transition:background .1s;font-family:var(--sans);
+}
+.status-opt:hover{background:var(--bg2);}
+.status-opt.active{background:var(--bg3);font-weight:700;}
+.status-opt .sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.status-opt.blocked{opacity:.45;cursor:not-allowed;}
+.status-opt.blocked:hover{background:none;}
+/* status colors */
+.s-draft .sdot{background:#a3a3a3;} .s-draft .stext{color:var(--ink3);}
+.s-active .sdot{background:#16a34a;} .s-active .stext{color:#166534;}
+.s-paused .sdot{background:#9ca3af;} .s-paused .stext{color:#374151;}
+.s-completed .sdot{background:#2563eb;} .s-completed .stext{color:#1e40af;}
+.s-cancelled .sdot{background:var(--red);} .s-cancelled .stext{color:#991b1b;}
 
 /* ── Milestones ── */
 .milestone-list{display:flex;flex-direction:column;gap:6px;}
@@ -127,7 +234,7 @@
 .milestone-header:hover{background:var(--bg2);}
 .milestone-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;cursor:pointer;background:none;}
 .milestone-check.done{background:var(--accent);border-color:var(--accent);}
-.milestone-check.done svg,.milestone-check svg{display:none;width:10px;height:10px;}
+.milestone-check svg,.milestone-check.done svg{display:none;width:10px;height:10px;}
 .milestone-check.done svg{display:block;}
 .milestone-title{font-size:.82rem;font-weight:600;color:var(--ink);flex:1;}
 .milestone-title.done{text-decoration:line-through;color:var(--ink4);}
@@ -144,8 +251,6 @@
 .subtask-title.done{text-decoration:line-through;color:var(--ink4);}
 .milestone-add-btn{display:flex;align-items:center;gap:6px;padding:8px 0;font-size:.78rem;color:var(--accent);font-weight:600;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:opacity .15s;}
 .milestone-add-btn:hover{opacity:.7;}
-
-/* ── Inline editing ── */
 .milestone-title-input{font-size:.82rem;font-weight:600;color:var(--ink);background:none;border:none;outline:none;font-family:var(--sans);flex:1;padding:0;border-bottom:1.5px solid transparent;transition:border-color .15s;}
 .milestone-title-input:focus{border-bottom-color:var(--accent);}
 .subtask-title-input{font-size:.77rem;color:var(--ink2);flex:1;background:none;border:none;outline:none;font-family:var(--sans);padding:0;border-bottom:1.5px solid transparent;transition:border-color .15s;}
@@ -155,72 +260,191 @@
 .milestone-item:hover .ms-action-btn,.subtask-item:hover .ms-action-btn{opacity:1;}
 .ms-action-btn:hover{background:var(--bg3);color:var(--red);}
 .ms-action-btn svg{width:11px;height:11px;}
-
-/* Milestone amount input */
 .ms-amount-input{width:70px;height:26px;background:var(--bg2);border:1px solid var(--line2);border-radius:6px;padding:0 7px;font-size:.75rem;color:var(--ink);font-family:var(--sans);outline:none;text-align:right;}
 .ms-amount-input:focus{border-color:var(--accent);}
 
-/* ── Time logging ── */
-.time-log-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line2);transition:background .12s;}
-.time-log-row:hover{background:var(--bg2);}
-.time-log-date{font-size:.76rem;color:var(--ink4);width:80px;flex-shrink:0;}
-.time-log-hours{font-size:.88rem;font-weight:700;color:var(--ink);width:50px;flex-shrink:0;}
-.time-log-desc{font-size:.78rem;color:var(--ink2);flex:1;}
-.time-total{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg2);border-top:2px solid var(--accent-ln);}
-.time-total-label{font-size:.76rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;}
-.time-total-val{font-family:var(--serif);font-size:1.2rem;color:var(--ink);}
+/* ══════════════════════════════════════
+   HOURLY — TIME LOG MONTHLY SUMMARY
+══════════════════════════════════════ */
+.time-monthly-grid{display:flex;flex-direction:column;gap:6px;}
+.time-month-row{
+  background:var(--bg2);border:1.5px solid var(--line2);border-radius:var(--r);
+  padding:12px 14px;display:flex;align-items:center;gap:10px;
+  transition:border-color .15s;
+}
+.time-month-row:hover{border-color:var(--accent-ln);}
+.time-month-label{font-size:.82rem;font-weight:700;color:var(--ink);flex:1;}
+.time-month-entries{font-size:.72rem;color:var(--ink4);}
+.time-month-hours{font-family:var(--serif);font-size:1.1rem;color:var(--ink);font-weight:400;flex-shrink:0;}
+.time-month-earned{font-size:.74rem;font-weight:600;color:var(--accent);margin-left:8px;}
+.time-grand-row{
+  background:var(--bg);border:2px solid var(--accent-ln);border-radius:var(--r);
+  padding:12px 14px;display:flex;align-items:center;justify-content:space-between;
+  margin-top:4px;
+}
+.time-grand-label{font-size:.72rem;font-weight:700;color:var(--ink4);letter-spacing:.08em;text-transform:uppercase;}
+.time-grand-val{font-family:var(--serif);font-size:1.4rem;color:var(--ink);}
 
-/* Retainer deliverables */
-.deliverable-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--line2);border-radius:var(--r);margin-bottom:6px;}
+/* ══════════════════════════════════════
+   RETAINER — DELIVERABLES SECTION
+══════════════════════════════════════ */
+.deliverable-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--line2);border-radius:var(--r);margin-bottom:6px;transition:border-color .15s;}
+.deliverable-item:hover{border-color:var(--accent-ln);}
 .deliverable-status{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;background:none;transition:all .2s;}
 .deliverable-status.done{background:var(--accent);border-color:var(--accent);}
 .deliverable-status svg{display:none;width:10px;height:10px;}
 .deliverable-status.done svg{display:block;}
 
-/* ── Project-level attachments ── */
+/* ══════════════════════════════════════
+   ACTIVITY / HISTORY TAB
+══════════════════════════════════════ */
+.activity-feed{display:flex;flex-direction:column;}
+.activity-item{
+  display:flex;gap:12px;padding:13px 18px;
+  border-bottom:1px solid var(--line2);
+  animation:fadeSlideIn .25s var(--ease) both;
+}
+.activity-item:last-child{border-bottom:none;}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+.activity-dot-wrap{display:flex;flex-direction:column;align-items:center;gap:0;flex-shrink:0;}
+.activity-dot{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.activity-dot.freelancer{background:var(--accent-bg);color:var(--accent);}
+.activity-dot.client{background:#eff6ff;color:#2563eb;}
+.activity-dot.system{background:var(--bg3);color:var(--ink4);}
+.activity-dot svg{width:12px;height:12px;}
+.activity-line{flex:1;width:1px;background:var(--line2);min-height:10px;margin-top:3px;}
+.activity-content{flex:1;min-width:0;}
+.activity-who{font-size:.76rem;font-weight:700;color:var(--ink);margin-bottom:2px;}
+.activity-desc{font-size:.78rem;color:var(--ink2);line-height:1.5;}
+.activity-time{font-size:.68rem;color:var(--ink4);margin-top:3px;display:flex;align-items:center;gap:5px;}
+.activity-tag{
+  display:inline-flex;align-items:center;gap:3px;padding:1px 6px;
+  border-radius:4px;font-size:.62rem;font-weight:700;letter-spacing:.03em;
+}
+.activity-tag.freelancer{background:var(--accent-bg);color:var(--accent);}
+.activity-tag.client{background:#eff6ff;color:#2563eb;}
+.activity-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 20px;text-align:center;}
+.activity-empty svg{width:32px;height:32px;color:var(--line);margin-bottom:12px;}
+.activity-empty p{font-size:.8rem;color:var(--ink4);}
+.activity-loading{display:flex;align-items:center;justify-content:center;padding:32px;gap:8px;color:var(--ink4);font-size:.8rem;}
+.activity-spin{width:16px;height:16px;border-radius:50%;border:2px solid var(--line2);border-top-color:var(--accent);animation:spin .7s linear infinite;flex-shrink:0;}
+
+/* ══════════════════════════════════════
+   CONSISTENT ACTION SPINNER
+══════════════════════════════════════ */
+.btn-spin{
+  width:14px;height:14px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.3);border-top-color:#fff;
+  animation:spin .7s linear infinite;flex-shrink:0;display:none;
+}
+.btn-spin.dark{border-color:rgba(0,0,0,.15);border-top-color:var(--ink3);}
+.btn-label{transition:opacity .2s;}
+.btn-loading .btn-label{opacity:0;}
+.btn-loading .btn-spin{display:block;}
+
+/* ── Spend tracker ── */
+.spend-section{background:var(--bg2);border-radius:var(--r);padding:14px;border:1.5px solid var(--line2);}
+
+/* ── Project files ── */
 .proj-attach-list{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;}
-.proj-attach-row{display:flex;align-items:center;gap:7px;padding:6px 8px;background:var(--bg2);border:1px solid var(--line2);border-radius:7px;}
+.proj-attach-row{display:flex;align-items:center;gap:7px;padding:6px 8px;background:var(--bg2);border:1px solid var(--line2);border-radius:7px;transition:border-color .15s;}
+.proj-attach-row:hover{border-color:var(--accent-ln);}
 .proj-attach-icon{font-size:.85rem;flex-shrink:0;}
 .proj-attach-name{font-size:.76rem;color:var(--ink2);font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .proj-attach-open{font-size:.68rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:none;border-radius:4px;padding:2px 8px;cursor:pointer;flex-shrink:0;}
 
-/* ── Delete confirm modal ── */
-.confirm-modal{background:var(--bg);border-radius:var(--r-xl);box-shadow:0 20px 60px rgba(0,0,0,.2);width:100%;max-width:400px;overflow:hidden;}
-.confirm-modal-header{padding:20px 20px 0;}
-.confirm-modal-icon{width:44px;height:44px;border-radius:12px;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
-.confirm-modal-icon svg{width:20px;height:20px;color:var(--red);}
-.confirm-modal-title{font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:6px;}
-.confirm-modal-desc{font-size:.82rem;color:var(--ink3);line-height:1.5;margin-bottom:0;}
-.confirm-modal-footer{display:flex;gap:10px;padding:16px 20px;justify-content:flex-end;border-top:1px solid var(--line2);margin-top:16px;}
+/* ── Skeleton ── */
+.skeleton{background:var(--bg3);border-radius:6px;}
+
+/* ══════════════════════════════════════
+   MODAL: VIEW ALL TIME LOGS
+══════════════════════════════════════ */
+.time-log-row-full{
+  display:flex;align-items:center;gap:12px;padding:11px 16px;
+  border-bottom:1px solid var(--line2);transition:background .12s;
+}
+.time-log-row-full:hover{background:var(--bg2);}
+.time-log-row-full:last-child{border-bottom:none;}
+.tl-date{font-size:.75rem;color:var(--ink4);width:80px;flex-shrink:0;}
+.tl-hours{font-size:.88rem;font-weight:700;color:var(--ink);width:44px;flex-shrink:0;}
+.tl-desc{font-size:.78rem;color:var(--ink2);flex:1;}
+.tl-earn{font-size:.74rem;font-weight:600;color:var(--accent);width:60px;flex-shrink:0;text-align:right;}
+.tl-edit-btn{width:24px;height:24px;border-radius:6px;background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;justify-content:center;opacity:0;transition:all .12s;}
+.time-log-row-full:hover .tl-edit-btn{opacity:1;}
+.tl-edit-btn:hover{background:var(--bg3);color:var(--accent);}
+.tl-del-btn{width:24px;height:24px;border-radius:6px;background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;justify-content:center;opacity:0;transition:all .12s;}
+.time-log-row-full:hover .tl-del-btn{opacity:1;}
+.tl-del-btn:hover{background:#fee2e2;color:var(--red);}
+/* inline edit row */
+.tl-edit-row{background:var(--accent-bg);padding:8px 16px;border-bottom:1px solid var(--accent-ln);display:none;gap:8px;align-items:center;}
+.tl-edit-row.open{display:flex;}
+.tl-edit-input{height:32px;background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;}
+.tl-edit-input:focus{border-color:var(--accent);}
+
+/* ══════════════════════════════════════
+   MODAL: RETAINER VIEW ALL
+══════════════════════════════════════ */
+.retainer-view-tabs{display:flex;gap:0;border-bottom:1px solid var(--line2);padding:0 16px;background:var(--bg);flex-shrink:0;}
+.rv-tab{height:40px;padding:0 14px;border-bottom:2px solid transparent;font-size:.78rem;font-weight:600;color:var(--ink4);cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--sans);transition:color .15s,border-color .15s;}
+.rv-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.retainer-deliverable-item{
+  display:flex;align-items:center;gap:10px;padding:11px 16px;
+  border-bottom:1px solid var(--line2);transition:background .12s;cursor:pointer;
+}
+.retainer-deliverable-item:last-child{border-bottom:none;}
+.retainer-deliverable-item:hover{background:var(--bg2);}
+.rd-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.rd-check.done{background:var(--accent);border-color:var(--accent);}
+.rd-check svg{display:none;width:9px;height:9px;}
+.rd-check.done svg{display:block;}
+.rd-title{font-size:.82rem;font-weight:500;flex:1;color:var(--ink);}
+.rd-title.done{text-decoration:line-through;color:var(--ink4);}
+.rd-date{font-size:.7rem;color:var(--ink4);width:70px;flex-shrink:0;}
+.rd-edit-btn{width:24px;height:24px;border-radius:6px;background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;justify-content:center;opacity:0;transition:all .12s;}
+.retainer-deliverable-item:hover .rd-edit-btn{opacity:1;}
+.rd-edit-btn:hover{background:var(--bg3);color:var(--accent);}
+.rv-day-group{padding:10px 16px 4px;font-size:.66rem;font-weight:700;color:var(--ink4);letter-spacing:.08em;text-transform:uppercase;background:var(--bg2);border-bottom:1px solid var(--line2);}
+.rv-week-header{padding:8px 16px 4px;background:var(--bg3);border-bottom:1px solid var(--line2);font-size:.7rem;font-weight:700;color:var(--ink3);}
+.rv-month-header{padding:10px 16px 6px;background:var(--bg);border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;}
+.rv-month-name{font-size:.8rem;font-weight:700;color:var(--ink);}
+.rv-month-count{font-size:.72rem;color:var(--ink4);}
 
 /* ── New project wizard ── */
-.wizard-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;}
+.wizard-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;}
 .wizard-overlay.open{opacity:1;pointer-events:all;}
-.wizard-modal{background:var(--bg);border-radius:var(--r-xl);box-shadow:0 20px 60px rgba(0,0,0,.18);width:100%;max-width:560px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
-.wizard-header{padding:20px 24px 0;flex-shrink:0;}
+.wizard-modal{background:var(--bg);border-radius:var(--r-xl,16px);box-shadow:0 24px 64px rgba(0,0,0,.18);width:100%;max-width:560px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;transform:scale(.97) translateY(12px);transition:transform .3s var(--ease);}
+.wizard-overlay.open .wizard-modal{transform:none;}
+.wizard-header{padding:22px 24px 0;flex-shrink:0;}
 .wizard-step-label{font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;}
 .wizard-title{font-family:var(--serif);font-size:1.4rem;color:var(--ink);margin-bottom:4px;}
-.wizard-subtitle{font-size:.82rem;color:var(--ink3);margin-bottom:0;}
+.wizard-subtitle{font-size:.82rem;color:var(--ink3);}
 .wizard-progress{display:flex;gap:4px;padding:14px 24px 0;}
 .wizard-step-dot{flex:1;height:3px;border-radius:2px;background:var(--line2);transition:background .3s;}
 .wizard-step-dot.active{background:var(--accent);}
 .wizard-step-dot.done{background:var(--accent-ln);}
 .wizard-body{padding:20px 24px;overflow-y:auto;flex:1;}
 .wizard-footer{padding:16px 24px;border-top:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-
-/* Type selector cards */
 .type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;}
 .type-card{border:2px solid var(--line2);border-radius:var(--r-lg);padding:16px 14px;cursor:pointer;transition:all .2s;text-align:center;user-select:none;}
 .type-card:hover{border-color:var(--accent-ln);background:var(--accent-bg);}
 .type-card.selected{border-color:var(--accent);background:var(--accent-bg);}
 .type-card-icon{font-size:1.6rem;margin-bottom:8px;display:block;}
+.type-card-icon svg{width:36px;height:36px;color:var(--ink3);}
+.type-card.selected .type-card-icon svg{color:var(--accent);}
 .type-card-name{font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:3px;}
 .type-card-desc{font-size:.7rem;color:var(--ink4);line-height:1.4;}
+.word-counter{font-size:.68rem;color:var(--ink4);text-align:right;margin-top:3px;}
+.word-counter.warn{color:#d97706;}
+.word-counter.over{color:var(--red);font-weight:600;}
 
-/* ── Modals ── */
-.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;}
+/* ── Modal universal ── */
+.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.35);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;}
 .modal-overlay.open{opacity:1;pointer-events:all;}
-.modal{background:var(--bg);border-radius:var(--r-xl);box-shadow:0 20px 60px rgba(0,0,0,.15);width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
+.modal{background:var(--bg);border-radius:var(--r-lg);box-shadow:0 20px 60px rgba(0,0,0,.15);width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;transform:translateY(12px) scale(.98);transition:transform .3s var(--ease);}
+.modal-overlay.open .modal{transform:none;}
 .modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid var(--line2);flex-shrink:0;}
 .modal-title{font-family:var(--serif);font-size:1.2rem;color:var(--ink);}
 .modal-close{width:28px;height:28px;border-radius:7px;background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;justify-content:center;transition:background .15s;}
@@ -235,18 +459,24 @@
 .field-textarea{height:auto;padding:10px 12px;resize:vertical;min-height:80px;}
 .field-select{cursor:pointer;}
 
-.word-counter{font-size:.68rem;color:var(--ink4);text-align:right;margin-top:3px;}
-.word-counter.warn{color:#d97706;}
-.word-counter.over{color:var(--red);font-weight:600;}
-  
-/* ── Skeleton (static, no animation) ── */
-.skeleton{background:var(--bg3);border-radius:6px;}
+/* ── Delete confirm ── */
+.confirm-modal{background:var(--bg);border-radius:var(--r-lg);box-shadow:0 20px 60px rgba(0,0,0,.2);width:100%;max-width:400px;overflow:hidden;}
+.confirm-modal-header{padding:20px 20px 0;}
+.confirm-modal-icon{width:44px;height:44px;border-radius:12px;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.confirm-modal-icon svg{width:20px;height:20px;color:var(--red);}
+.confirm-modal-footer{display:flex;gap:10px;padding:16px 20px;justify-content:flex-end;border-top:1px solid var(--line2);margin-top:16px;}
 
-/* ── Btn variants ── */
-.btn-danger{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 16px;background:#fee2e2;color:var(--red);border:1.5px solid #fecaca;border-radius:var(--r);font-size:.8rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:background .15s;white-space:nowrap;}
-.btn-danger:hover{background:#fecaca;}
+/* ── Large modal for time logs / retainer view ── */
+.modal-lg{max-width:680px;}
+.modal-xl{max-width:800px;max-height:90vh;}
 
-/* ── Responsive ── */
+/* ── Tab pane content ── */
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
 @media(max-width:768px){
   .project-row-client,.project-row-type,.project-row-budget,.project-row-progress{display:none;}
   #project-detail{width:100vw;max-width:100vw;}
@@ -256,13 +486,16 @@
   .filter-btn{padding:0 10px;font-size:.76rem;}
   .type-grid{grid-template-columns:1fr;}
   .wizard-modal{max-height:100vh;border-radius:0;}
+  .modal-lg,.modal-xl{max-width:100%;margin:0;border-radius:var(--r-lg) var(--r-lg) 0 0;max-height:95vh;}
+  .modal-overlay.open{align-items:flex-end;padding:0;}
 }
 @media(max-width:480px){
   .kanban-board{grid-template-columns:1fr;}
   .projects-toolbar{flex-wrap:wrap;}
   .search-wrap{min-width:100%;order:-1;}
   .view-toggle{margin-left:0;}
-
+  .detail-topbar{padding:0 12px;}
+  .detail-tabs{padding:0 12px;}
 }
 </style>
 </head>
@@ -337,7 +570,6 @@
           </div>
         </div>
 
-        <!-- Project count chips -->
         <div id="project-chips" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;"></div>
 
         <div class="projects-toolbar">
@@ -376,134 +608,203 @@
   </div>
 </div>
 
-<!-- ── Project detail panel ── -->
+<!-- ══════════════════════════════════════════════════════════
+     PROJECT DETAIL PANEL
+══════════════════════════════════════════════════════════ -->
 <div id="project-detail">
+  <!-- Topbar: icon-only actions -->
   <div class="detail-topbar">
     <span class="detail-topbar-title" id="detail-title">Project</span>
     <div class="detail-topbar-actions">
-      <button class="btn-secondary" style="height:30px;font-size:.75rem;padding:0 10px;" onclick="editProject()">Edit</button>
-      <button id="detail-send-request-btn" class="btn-secondary" style="height:30px;font-size:.75rem;padding:0 10px;display:none;gap:5px;" onclick="sendProjectRequest()">
-  <span id="send-request-label">Send to Client</span>
-  <div id="send-request-spin" style="display:none;width:13px;height:13px;border-radius:50%;border:2px solid rgba(0,0,0,.15);border-top-color:var(--ink3);animation:spin .7s linear infinite;flex-shrink:0;"></div>
-</button>
-      <button id="detail-delete-btn" class="btn-danger" style="height:30px;font-size:.75rem;padding:0 10px;" onclick="confirmDeleteProject()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>Delete</button>
-      <button class="detail-close" onclick="closeDetail()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      <!-- Send to client (shown only for draft + no requestStatus OR after declined) -->
+      <button id="detail-send-request-btn" class="detail-send-btn" onclick="sendProjectRequest()" style="display:none;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span class="btn-label">Send to client</span>
+        <div class="btn-spin"></div>
+      </button>
+      <!-- Edit icon -->
+      <button class="detail-icon-btn" onclick="editProject()" title="Edit project">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+      <!-- Delete icon -->
+      <button class="detail-icon-btn danger" id="detail-delete-btn" onclick="confirmDeleteProject()" title="Delete project">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      </button>
+      <!-- Close -->
+      <button class="detail-close" onclick="closeDetail()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
     </div>
   </div>
-  <div class="detail-scroll">
 
-    <!-- Client change notice -->
-    <div id="detail-change-notice" style="display:none;padding:10px 18px;background:#fef2f2;border-bottom:1px solid #fecaca;">
-      <div style="display:flex;align-items:center;gap:7px;font-size:.76rem;color:var(--red);font-weight:600;">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Client made updates to this project
-      </div>
-    </div>
-
-    <!-- Status -->
-    <div class="detail-section">
-      <div class="detail-section-title">Status</div>
-      <div class="status-select-wrap" id="detail-status-wrap"></div>
-      <div id="detail-request-status" style="display:none;margin-top:8px;padding:7px 10px;border-radius:var(--r);font-size:.75rem;"></div>
-    </div>
-
-    <!-- Info -->
-    <div class="detail-section">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div class="detail-field"><div class="detail-field-label">Client</div><div class="detail-field-val" id="detail-client">—</div></div>
-        <div class="detail-field"><div class="detail-field-label">Type</div><div class="detail-field-val" id="detail-type">—</div></div>
-        <div class="detail-field"><div class="detail-field-label">Budget</div><div class="detail-field-val" id="detail-budget">—</div></div>
-        <div class="detail-field"><div class="detail-field-label">Due date</div><div class="detail-field-val" id="detail-due">—</div></div>
-        <div class="detail-field"><div class="detail-field-label">Start date</div><div class="detail-field-val" id="detail-start">—</div></div>
-        <div class="detail-field"><div class="detail-field-label">Created</div><div class="detail-field-val" id="detail-created">—</div></div>
-      </div>
-      <div class="detail-field" id="detail-desc-wrap" style="margin-top:4px;display:none;">
-        <div class="detail-field-label">Description (70 words)</div>
-        <div class="detail-field-val" id="detail-desc" style="line-height:1.6;color:var(--ink3);font-size:.82rem;font-weight:400;"></div>
-      </div>
-    </div>
-
-    <!-- Progress (shown for milestone/retainer projects) -->
-    <div class="detail-section" id="detail-progress-section">
-      <div class="detail-section-title">Overall progress</div>
-      <div class="detail-progress-num" id="detail-progress-num">0%</div>
-      <div class="detail-progress-bar"><div class="detail-progress-fill" id="detail-progress-fill" style="width:0%"></div></div>
-    </div>
-
-    <!-- Spend summary -->
-    <div class="detail-section" id="detail-spend-section" style="display:none;">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div class="detail-section-title" style="margin-bottom:0;">Spend tracker</div>
-        <div style="font-family:var(--serif);font-size:1.3rem;color:var(--ink);" id="detail-spend-total">$0</div>
-      </div>
-      <div style="font-size:.73rem;color:var(--ink4);margin-top:3px;" id="detail-spend-sub"></div>
-      <div style="height:5px;background:var(--line2);border-radius:3px;overflow:hidden;margin-top:10px;"><div id="detail-spend-bar" style="height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s var(--ease);"></div></div>
-    </div>
-
-    <!-- Milestones section (one-off / fixed price) -->
-    <div class="detail-section" id="detail-milestones-section">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div class="detail-section-title" style="margin-bottom:0;">Milestones</div>
-        <button class="milestone-add-btn" onclick="addMilestone()">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add milestone
-        </button>
-      </div>
-      <div class="milestone-list" id="milestone-list"></div>
-    </div>
-
-    <!-- Time logs section (hourly) -->
-    <div class="detail-section" id="detail-time-section" style="display:none;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div class="detail-section-title" style="margin-bottom:0;">Time logs</div>
-        <button class="milestone-add-btn" onclick="openLogTimeModal()">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Log time
-        </button>
-      </div>
-      <div id="time-log-list" style="border:1.5px solid var(--line2);border-radius:var(--r);overflow:hidden;"></div>
-      <div id="time-log-empty" style="text-align:center;padding:20px 0;font-size:.78rem;color:var(--ink4);display:none;">No time logged yet.</div>
-    </div>
-
-    <!-- Retainer deliverables section -->
-    <div class="detail-section" id="detail-retainer-section" style="display:none;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div class="detail-section-title" style="margin-bottom:0;">Monthly deliverables</div>
-        <button class="milestone-add-btn" onclick="addDeliverable()">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add deliverable
-        </button>
-      </div>
-      <div id="retainer-period" style="font-size:.75rem;color:var(--ink4);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
-        <span id="retainer-period-label"></span>
-        <div style="display:flex;gap:5px;">
-          <button onclick="changeRetainerPeriod(-1)" style="width:24px;height:24px;border:1px solid var(--line2);border-radius:5px;background:var(--bg);cursor:pointer;font-size:.8rem;">‹</button>
-          <button onclick="changeRetainerPeriod(1)" style="width:24px;height:24px;border:1px solid var(--line2);border-radius:5px;background:var(--bg);cursor:pointer;font-size:.8rem;">›</button>
-        </div>
-      </div>
-      <div id="deliverable-list"></div>
-    </div>
-
-    <!-- Project files section (for ALL project types) -->
-    <div class="detail-section" id="detail-files-section">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div class="detail-section-title" style="margin-bottom:0;">Project files & links</div>
-        <div style="display:flex;gap:6px;">
-          <button class="milestone-add-btn" onclick="triggerProjectUpload()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload</button>
-          <button class="milestone-add-btn" onclick="toggleProjLinkInput()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>Add link</button>
-        </div>
-      </div>
-      <div id="proj-link-input-wrap" style="display:none;margin-bottom:10px;display:none;flex-direction:column;gap:6px;">
-        <input id="proj-link-url" type="url" placeholder="https://…" style="height:36px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveProjectLink()">
-        <input id="proj-link-label" type="text" placeholder="Label (e.g. Design file, Live site…)" style="height:36px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveProjectLink()">
-        <div style="display:flex;gap:6px;"><button onclick="saveProjectLink()" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save link</button><button onclick="toggleProjLinkInput()" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button></div>
-      </div>
-      <div class="proj-attach-list" id="proj-attach-list"></div>
-      <div id="proj-attach-empty" style="font-size:.76rem;color:var(--ink4);">No files added yet.</div>
-    </div>
-
+  <!-- Tabs -->
+  <div class="detail-tabs" id="detail-tabs-bar">
+    <button class="detail-tab active" data-tab="overview" onclick="switchDetailTab('overview',this)">Overview</button>
+    <button class="detail-tab" data-tab="work" id="tab-work" onclick="switchDetailTab('work',this)">Work</button>
+    <button class="detail-tab" data-tab="files" onclick="switchDetailTab('files',this)">Files</button>
+    <button class="detail-tab" data-tab="activity" onclick="switchDetailTab('activity',this)">
+      Activity
+      <span class="detail-tab-badge" id="activity-badge">—</span>
+    </button>
   </div>
-</div>
+
+  <div class="detail-scroll" id="detail-scroll-area">
+
+    <!-- ── OVERVIEW TAB ── -->
+    <div class="tab-pane active" id="pane-overview">
+
+      <!-- Status dropdown -->
+      <div class="detail-section">
+        <div class="detail-section-title">Status</div>
+        <div class="status-dropdown-wrap" id="status-dropdown-wrap">
+          <div class="status-dropdown-trigger" id="status-dropdown-trigger" onclick="toggleStatusDropdown()">
+            <span class="sdot" id="status-dot"></span>
+            <span class="stext" id="status-text">—</span>
+            <svg class="schev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="status-dropdown-menu" id="status-dropdown-menu"></div>
+        </div>
+        <!-- Request status info line (replaces always-visible notice) -->
+        <div id="detail-request-info" style="display:none;margin-top:8px;font-size:.74rem;color:var(--ink4);display:none;align-items:center;gap:5px;"></div>
+      </div>
+
+      <!-- Info grid -->
+      <div class="detail-section">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="detail-field"><div class="detail-field-label">Client</div><div class="detail-field-val" id="detail-client">—</div></div>
+          <div class="detail-field"><div class="detail-field-label">Type</div><div class="detail-field-val" id="detail-type">—</div></div>
+          <div class="detail-field"><div class="detail-field-label">Budget</div><div class="detail-field-val" id="detail-budget">—</div></div>
+          <div class="detail-field"><div class="detail-field-label">Due date</div><div class="detail-field-val" id="detail-due">—</div></div>
+          <div class="detail-field"><div class="detail-field-label">Start date</div><div class="detail-field-val" id="detail-start">—</div></div>
+          <div class="detail-field"><div class="detail-field-label">Created</div><div class="detail-field-val" id="detail-created">—</div></div>
+        </div>
+        <div class="detail-field" id="detail-desc-wrap" style="margin-top:4px;display:none;">
+          <div class="detail-field-label">Description</div>
+          <div class="detail-field-val" id="detail-desc" style="line-height:1.6;color:var(--ink3);font-size:.82rem;font-weight:400;"></div>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="detail-section" id="detail-progress-section">
+        <div class="detail-section-title">Overall progress</div>
+        <div class="detail-progress-num" id="detail-progress-num">0%</div>
+        <div class="detail-progress-bar"><div class="detail-progress-fill" id="detail-progress-fill" style="width:0%"></div></div>
+      </div>
+
+      <!-- Spend tracker (one-off/fixed) -->
+      <div class="detail-section" id="detail-spend-section" style="display:none;">
+        <div class="detail-section-title">Spend tracker</div>
+        <div class="spend-section">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:8px;">
+            <div><div style="font-size:.72rem;color:var(--ink4);" id="detail-spend-sub">of $0 allocated</div><div style="font-family:var(--serif);font-size:1.6rem;color:var(--ink);" id="detail-spend-total">$0</div></div>
+          </div>
+          <div style="height:5px;background:var(--line2);border-radius:3px;overflow:hidden;"><div id="detail-spend-bar" style="height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s var(--ease);width:0%;"></div></div>
+        </div>
+      </div>
+
+    </div><!-- /overview -->
+
+    <!-- ── WORK TAB ── -->
+    <div class="tab-pane" id="pane-work">
+
+      <!-- Milestones (one-off) -->
+      <div class="detail-section" id="detail-milestones-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div class="detail-section-title" style="margin-bottom:0;">Milestones</div>
+          <button class="milestone-add-btn" onclick="addMilestone()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add milestone
+          </button>
+        </div>
+        <div class="milestone-list" id="milestone-list"></div>
+      </div>
+
+      <!-- Time logs (hourly) -->
+      <div class="detail-section" id="detail-time-section" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div class="detail-section-title" style="margin-bottom:0;">Time logs</div>
+          <div style="display:flex;gap:6px;">
+            <button class="milestone-add-btn" onclick="openViewAllTimeLogs()" id="view-all-logs-btn" style="display:none;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              View all
+            </button>
+            <button class="milestone-add-btn" onclick="openLogTimeModal()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Log time
+            </button>
+          </div>
+        </div>
+        <!-- Monthly summary -->
+        <div id="time-monthly-summary"></div>
+        <div id="time-log-empty" style="text-align:center;padding:20px 0;font-size:.78rem;color:var(--ink4);display:none;">No time logged yet. Start by logging your first hours.</div>
+      </div>
+
+      <!-- Retainer deliverables -->
+      <div class="detail-section" id="detail-retainer-section" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div class="detail-section-title" style="margin-bottom:0;">Monthly deliverables</div>
+          <div style="display:flex;gap:6px;">
+            <button class="milestone-add-btn" onclick="openRetainerViewAll()" id="retainer-view-all-btn" style="display:none;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              View all
+            </button>
+            <button class="milestone-add-btn" onclick="addDeliverable()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add
+            </button>
+          </div>
+        </div>
+        <!-- Period nav -->
+        <div style="font-size:.75rem;color:var(--ink4);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
+          <span id="retainer-period-label"></span>
+          <div style="display:flex;gap:5px;">
+            <button onclick="changeRetainerPeriod(-1)" style="width:26px;height:26px;border:1px solid var(--line2);border-radius:6px;background:var(--bg);cursor:pointer;font-size:.8rem;display:flex;align-items:center;justify-content:center;color:var(--ink3);transition:all .15s;" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='var(--bg)'">‹</button>
+            <button onclick="changeRetainerPeriod(1)" style="width:26px;height:26px;border:1px solid var(--line2);border-radius:6px;background:var(--bg);cursor:pointer;font-size:.8rem;display:flex;align-items:center;justify-content:center;color:var(--ink3);transition:all .15s;" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='var(--bg)'">›</button>
+          </div>
+        </div>
+        <!-- Last 7 deliverables for current period -->
+        <div id="deliverable-list"></div>
+      </div>
+
+    </div><!-- /work -->
+
+    <!-- ── FILES TAB ── -->
+    <div class="tab-pane" id="pane-files">
+      <div class="detail-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div class="detail-section-title" style="margin-bottom:0;">Project files & links</div>
+          <div style="display:flex;gap:6px;">
+            <button class="milestone-add-btn" onclick="triggerProjectUpload()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload</button>
+            <button class="milestone-add-btn" onclick="toggleProjLinkInput()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>Add link</button>
+          </div>
+        </div>
+        <div id="proj-link-input-wrap" style="display:none;flex-direction:column;gap:6px;margin-bottom:10px;">
+          <input id="proj-link-url" type="url" placeholder="https://…" style="height:36px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveProjectLink()">
+          <input id="proj-link-label" type="text" placeholder="Label (e.g. Design file, Live site…)" style="height:36px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveProjectLink()">
+          <div style="display:flex;gap:6px;"><button onclick="saveProjectLink()" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save link</button><button onclick="toggleProjLinkInput()" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button></div>
+        </div>
+        <div class="proj-attach-list" id="proj-attach-list"></div>
+        <div id="proj-attach-empty" style="font-size:.76rem;color:var(--ink4);">No files added yet.</div>
+      </div>
+    </div><!-- /files -->
+
+    <!-- ── ACTIVITY TAB ── -->
+    <div class="tab-pane" id="pane-activity">
+      <div id="activity-content">
+        <div class="activity-loading" id="activity-loading">
+          <div class="activity-spin"></div>
+          Loading activity…
+        </div>
+        <div class="activity-feed" id="activity-feed" style="display:none;"></div>
+        <div class="activity-empty" id="activity-empty" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <p>No activity recorded yet for this project.</p>
+        </div>
+      </div>
+    </div><!-- /activity -->
+
+  </div><!-- /detail-scroll -->
+</div><!-- /project-detail -->
 
 <!-- ── Notification drawer ── -->
 <div id="notif-overlay" onclick="ARK.closeNotifications()"></div>
@@ -512,7 +813,9 @@
   <div class="notif-list"><div class="panel-empty" style="padding:40px 20px;text-align:center;color:var(--ink4);font-size:.82rem;">No notifications yet.</div></div>
 </div>
 
-<!-- ── NEW PROJECT WIZARD ── -->
+<!-- ══════════════════════════════════════════════════════════
+     NEW PROJECT WIZARD
+══════════════════════════════════════════════════════════ -->
 <div class="wizard-overlay" id="wizard-overlay">
   <div class="wizard-modal" id="wizard-modal">
     <div class="wizard-header">
@@ -532,32 +835,36 @@
         <button class="btn-secondary" onclick="closeWizard()">Cancel</button>
         <button class="btn-primary" id="wizard-next-btn" onclick="wizardNext()">
           <span id="wizard-next-label">Continue</span>
-          <div id="wizard-next-spin" style="display:none;width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;"></div>
+          <div class="btn-spin"></div>
         </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ── DELETE CONFIRM MODAL ── -->
-<div class="modal-overlay" id="modal-delete">
+<!-- ══════════════════════════════════════════════════════════
+     DELETE CONFIRM MODAL
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-delete" onclick="if(event.target===this)ARK.closeModal('modal-delete')">
   <div class="confirm-modal">
     <div class="confirm-modal-header">
       <div class="confirm-modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></div>
-      <div class="confirm-modal-title">Delete project?</div>
-      <div class="confirm-modal-desc">This action cannot be undone. The project and all its milestones will be permanently deleted. Client files in Drive will not be affected.</div>
+      <div style="font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:6px;">Delete project?</div>
+      <div style="font-size:.82rem;color:var(--ink3);line-height:1.5;">This action cannot be undone. The project and all its milestones will be permanently deleted.</div>
     </div>
     <div class="confirm-modal-footer">
       <button class="btn-secondary" onclick="ARK.closeModal('modal-delete')">Keep it</button>
       <button class="btn-primary" style="background:var(--red);" onclick="executeDeleteProject()" id="delete-confirm-btn">
-        <span id="delete-confirm-label">Delete project</span>
-        <div id="delete-confirm-spin" style="display:none;width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;"></div>
+        <span class="btn-label">Delete project</span>
+        <div class="btn-spin"></div>
       </button>
     </div>
   </div>
 </div>
 
-<!-- ── LOG TIME MODAL ── -->
+<!-- ══════════════════════════════════════════════════════════
+     LOG TIME MODAL
+══════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="modal-log-time" onclick="if(event.target===this)ARK.closeModal('modal-log-time')">
   <div class="modal" style="max-width:400px;">
     <div class="modal-header">
@@ -571,15 +878,70 @@
     </div>
     <div class="modal-footer">
       <button class="btn-secondary" onclick="ARK.closeModal('modal-log-time')">Cancel</button>
-      <button class="btn-primary" onclick="saveTimeLog()">
-        <span id="log-save-label">Log time</span>
-        <div id="log-save-spin" style="display:none;width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;"></div>
+      <button class="btn-primary" id="log-save-btn" onclick="saveTimeLog()">
+        <span class="btn-label">Log time</span>
+        <div class="btn-spin"></div>
       </button>
     </div>
   </div>
 </div>
 
-<!-- ── EDIT PROJECT MODAL ── -->
+<!-- ══════════════════════════════════════════════════════════
+     VIEW ALL TIME LOGS MODAL
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay modal-lg" id="modal-view-logs" onclick="if(event.target===this)ARK.closeModal('modal-view-logs')">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h2 class="modal-title">All Time Logs</h2>
+      <button class="modal-close" onclick="ARK.closeModal('modal-view-logs')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <!-- Summary strip -->
+    <div style="padding:12px 20px;background:var(--bg2);border-bottom:1px solid var(--line2);display:flex;gap:20px;flex-wrap:wrap;">
+      <div><div style="font-size:.66rem;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.08em;">Total Hours</div><div style="font-family:var(--serif);font-size:1.3rem;color:var(--ink);" id="vl-total-hours">0h</div></div>
+      <div><div style="font-size:.66rem;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.08em;">Total Earned</div><div style="font-family:var(--serif);font-size:1.3rem;color:var(--accent);" id="vl-total-earned">$0</div></div>
+      <div><div style="font-size:.66rem;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.08em;">Entries</div><div style="font-family:var(--serif);font-size:1.3rem;color:var(--ink);" id="vl-entries">0</div></div>
+    </div>
+    <div class="modal-body" style="padding:0;max-height:55vh;overflow-y:auto;" id="vl-list-wrap">
+      <!-- rows injected here -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="ARK.closeModal('modal-view-logs')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     RETAINER VIEW ALL MODAL
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay modal-xl" id="modal-retainer-all" onclick="if(event.target===this)ARK.closeModal('modal-retainer-all')">
+  <div class="modal modal-xl">
+    <div class="modal-header">
+      <h2 class="modal-title">All Deliverables</h2>
+      <button class="modal-close" onclick="ARK.closeModal('modal-retainer-all')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <!-- Summary strip -->
+    <div style="padding:12px 20px;background:var(--bg2);border-bottom:1px solid var(--line2);display:flex;gap:20px;flex-wrap:wrap;">
+      <div><div style="font-size:.66rem;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.08em;">Total</div><div style="font-family:var(--serif);font-size:1.3rem;color:var(--ink);" id="ra-total">0</div></div>
+      <div><div style="font-size:.66rem;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.08em;">Completed</div><div style="font-family:var(--serif);font-size:1.3rem;color:var(--accent);" id="ra-done">0</div></div>
+      <div><div style="font-size:.66rem;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.08em;">Pending</div><div style="font-family:var(--serif);font-size:1.3rem;color:var(--ink);" id="ra-pending">0</div></div>
+    </div>
+    <!-- Tabs: Day | Week | Month -->
+    <div class="retainer-view-tabs">
+      <button class="rv-tab active" data-rv="month" onclick="switchRetainerView('month',this)">By Month</button>
+      <button class="rv-tab" data-rv="week" onclick="switchRetainerView('week',this)">By Week</button>
+      <button class="rv-tab" data-rv="day" onclick="switchRetainerView('day',this)">By Day</button>
+    </div>
+    <div class="modal-body" style="padding:0;max-height:52vh;overflow-y:auto;" id="ra-body">
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="ARK.closeModal('modal-retainer-all')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     EDIT PROJECT MODAL
+══════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="modal-edit-project" onclick="if(event.target===this)ARK.closeModal('modal-edit-project')">
   <div class="modal" style="max-width:520px;">
     <div class="modal-header">
@@ -590,22 +952,27 @@
       <input type="hidden" id="edit-project-id">
       <div class="field"><label class="field-label">Project title *</label><input class="field-input" type="text" id="ep-title" placeholder="e.g. Airbnb Automation System" autocomplete="off"><span id="err-ep-title" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
       <div class="field"><label class="field-label">Description <span style="font-weight:400;color:var(--ink4);">(max 70 words)</span></label><textarea class="field-input field-textarea" id="ep-desc" rows="2" style="height:auto;padding:10px 12px;resize:vertical;" placeholder="What does this project involve?" oninput="updateWordCount('ep-desc','ep-desc-count')"></textarea><div class="word-counter" id="ep-desc-count">0 / 70</div></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
         <div class="field"><label class="field-label">Due date</label><input class="field-input" type="date" id="ep-due"></div>
         <div class="field"><label class="field-label">Amount ($)</label><input class="field-input" type="number" id="ep-budget" placeholder="0" min="0"></div>
       </div>
       <div id="ep-hours-field" style="display:none;"><div class="field"><label class="field-label">Estimated hours</label><input class="field-input" type="number" id="ep-hours" placeholder="e.g. 40" min="1"></div></div>
-      <div id="ep-rate-field" style="display:none;"><div class="field"><label class="field-label">Hourly rate ($)</label><input class="field-input" type="number" id="ep-rate" placeholder="e.g. 75" min="1"></div></div>
     </div>
     <div class="modal-footer">
       <button class="btn-secondary" onclick="ARK.closeModal('modal-edit-project')">Cancel</button>
-      <button class="btn-primary" onclick="saveEditProject()"><span id="ep-save-label">Save changes</span><div id="ep-save-spin" style="display:none;width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;"></div></button>
+      <button class="btn-primary" id="ep-save-btn" onclick="saveEditProject()">
+        <span class="btn-label">Save changes</span>
+        <div class="btn-spin"></div>
+      </button>
     </div>
   </div>
 </div>
 
 <div id="toast-container"></div>
-<style>@keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@keyframes spin{to{transform:rotate(360deg)}}</style>
+<style>
+@keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
 <script src="../assets/ark.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════
@@ -616,168 +983,123 @@ let currentFilter = "all", currentView = "card";
 let selectedProject = null, milestonesDirty = false;
 let timeLogs = [], retainerPeriodOffset = 0;
 let projectAttachments = [];
-// Change detection
+let currentDetailTab = "overview";
+let activityCache = {}; // projectId → entries
 const SEEN_KEY = "ark_freelancer_projects_seen";
 const CLIENT_KEY = "ark_freelancer_client_changes";
 let pollTimer = null;
 const DRIVE_FOLDER_ID = "1oaLlUJrnD0uzPtM6CmL4NFWRwbULnxz7";
+let wizard = { step:1, totalSteps:3, type:"one-off", data:{} };
+let _statusDropdownOpen = false;
+let retainerAllView = "month";
 
-// Wizard state
-let wizard = { step: 1, totalSteps: 3, type: "one-off", data: {} };
-
-
-function countWords(str) {
-  return str.trim() === "" ? 0 : str.trim().split(/\s+/).length;
+// ═══════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════
+function countWords(str){return str.trim()===""?0:str.trim().split(/\s+/).length;}
+function updateWordCount(tid,cid){
+  const ta=document.getElementById(tid),counter=document.getElementById(cid);
+  if(!ta||!counter)return;
+  const words=countWords(ta.value);
+  counter.textContent=words+" / 70";
+  counter.className="word-counter"+(words>70?" over":words>60?" warn":"");
+  if(words>70){ta.value=ta.value.trim().split(/\s+/).slice(0,70).join(" ")+" ";counter.textContent="70 / 70";counter.className="word-counter over";}
 }
-function updateWordCount(textareaId, counterId) {
-  const ta = document.getElementById(textareaId);
-  const counter = document.getElementById(counterId);
-  if (!ta || !counter) return;
-  const words = countWords(ta.value);
-  counter.textContent = words + " / 70";
-  counter.className = "word-counter" + (words > 70 ? " over" : words > 60 ? " warn" : "");
-  if (words > 70) {
-    // Trim to 70 words
-    const trimmed = ta.value.trim().split(/\s+/).slice(0, 70).join(" ");
-    ta.value = trimmed + " ";
-    counter.textContent = "70 / 70";
-    counter.className = "word-counter over";
-  }
+
+// Consistent btn loading state
+function setBtnLoading(btn, loading){
+  if(!btn)return;
+  if(loading){btn.classList.add("btn-loading");btn.disabled=true;}
+  else{btn.classList.remove("btn-loading");btn.disabled=false;}
 }
-  
+
 // ═══════════════════════════════════════════════════════════
 // BOOT
 // ═══════════════════════════════════════════════════════════
-// Hard failsafe: if auth hangs for 15s, show page anyway
-const _bootTimeout = setTimeout(() => {
-  const gate = document.getElementById("auth-gate");
-  if (gate && !gate.classList.contains("hidden")) {
-    gate.classList.add("hidden");
-    document.getElementById("app")?.classList.add("ready");
-    document.getElementById("projects-loading").style.display = "none";
-    document.getElementById("projects-empty").style.display = "";
-  }
-}, 15000);
+const _bootTimeout = setTimeout(()=>{
+  const gate=document.getElementById("auth-gate");
+  if(gate&&!gate.classList.contains("hidden")){gate.classList.add("hidden");document.getElementById("app")?.classList.add("ready");document.getElementById("projects-loading").style.display="none";document.getElementById("projects-empty").style.display="";}
+},15000);
 
-ARK.requireAuth(async function(user) {
+ARK.requireAuth(async function(user){
   clearTimeout(_bootTimeout);
-  try { ARK.bootSidebar(user); } catch(e) {}
+  try{ARK.bootSidebar(user);}catch(e){}
   document.getElementById("auth-gate").classList.add("hidden");
   document.getElementById("app").classList.add("ready");
-  try {
-    await Promise.all([loadProjects(), loadClients()]);
+  try{
+    await Promise.all([loadProjects(),loadClients()]);
     startPolling();
-    const logDate = document.getElementById("log-date");
-    if (logDate) logDate.value = new Date().toISOString().slice(0,10);
-  } catch(e) {
-    ARK.showToast("Something went wrong loading projects.", "error");
-    const el = document.getElementById("projects-loading");
-    if (el) el.style.display = "none";
-  }
+    const logDate=document.getElementById("log-date");
+    if(logDate)logDate.value=new Date().toISOString().slice(0,10);
+  }catch(e){ARK.showToast("Something went wrong loading projects.","error");document.getElementById("projects-loading").style.display="none";}
 });
 
-async function loadProjects() {
-  try {
-    const res = await ARK.api({ action: "get_projects", token: ARK.getToken() });
-    if (!res.success) { ARK.showToast(res.error || "Failed to load", "error"); return; }
-    // First load: mark all as seen
-    const seen = getSeenMap();
-    (res.projects || []).forEach(p => { if (!seen[p.id]) markSeen(p.id, p.updatedAt); });
-    allProjects = res.projects || [];
-    updateStats();
-    renderProjects();
-    updateChangeDots();
-  } catch(e) { ARK.showToast("Connection error.", "error"); }
-  finally { document.getElementById("projects-loading").style.display = "none"; }
+async function loadProjects(){
+  try{
+    const res=await ARK.api({action:"get_projects",token:ARK.getToken()});
+    if(!res.success){ARK.showToast(res.error||"Failed to load","error");return;}
+    const seen=getSeenMap();
+    (res.projects||[]).forEach(p=>{if(!seen[p.id])markSeen(p.id,p.updatedAt);});
+    allProjects=res.projects||[];
+    updateStats();renderProjects();updateChangeDots();
+  }catch(e){ARK.showToast("Connection error.","error");}
+  finally{document.getElementById("projects-loading").style.display="none";}
 }
 
-async function loadClients() {
-  try {
-    const res = await ARK.api({ action: "get_clients", token: ARK.getToken() });
-    if (res.success) allClients = res.clients || [];
-  } catch(e) {}
+async function loadClients(){
+  try{const res=await ARK.api({action:"get_clients",token:ARK.getToken()});if(res.success)allClients=res.clients||[];}catch(e){}
 }
 
-// ═══════════════════════════════════════════════════════════
-// POLLING — silent background, no blinking
-// ═══════════════════════════════════════════════════════════
-function startPolling() {
-  pollTimer = setInterval(async () => {
-    try {
-      const res = await ARK.api({ action: "get_projects", token: ARK.getToken() });
-      if (!res.success) return;
-      const incoming = res.projects || [];
-      detectClientChanges(incoming);
-      allProjects = incoming;
-      updateStats();
-      renderProjects();
-      updateChangeDots();
-    } catch(e) {} // silent
-  }, 30000);
+function startPolling(){
+  pollTimer=setInterval(async()=>{
+    try{
+      const res=await ARK.api({action:"get_projects",token:ARK.getToken()});
+      if(!res.success)return;
+      allProjects=res.projects||[];
+      updateStats();renderProjects();updateChangeDots();
+    }catch(e){}
+  },30000);
 }
 
 // ═══════════════════════════════════════════════════════════
-// CHANGE DETECTION — client changes only
+// CHANGE DETECTION
 // ═══════════════════════════════════════════════════════════
-function getSeenMap() { try { return JSON.parse(localStorage.getItem(SEEN_KEY)||"{}"); } catch(e) { return {}; } }
-function getClientMap() { try { return JSON.parse(localStorage.getItem(CLIENT_KEY)||"{}"); } catch(e) { return {}; } }
-function markSeen(id, updatedAt) { const m=getSeenMap(); m[id]=String(updatedAt); localStorage.setItem(SEEN_KEY,JSON.stringify(m)); }
-
-// Called before any freelancer action — records timestamp and current server updatedAt
-function markFreelancerChange(id) {
-  const cm=getClientMap();
-  cm[id]=Date.now();
-  localStorage.setItem(CLIENT_KEY,JSON.stringify(cm));
-}
-// Called after a freelancer save returns — sync seen to the new updatedAt so dot never shows
-function syncSeenAfterSave(id, newUpdatedAt) {
-  markSeen(id, newUpdatedAt);
-  // Also clear the client map entry
-  const cm=getClientMap(); delete cm[id]; localStorage.setItem(CLIENT_KEY,JSON.stringify(cm));
-}
-
-function projectHasClientChanges(p) {
+function getSeenMap(){try{return JSON.parse(localStorage.getItem(SEEN_KEY)||"{}");}catch(e){return{};}}
+function getClientMap(){try{return JSON.parse(localStorage.getItem(CLIENT_KEY)||"{}");}catch(e){return{};}}
+function markSeen(id,updatedAt){const m=getSeenMap();m[id]=String(updatedAt);localStorage.setItem(SEEN_KEY,JSON.stringify(m));}
+function markFreelancerChange(id){const cm=getClientMap();cm[id]=Date.now();localStorage.setItem(CLIENT_KEY,JSON.stringify(cm));}
+function syncSeenAfterSave(id,newUpdatedAt){markSeen(id,newUpdatedAt);const cm=getClientMap();delete cm[id];localStorage.setItem(CLIENT_KEY,JSON.stringify(cm));}
+function projectHasClientChanges(p){
   const seen=getSeenMap();
-  // First time seeing this project
-  if (!seen[p.id]) return false;
-  // Already up to date
-  if (seen[p.id]===String(p.updatedAt)) return false;
-  // Freelancer made a change within last 120 seconds — grace period
+  if(!seen[p.id])return false;
+  if(seen[p.id]===String(p.updatedAt))return false;
   const cm=getClientMap();
-  if (cm[p.id] && (Date.now()-cm[p.id]) < 120000) return false;
-  // Otherwise: server updatedAt changed without us making the change — client did it
+  if(cm[p.id]&&(Date.now()-cm[p.id])<120000)return false;
   return true;
 }
-function detectClientChanges(incoming) {
-  // On polls: for projects we haven't seen, mark as seen. Don't touch the rest.
-  const seen = getSeenMap();
-  incoming.forEach(p => {
-    if (!seen[p.id]) markSeen(p.id, p.updatedAt);
-  });
-}
-function updateChangeDots() {
-  const changed = allProjects.filter(p => projectHasClientChanges(p));
-  const dot = document.getElementById("nav-projects-dot");
-  if (dot) dot.style.display = changed.length > 0 ? "inline-block" : "none";
+function updateChangeDots(){
+  const changed=allProjects.filter(p=>projectHasClientChanges(p));
+  const dot=document.getElementById("nav-projects-dot");
+  if(dot)dot.style.display=changed.length>0?"inline-block":"none";
 }
 
 // ═══════════════════════════════════════════════════════════
-// PROJECT COUNT CHIPS
+// STATS + CHIPS
 // ═══════════════════════════════════════════════════════════
-function updateStats() {
-  const chips = document.getElementById("project-chips");
-  if (!chips) return;
-  const counts = { active:0, draft:0, paused:0, completed:0, cancelled:0 };
-  allProjects.filter(p=>p.status!=="deleted").forEach(p=>{ if(counts[p.status]!==undefined) counts[p.status]++; });
-  const styles = {
-    active:    {bg:"#dcfce7",color:"#166534",border:"#bbf7d0"},
-    draft:     {bg:"var(--bg3)",color:"var(--ink3)",border:"var(--line2)"},
-    paused:    {bg:"#f3f4f6",color:"#374151",border:"#e5e7eb"},
-    completed: {bg:"#dbeafe",color:"#1e40af",border:"#bfdbfe"},
-    cancelled: {bg:"#fee2e2",color:"#991b1b",border:"#fecaca"}
+function updateStats(){
+  const chips=document.getElementById("project-chips");
+  if(!chips)return;
+  const counts={active:0,draft:0,paused:0,completed:0,cancelled:0};
+  allProjects.filter(p=>p.status!=="deleted").forEach(p=>{if(counts[p.status]!==undefined)counts[p.status]++;});
+  const styles={
+    active:{bg:"#dcfce7",color:"#166534",border:"#bbf7d0"},
+    draft:{bg:"var(--bg3)",color:"var(--ink3)",border:"var(--line2)"},
+    paused:{bg:"#f3f4f6",color:"#374151",border:"#e5e7eb"},
+    completed:{bg:"#dbeafe",color:"#1e40af",border:"#bfdbfe"},
+    cancelled:{bg:"#fee2e2",color:"#991b1b",border:"#fecaca"}
   };
-  const total = Object.values(counts).reduce((s,v)=>s+v,0);
-  chips.innerHTML = `<div class="proj-chip" style="background:var(--bg);color:var(--ink2);border-color:var(--line2);">${total} total</div>` +
+  const total=Object.values(counts).reduce((s,v)=>s+v,0);
+  chips.innerHTML=`<div class="proj-chip" style="background:var(--bg);color:var(--ink2);border-color:var(--line2);">${total} total</div>`+
     Object.entries(counts).filter(([,v])=>v>0).map(([k,v])=>{
       const s=styles[k]||styles.draft;
       return `<div class="proj-chip" style="background:${s.bg};color:${s.color};border-color:${s.border};" onclick="setFilter('${k}',null)">${v} ${k}</div>`;
@@ -787,58 +1109,50 @@ function updateStats() {
 // ═══════════════════════════════════════════════════════════
 // SEARCH & RENDER
 // ═══════════════════════════════════════════════════════════
-function fuzzyMatch(str, pattern) {
-  if (!pattern) return true;
-  str=str.toLowerCase().trim(); pattern=pattern.toLowerCase().trim();
-  if (!pattern) return true;
-  if (str.includes(pattern)) return true;
+function fuzzyMatch(str,pattern){
+  if(!pattern)return true;
+  str=str.toLowerCase().trim();pattern=pattern.toLowerCase().trim();
+  if(!pattern)return true;
+  if(str.includes(pattern))return true;
   const words=str.split(/[\s\-_]+/);
-  if (words.some(w=>w.startsWith(pattern))) return true;
+  if(words.some(w=>w.startsWith(pattern)))return true;
   const tokens=pattern.split(/\s+/).filter(Boolean);
-  if (tokens.length>1) return tokens.every(tok=>words.some(w=>w.startsWith(tok)));
+  if(tokens.length>1)return tokens.every(tok=>words.some(w=>w.startsWith(tok)));
   return false;
 }
 let _searchTimer=null;
-function handleSearch() { clearTimeout(_searchTimer); _searchTimer=setTimeout(()=>renderProjects(),150); }
+function handleSearch(){clearTimeout(_searchTimer);_searchTimer=setTimeout(()=>renderProjects(),150);}
 
-function renderProjects() {
+function renderProjects(){
   const q=document.getElementById("search-input").value.toLowerCase();
   const filtered=allProjects.filter(p=>{
-    if (p.status==="deleted") return false;
-    if (currentFilter!=="all"&&p.status!==currentFilter) return false;
-    if (q&&!fuzzyMatch(p.title,q)&&!fuzzyMatch(p.clientName||"",q)&&!fuzzyMatch(p.type||"",q)) return false;
+    if(p.status==="deleted")return false;
+    if(currentFilter!=="all"&&p.status!==currentFilter)return false;
+    if(q&&!fuzzyMatch(p.title,q)&&!fuzzyMatch(p.clientName||"",q)&&!fuzzyMatch(p.type||"",q))return false;
     return true;
   });
   const count=allProjects.filter(p=>p.status!=="deleted").length;
   document.getElementById("projects-count-label").textContent=count===0?"Create your first project.":count+" project"+(count!==1?"s":"")+" in your workspace.";
-  const container=document.getElementById("projects-container"), empty=document.getElementById("projects-empty");
-  if (!filtered.length) { container.innerHTML=""; empty.style.display=""; return; }
+  const container=document.getElementById("projects-container"),empty=document.getElementById("projects-empty");
+  if(!filtered.length){container.innerHTML="";empty.style.display="";return;}
   empty.style.display="none";
-  if (currentView==="card") container.innerHTML=renderCardView(filtered);
-  else if (currentView==="list") container.innerHTML=renderListView(filtered);
+  if(currentView==="card")container.innerHTML=renderCardView(filtered);
+  else if(currentView==="list")container.innerHTML=renderListView(filtered);
   else container.innerHTML=renderKanbanView(filtered);
 }
 
-function typeLabel(t) {
-  if (t==="hourly") return "Hourly";
-  if (t==="retainer") return "Retainer";
-  return "One-off";
-}
-function typePillClass(t) {
-  if (t==="hourly") return "project-type-pill hourly";
-  if (t==="retainer") return "project-type-pill retainer";
-  return "project-type-pill";
-}
+function typeLabel(t){if(t==="hourly")return"Hourly";if(t==="retainer")return"Retainer";return"One-off";}
+function typePillClass(t){if(t==="hourly")return"project-type-pill hourly";if(t==="retainer")return"project-type-pill retainer";return"project-type-pill";}
 
-function renderCardView(projects) {
-  return `<div class="projects-grid">${projects.map(p=>{
+function renderCardView(projects){
+  return`<div class="projects-grid">${projects.map(p=>{
     const due=p.dueDate?new Date(p.dueDate):null,isOver=due&&due<new Date()&&p.status!=="completed";
     const doneM=(p.milestones||[]).filter(m=>m.status==="done"||m.approvalStatus==="approved").length;
     const totalM=(p.milestones||[]).length;
     const hasClientChange=projectHasClientChanges(p);
     const hasRevision=(p.milestones||[]).some(m=>m.approvalStatus==="revision_requested");
     const isPending=p.requestStatus==="pending_client";
-    return `<div class="project-card" onclick="openDetail('${p.id}')">
+    return`<div class="project-card" onclick="openDetail('${p.id}')">
       <div class="project-card-header">
         <div class="project-card-title">${ARK.escHtml(p.title)}${hasClientChange?'<span class="change-dot"></span>':''}</div>
         ${badgeHtml(p.status)}
@@ -855,13 +1169,13 @@ function renderCardView(projects) {
       </div>
       ${isPending?`<div class="card-notice request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Awaiting client acceptance</div>`:""}
       ${hasRevision?`<div class="card-notice revision"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Client requested revision</div>`:""}
-      ${p.requestStatus==="pending"&&!isPending?`<div class="card-notice pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Client project request — <button onclick="event.stopPropagation();respondToRequest('${p.id}','accepted')" style="background:var(--accent);color:#fff;border:none;border-radius:4px;padding:1px 8px;cursor:pointer;font-size:.67rem;font-weight:700;font-family:var(--sans);margin-left:4px;">Accept</button><button onclick="event.stopPropagation();respondToRequest('${p.id}','declined')" style="background:#fee2e2;color:#991b1b;border:none;border-radius:4px;padding:1px 8px;cursor:pointer;font-size:.67rem;font-weight:700;font-family:var(--sans);margin-left:3px;">Decline</button></div>`:""}
+      ${p.requestStatus==="pending"?`<div class="card-notice pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Client project request — <button onclick="event.stopPropagation();respondToRequest('${p.id}','accepted')" style="background:var(--accent);color:#fff;border:none;border-radius:4px;padding:1px 8px;cursor:pointer;font-size:.67rem;font-weight:700;font-family:var(--sans);margin-left:4px;">Accept</button><button onclick="event.stopPropagation();respondToRequest('${p.id}','declined')" style="background:#fee2e2;color:#991b1b;border:none;border-radius:4px;padding:1px 8px;cursor:pointer;font-size:.67rem;font-weight:700;font-family:var(--sans);margin-left:3px;">Decline</button></div>`:""}
     </div>`;
   }).join("")}</div>`;
 }
 
-function renderListView(projects) {
-  return `<div class="projects-list">
+function renderListView(projects){
+  return`<div class="projects-list">
     <div style="display:flex;align-items:center;gap:14px;padding:9px 18px;border-bottom:1px solid var(--line2);background:var(--bg2);">
       <div style="flex:1;font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;">Project</div>
       <div style="width:130px;font-size:.68rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;">Client</div>
@@ -874,7 +1188,7 @@ function renderListView(projects) {
     ${projects.map(p=>{
       const due=p.dueDate?new Date(p.dueDate):null,isOver=due&&due<new Date()&&p.status!=="completed";
       const hasChange=projectHasClientChanges(p);
-      return `<div class="project-row" onclick="openDetail('${p.id}')">
+      return`<div class="project-row" onclick="openDetail('${p.id}')">
         <div class="project-row-title">${ARK.escHtml(p.title)}${hasChange?'<span class="change-dot"></span>':''}</div>
         <div class="project-row-client">${ARK.escHtml(p.clientName||"—")}</div>
         <div class="project-row-type">${typeLabel(p.type)}</div>
@@ -887,12 +1201,12 @@ function renderListView(projects) {
   </div>`;
 }
 
-function renderKanbanView(projects) {
+function renderKanbanView(projects){
   const cols=[{key:"draft",label:"Draft"},{key:"active",label:"Active"},{key:"paused",label:"Paused"},{key:"completed",label:"Completed"}];
-  return `<div class="kanban-board">${cols.map(col=>{
+  return`<div class="kanban-board">${cols.map(col=>{
     const cp=projects.filter(p=>p.status===col.key);
-    return `<div class="kanban-col"><div class="kanban-col-header"><span class="kanban-col-title">${col.label}</span><span class="kanban-col-count">${cp.length}</span></div>
-    <div class="kanban-col-body">${cp.map(p=>`<div class="kanban-card" onclick="openDetail('${p.id}')">
+    return`<div class="kanban-col"><div class="kanban-col-header"><span class="kanban-col-title">${col.label}</span><span class="kanban-col-count">${cp.length}</span></div>
+    <div>${cp.map(p=>`<div class="kanban-card" onclick="openDetail('${p.id}')">
       <div class="kanban-card-title">${ARK.escHtml(p.title)}${projectHasClientChanges(p)?'<span class="change-dot"></span>':''}</div>
       <div class="kanban-card-client">${ARK.escHtml(p.clientName||"No client")}</div>
       <div class="kanban-card-footer">${p.budgetAmount>0?`<span style="font-size:.7rem;font-weight:600;color:var(--ink3);">${ARK.fmtCurrency(p.budgetAmount,p.currency)}</span>`:"<span></span>"}<span style="font-size:.7rem;color:var(--ink4);">${p.progress||0}%</span></div>
@@ -903,16 +1217,17 @@ function renderKanbanView(projects) {
 // ═══════════════════════════════════════════════════════════
 // DETAIL PANEL
 // ═══════════════════════════════════════════════════════════
-async function openDetail(id) {
-  if (milestonesDirty) await saveNow();
+async function openDetail(id){
+  if(milestonesDirty)await saveNow();
   selectedProject=allProjects.find(p=>p.id===id);
-  if (!selectedProject) return;
+  if(!selectedProject)return;
   const p=selectedProject;
+  markSeen(p.id,p.updatedAt);updateChangeDots();renderProjects();
 
-  // Mark as seen — clears change dot for this project
-  markSeen(p.id, p.updatedAt);
-  updateChangeDots(); renderProjects();
+  // Reset tabs to overview
+  switchDetailTab("overview", document.querySelector('.detail-tab[data-tab="overview"]'));
 
+  // Populate overview
   document.getElementById("detail-title").textContent=p.title;
   document.getElementById("detail-client").textContent=p.clientName||"—";
   document.getElementById("detail-type").textContent=typeLabel(p.type);
@@ -921,146 +1236,194 @@ async function openDetail(id) {
   document.getElementById("detail-start").textContent=p.startDate?ARK.fmtDate(p.startDate):"—";
   document.getElementById("detail-created").textContent=ARK.fmtDate(p.createdAt);
   const dw=document.getElementById("detail-desc-wrap");
-  if (p.description) { dw.style.display=""; document.getElementById("detail-desc").textContent=p.description; } else dw.style.display="none";
+  if(p.description){dw.style.display="";document.getElementById("detail-desc").textContent=p.description;}else dw.style.display="none";
 
-  renderStatusSelector(p.status);
+  renderStatusDropdown(p.status);
 
-  // Request status notice
-  const rsEl=document.getElementById("detail-request-status");
-  if (p.requestStatus==="pending_client") {
-    rsEl.style.display=""; rsEl.style.background="#eff6ff"; rsEl.style.border="1px solid #bfdbfe"; rsEl.style.color="#1d4ed8"; rsEl.style.borderRadius="var(--r)";
-    rsEl.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:middle;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Sent to client — awaiting acceptance';
-  } else if (p.requestStatus==="pending") {
-    rsEl.style.display=""; rsEl.style.background="#fffbeb"; rsEl.style.border="1px solid #fde68a"; rsEl.style.color="#92400e"; rsEl.style.borderRadius="var(--r)";
-    rsEl.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:middle;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg> Client created this project — accepting will set it to Active';
-  } else rsEl.style.display="none";
+  // Request info (small inline line, not a big banner)
+  renderRequestInfo(p);
 
-  // Show/hide send to client button (only for draft projects not yet sent)
+  // Send button visibility: show for draft + (no requestStatus OR declined)
   const sendBtn=document.getElementById("detail-send-request-btn");
-  sendBtn.style.display=(p.status==="draft"&&!p.requestStatus)?"":"none";
+  const canSend=p.status==="draft"&&(!p.requestStatus||p.requestStatus==="declined");
+  sendBtn.style.display=canSend?"":"none";
 
-  // Delete button (hidden for active/completed)
+  // Delete button
   document.getElementById("detail-delete-btn").style.display=(p.status==="active"||p.status==="completed")?"none":"";
 
-  // Client change notice
-  const changeNotice=document.getElementById("detail-change-notice");
-  changeNotice.style.display="none"; // already marked seen above
-
-  // Show correct sections based on project type
+  // Progress
   const isMilestone=p.type==="one-off"||p.type==="fixed";
   const isHourly=p.type==="hourly";
   const isRetainer=p.type==="retainer";
-
   document.getElementById("detail-progress-section").style.display=isMilestone||isRetainer?"":"none";
+  if(isMilestone||isRetainer){
+    document.getElementById("detail-progress-num").textContent=(p.progress||0)+"%";
+    document.getElementById("detail-progress-fill").style.width=(p.progress||0)+"%";
+  }
+  document.getElementById("detail-spend-section").style.display=isMilestone?"":"none";
+  if(isMilestone)renderSpend(p);
+
+  // Work tab label
+  const tabWork=document.getElementById("tab-work");
+  if(tabWork)tabWork.textContent=isHourly?"Time":(isRetainer?"Deliverables":"Milestones");
+
+  // Show correct sections in work tab
   document.getElementById("detail-milestones-section").style.display=isMilestone?"":"none";
   document.getElementById("detail-time-section").style.display=isHourly?"":"none";
   document.getElementById("detail-retainer-section").style.display=isRetainer?"":"none";
-  document.getElementById("detail-spend-section").style.display=isMilestone?"":"none";
 
-  if (isMilestone) {
-    document.getElementById("detail-progress-num").textContent=(p.progress||0)+"%";
-    document.getElementById("detail-progress-fill").style.width=(p.progress||0)+"%";
-    renderMilestones(p.milestones||[]);
-    renderSpend(p);
-    milestonesDirty=false;
-  }
-  if (isHourly) {
-    await loadTimeLogs(p.id);
-  }
-  if (isRetainer) {
-    document.getElementById("detail-progress-num").textContent=(p.progress||0)+"%";
-    document.getElementById("detail-progress-fill").style.width=(p.progress||0)+"%";
-    renderRetainerSection(p);
-    milestonesDirty=false;
+  if(isMilestone){renderMilestones(p.milestones||[]);milestonesDirty=false;}
+  if(isRetainer){retainerPeriodOffset=0;renderRetainerSection(p);milestonesDirty=false;}
+  if(isHourly){
+    // Load time logs immediately (don't wait for tab switch)
+    loadTimeLogs(p.id);
   }
 
-  // Project files (all types)
+  // Files
   projectAttachments=Array.isArray(p.attachments)?p.attachments:[];
   renderProjectFiles();
+
+  // Clear cached activity so it reloads fresh
+  delete activityCache[p.id];
+  document.getElementById("activity-badge").textContent="—";
 
   document.getElementById("project-detail").classList.add("open");
   document.getElementById("detail-overlay").classList.add("open");
 }
 
-function closeDetail() {
-  if (milestonesDirty) saveNow();
+function closeDetail(){
+  if(milestonesDirty)saveNow();
   document.getElementById("project-detail").classList.remove("open");
   document.getElementById("detail-overlay").classList.remove("open");
+  closeStatusDropdown();
   selectedProject=null;
 }
 
 // ═══════════════════════════════════════════════════════════
-// STATUS SELECTOR
+// DETAIL TABS
 // ═══════════════════════════════════════════════════════════
-function renderStatusSelector(current) {
-  const p = selectedProject;
-  const blockedActive = p && p.requestStatus !== "accepted" && p.status !== "active";
-  document.getElementById("detail-status-wrap").innerHTML=["draft","active","paused","completed","cancelled"].map(s=>{
-    const isBlocked = s==="active" && blockedActive;
-    return `<div class="status-opt ${s===current?"active":""} ${isBlocked?"blocked":""}" data-s="${s}"
-      onclick="${isBlocked?"ARK.showToast('Project must be accepted by client first','warn')":"changeStatus('"+s+"')"}"
-      title="${isBlocked?"Awaiting client acceptance":""}"
-      style="${isBlocked?"opacity:.45;cursor:not-allowed;":""}">
-      ${s.charAt(0).toUpperCase()+s.slice(1)}${isBlocked?" 🔒":""}
+function switchDetailTab(tab, el){
+  currentDetailTab=tab;
+  document.querySelectorAll(".detail-tab").forEach(b=>b.classList.remove("active"));
+  if(el)el.classList.add("active");
+  else{const b=document.querySelector(`.detail-tab[data-tab="${tab}"]`);if(b)b.classList.add("active");}
+  document.querySelectorAll(".tab-pane").forEach(p=>p.classList.remove("active"));
+  const pane=document.getElementById("pane-"+tab);
+  if(pane){pane.classList.add("active");pane.style.animation="none";pane.offsetHeight;pane.style.animation="";}
+  if(tab==="activity"&&selectedProject)loadActivity(selectedProject.id);
+}
+
+// ═══════════════════════════════════════════════════════════
+// STATUS DROPDOWN
+// ═══════════════════════════════════════════════════════════
+const STATUS_META={
+  draft:{dot:"#a3a3a3",text:"Draft",cls:"s-draft"},
+  active:{dot:"#16a34a",text:"Active",cls:"s-active"},
+  paused:{dot:"#9ca3af",text:"Paused",cls:"s-paused"},
+  completed:{dot:"#2563eb",text:"Completed",cls:"s-completed"},
+  cancelled:{dot:"#dc2626",text:"Cancelled",cls:"s-cancelled"}
+};
+function renderStatusDropdown(current){
+  const p=selectedProject;
+  const trigger=document.getElementById("status-dropdown-trigger");
+  const menu=document.getElementById("status-dropdown-menu");
+  const meta=STATUS_META[current]||STATUS_META.draft;
+  trigger.className=`status-dropdown-trigger ${meta.cls}${_statusDropdownOpen?" open":""}`;
+  document.getElementById("status-dot").style.background=meta.dot;
+  document.getElementById("status-text").textContent=meta.text;
+  const blockedActive=p&&p.requestStatus!=="accepted"&&p.status!=="active";
+  menu.innerHTML=Object.entries(STATUS_META).map(([s,m])=>{
+    const isBlocked=s==="active"&&blockedActive&&current!=="active";
+    return`<div class="status-opt ${s===current?"active":""} ${isBlocked?"blocked":""} ${m.cls}" onclick="${isBlocked?"ARK.showToast('Project must be accepted by client first','warn')":"doChangeStatus('"+s+"')"}" title="${isBlocked?"Awaiting client acceptance":""}">
+      <span class="sdot" style="background:${m.dot};"></span>
+      <span class="stext">${m.text}${isBlocked?" 🔒":""}</span>
+      ${s===current?`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="margin-left:auto;color:var(--accent)"><polyline points="20 6 9 17 4 12"/></svg>`:""}
     </div>`;
   }).join("");
 }
-async function changeStatus(status) {
-  if (!selectedProject) return;
+function toggleStatusDropdown(){
+  _statusDropdownOpen=!_statusDropdownOpen;
+  document.getElementById("status-dropdown-trigger").classList.toggle("open",_statusDropdownOpen);
+  document.getElementById("status-dropdown-menu").classList.toggle("open",_statusDropdownOpen);
+}
+function closeStatusDropdown(){
+  _statusDropdownOpen=false;
+  document.getElementById("status-dropdown-trigger")?.classList.remove("open");
+  document.getElementById("status-dropdown-menu")?.classList.remove("open");
+}
+document.addEventListener("click",e=>{
+  if(!e.target.closest(".status-dropdown-wrap")&&_statusDropdownOpen)closeStatusDropdown();
+});
+async function doChangeStatus(status){
+  closeStatusDropdown();
+  if(!selectedProject)return;
+  if(status===selectedProject.status)return;
   markFreelancerChange(selectedProject.id);
   const old=selectedProject.status;
-  selectedProject.status=status; renderStatusSelector(status);
+  selectedProject.status=status;
+  renderStatusDropdown(status);
   const idx=allProjects.findIndex(p=>p.id===selectedProject.id);
-  if (idx>-1) allProjects[idx].status=status; renderProjects();
-  // Update delete btn visibility
+  if(idx>-1)allProjects[idx].status=status;renderProjects();
   document.getElementById("detail-delete-btn").style.display=(status==="active"||status==="completed")?"none":"";
-  try {
+  try{
     const res=await ARK.api({action:"update_project",token:ARK.getToken(),projectId:selectedProject.id,status});
-    if (!res.success) { selectedProject.status=old; ARK.showToast(res.error||"Failed","error"); }
-    else { ARK.showToast("Status updated","success"); if(res.updatedAt) syncSeenAfterSave(selectedProject.id,res.updatedAt); else syncSeenAfterSave(selectedProject.id,new Date().toISOString()); }
-  } catch(e) { ARK.showToast("Connection error.","error"); }
+    if(!res.success){selectedProject.status=old;renderStatusDropdown(old);ARK.showToast(res.error||"Failed","error");}
+    else{ARK.showToast("Status updated","success");if(res.updatedAt)syncSeenAfterSave(selectedProject.id,res.updatedAt);else syncSeenAfterSave(selectedProject.id,new Date().toISOString());}
+  }catch(e){selectedProject.status=old;renderStatusDropdown(old);ARK.showToast("Connection error.","error");}
+}
+
+// ═══════════════════════════════════════════════════════════
+// REQUEST INFO (subtle, not banner)
+// ═══════════════════════════════════════════════════════════
+function renderRequestInfo(p){
+  const el=document.getElementById("detail-request-info");
+  if(!el)return;
+  if(p.requestStatus==="pending_client"){
+    el.style.display="flex";
+    el.innerHTML=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span style="color:#2563eb;">Sent to client — awaiting acceptance</span>`;
+  }else if(p.requestStatus==="pending"){
+    el.style.display="flex";
+    el.innerHTML=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg><span style="color:#d97706;">Client-created request — accept to set active</span>`;
+  }else{el.style.display="none";}
 }
 
 // ═══════════════════════════════════════════════════════════
 // RESPOND TO CLIENT REQUEST
 // ═══════════════════════════════════════════════════════════
-async function respondToRequest(projectId, response) {
-  try {
+async function respondToRequest(projectId,response){
+  try{
     const res=await ARK.api({action:"respond_to_project_request",token:ARK.getToken(),projectId,response});
-    if (res.success) {
+    if(res.success){
       const idx=allProjects.findIndex(p=>p.id===projectId);
-      if (idx>-1) { allProjects[idx].requestStatus=response; allProjects[idx].status=response==="accepted"?"active":"cancelled"; }
+      if(idx>-1){allProjects[idx].requestStatus=response;allProjects[idx].status=response==="accepted"?"active":"cancelled";}
       ARK.showToast(response==="accepted"?"Project accepted! Now Active.":"Project declined","success");
-      renderProjects(); if (selectedProject?.id===projectId) openDetail(projectId);
-    } else ARK.showToast(res.error||"Failed","error");
-  } catch(e) { ARK.showToast("Connection error.","error"); }
+      renderProjects();if(selectedProject?.id===projectId)openDetail(projectId);
+    }else ARK.showToast(res.error||"Failed","error");
+  }catch(e){ARK.showToast("Connection error.","error");}
 }
 
-async function sendProjectRequest() {
-  if (!selectedProject) return;
-  const lbl=document.getElementById("send-request-label"), spin=document.getElementById("send-request-spin");
+async function sendProjectRequest(){
+  if(!selectedProject)return;
   const btn=document.getElementById("detail-send-request-btn");
-  btn.disabled=true; lbl.style.display="none"; spin.style.display="block";
-  try {
+  setBtnLoading(btn,true);
+  try{
     const res=await ARK.api({action:"request_project_acceptance",token:ARK.getToken(),projectId:selectedProject.id});
-    if (res.success) {
+    if(res.success){
       selectedProject.requestStatus="pending_client";
       const idx=allProjects.findIndex(p=>p.id===selectedProject.id);
-      if (idx>-1) allProjects[idx].requestStatus="pending_client";
-      document.getElementById("detail-send-request-btn").style.display="none";
-      const rsEl=document.getElementById("detail-request-status");
-      rsEl.style.display=""; rsEl.style.background="#eff6ff"; rsEl.style.color="#1d4ed8"; rsEl.style.border="1px solid #bfdbfe"; rsEl.style.borderRadius="var(--r)";
-      rsEl.textContent="Sent to client — awaiting acceptance";
+      if(idx>-1)allProjects[idx].requestStatus="pending_client";
+      btn.style.display="none";
+      renderRequestInfo(selectedProject);
       ARK.showToast("Project request sent to client!","success");
-    } else ARK.showToast(res.error||"Failed","error");
-  } catch(e) { ARK.showToast("Connection error.","error"); }
-  finally { btn.disabled=false; lbl.style.display=""; spin.style.display="none"; }
+    }else ARK.showToast(res.error||"Failed","error");
+  }catch(e){ARK.showToast("Connection error.","error");}
+  finally{setBtnLoading(btn,false);}
 }
 
 // ═══════════════════════════════════════════════════════════
 // SPEND TRACKER
 // ═══════════════════════════════════════════════════════════
-function renderSpend(p) {
+function renderSpend(p){
   const milestones=p.milestones||[];
   const totalMs=milestones.reduce((s,m)=>s+(parseFloat(m.amount)||0),0);
   const earnedMs=milestones.filter(m=>m.status==="done"||m.approvalStatus==="approved").reduce((s,m)=>s+(parseFloat(m.amount)||0),0);
@@ -1076,27 +1439,27 @@ function renderSpend(p) {
 // ═══════════════════════════════════════════════════════════
 // MILESTONES
 // ═══════════════════════════════════════════════════════════
-function renderMilestones(milestones) {
+function renderMilestones(milestones){
   const list=document.getElementById("milestone-list");
-  if (!milestones.length) { list.innerHTML=`<div style="text-align:center;padding:20px 0;font-size:.78rem;color:var(--ink4);">No milestones yet — add your first one above.</div>`; return; }
+  if(!milestones.length){list.innerHTML=`<div style="text-align:center;padding:20px 0;font-size:.78rem;color:var(--ink4);">No milestones yet — add your first one above.</div>`;return;}
   const openStates={};
-  list.querySelectorAll(".subtask-list").forEach((el,i)=>{ openStates[i]=el.style.display!=="none"; });
+  list.querySelectorAll(".subtask-list").forEach((el,i)=>{openStates[i]=el.style.display!=="none";});
   list.innerHTML=milestones.map((m,mi)=>{
-    const ap=m.approvalStatus||"pending", isDone=m.status==="done"||ap==="approved";
-    const subtasks=m.subtasks||[], revNotes=m.revisionNotes||{};
+    const ap=m.approvalStatus||"pending",isDone=m.status==="done"||ap==="approved";
+    const subtasks=m.subtasks||[],revNotes=m.revisionNotes||{};
     const isOpen=openStates[mi]||false;
-    let bcolor="var(--line2)"; if(ap==="approved")bcolor="var(--accent-ln,#bbf7d0)"; if(ap==="revision_requested")bcolor="#ddd6fe";
-    return `
+    let bcolor="var(--line2)";if(ap==="approved")bcolor="var(--accent-ln,#bbf7d0)";if(ap==="revision_requested")bcolor="#ddd6fe";
+    return`
     <div class="milestone-item ${isDone?"done":""}" style="border-color:${bcolor}">
       <div class="milestone-header" onclick="toggleMilestoneOpen(this)">
         <button class="milestone-check ${isDone||ap==="approved"?"done":""}" onclick="toggleMilestone(event,${mi})">
           <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
         </button>
         <input class="milestone-title-input ${isDone?"done":""}" value="${ARK.escHtml(m.title)}" onclick="event.stopPropagation()" onchange="editMilestoneTitle(${mi},this.value)" onblur="editMilestoneTitle(${mi},this.value)" placeholder="Milestone title">
-          <div style="display:flex;align-items:center;gap:2px;flex-shrink:0;">
-            <span style="font-size:.72rem;color:var(--ink4);font-weight:600;">${selectedProject?.currency==="EUR"?"€":selectedProject?.currency==="GBP"?"£":"$"}</span>
-            <input class="ms-amount-input" type="number" value="${m.amount||""}" placeholder="0" min="0" step="0.01" onclick="event.stopPropagation()" onchange="editMilestoneAmount(${mi},this.value)" onblur="editMilestoneAmount(${mi},this.value)" title="Milestone amount">
-          </div>
+        <div style="display:flex;align-items:center;gap:2px;flex-shrink:0;">
+          <span style="font-size:.72rem;color:var(--ink4);font-weight:600;">${selectedProject?.currency==="EUR"?"€":selectedProject?.currency==="GBP"?"£":"$"}</span>
+          <input class="ms-amount-input" type="number" value="${m.amount||""}" placeholder="0" min="0" step="0.01" onclick="event.stopPropagation()" onchange="editMilestoneAmount(${mi},this.value)" onblur="editMilestoneAmount(${mi},this.value)" title="Milestone amount">
+        </div>
         ${ap==="approved"?`<span style="background:#dcfce7;color:#166634;font-size:.6rem;flex-shrink:0;padding:2px 6px;border-radius:999px;font-weight:700;">✓ Approved</span>`:""}
         ${ap==="revision_requested"?`<span style="background:#f5f3ff;color:#7c3aed;font-size:.6rem;flex-shrink:0;padding:2px 6px;border-radius:999px;font-weight:700;">↩ Revision</span>`:""}
         ${revNotes&&revNotes.resolved?`<span style="background:#dcfce7;color:#166634;font-size:.6rem;flex-shrink:0;padding:2px 6px;border-radius:999px;font-weight:700;">✓ Resolved</span>`:""}
@@ -1116,14 +1479,14 @@ function renderMilestones(milestones) {
         </button>
         ${(m.attachments||[]).length>0?`<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line2);display:flex;flex-direction:column;gap:5px;">
           ${(m.attachments||[]).map(a=>a.type==="note"
-            ?`<div style="border:1px solid var(--line2);border-radius:6px;overflow:hidden;"><div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);cursor:pointer;"><span style="font-size:.82rem;">📝</span><span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;">Note</span><span style="font-size:.65rem;color:var(--ink4);">▶</span></div><div style="display:none;padding:7px 10px;font-size:.75rem;color:var(--ink3);line-height:1.6;background:var(--bg2);border-top:1px solid var(--line2);white-space:pre-wrap;">${ARK.escHtml(a.content||"")}</div></div>`
+            ?`<div style="border:1px solid var(--line2);border-radius:6px;overflow:hidden;"><div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);cursor:pointer;"><span style="font-size:.82rem;">📝</span><span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;">Note</span></div><div style="display:none;padding:7px 10px;font-size:.75rem;color:var(--ink3);line-height:1.6;background:var(--bg2);border-top:1px solid var(--line2);white-space:pre-wrap;">${ARK.escHtml(a.content||"")}</div></div>`
             :`<div style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);border:1px solid var(--line2);border-radius:6px;"><span style="font-size:.85rem;">${getFileIcon(a.type)}</span><span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ARK.escHtml(a.name)}</span><button onclick="openAttachment('${ARK.escHtml(a.url)}')" style="font-size:.68rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:none;border-radius:4px;padding:2px 7px;cursor:pointer;">Open</button></div>`
           ).join("")}
         </div>`:""}
         <div style="display:flex;align-items:center;gap:10px;margin-top:4px;flex-wrap:wrap;">
-          <button data-attach-mi="${mi}" onclick="triggerMilestoneUpload(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>+ Attach file</button>
-          <button onclick="toggleLinkInput(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>+ Add link</button>
-          <button onclick="toggleNoteInput(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>+ Add note</button>
+          <button data-attach-mi="${mi}" onclick="triggerMilestoneUpload(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>+ Attach file</button>
+          <button onclick="toggleLinkInput(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>+ Add link</button>
+          <button onclick="toggleNoteInput(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);font-weight:500;cursor:pointer;background:none;border:none;font-family:var(--sans);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>+ Add note</button>
         </div>
         <div id="link-input-${mi}" style="display:none;flex-direction:column;gap:6px;margin-top:6px;">
           <input id="link-url-${mi}" type="url" placeholder="https://…" style="height:34px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveMilestoneLink(${mi})">
@@ -1134,7 +1497,10 @@ function renderMilestones(milestones) {
           <textarea id="note-text-${mi}" rows="3" placeholder="Add a milestone note…" style="background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:9px 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;resize:vertical;min-height:72px;width:100%;line-height:1.5;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'"></textarea>
           <div style="display:flex;gap:6px;"><button onclick="saveMilestoneNote(${mi})" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save note</button><button onclick="toggleNoteInput(${mi})" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button></div>
         </div>
-        ${ap==="revision_requested"?`<div style="margin-top:8px;padding:10px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:var(--r);"><div style="font-size:.74rem;font-weight:700;color:#7c3aed;margin-bottom:6px;display:flex;align-items:center;gap:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Client requested revision</div>${(revNotes.checklist||[]).length?`<div style="font-size:.73rem;color:#5b21b6;margin-bottom:4px;">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}</div>`:""}${revNotes.notes?`<div style="font-size:.73rem;color:#5b21b6;font-style:italic;">${ARK.escHtml(revNotes.notes)}</div>`:""}
+        ${ap==="revision_requested"?`<div style="margin-top:8px;padding:10px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:var(--r);">
+          <div style="font-size:.74rem;font-weight:700;color:#7c3aed;margin-bottom:6px;display:flex;align-items:center;gap:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Client requested revision</div>
+          ${(revNotes.checklist||[]).length?`<div style="font-size:.73rem;color:#5b21b6;margin-bottom:4px;">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}</div>`:""}
+          ${revNotes.notes?`<div style="font-size:.73rem;color:#5b21b6;font-style:italic;">${ARK.escHtml(revNotes.notes)}</div>`:""}
           <button onclick="markRevisionDone('${m.id}',${mi})" style="margin-top:8px;display:flex;align-items:center;gap:5px;height:30px;padding:0 12px;background:#f0fdf4;color:#166534;border:1.5px solid #bbf7d0;border-radius:var(--r);font-size:.73rem;font-weight:700;cursor:pointer;font-family:var(--sans);">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Mark revision done
           </button>
@@ -1145,204 +1511,284 @@ function renderMilestones(milestones) {
   }).join("");
 }
 
-function toggleMilestoneOpen(headerEl) {
+function toggleMilestoneOpen(headerEl){
   const list=document.getElementById("milestone-list");
-  const allSubs=list.querySelectorAll(".subtask-list"), allChevs=list.querySelectorAll(".milestone-chevron");
-  const sub=headerEl.parentElement.querySelector(".subtask-list"), chev=headerEl.querySelector(".milestone-chevron");
-  if (!sub) return;
+  const allSubs=list.querySelectorAll(".subtask-list"),allChevs=list.querySelectorAll(".milestone-chevron");
+  const sub=headerEl.parentElement.querySelector(".subtask-list"),chev=headerEl.querySelector(".milestone-chevron");
+  if(!sub)return;
   const isOpen=sub.style.display!=="none";
-  allSubs.forEach(s=>{s.style.display="none";}); allChevs.forEach(c=>c.classList.remove("open"));
-  if (!isOpen) { sub.style.display="flex"; sub.style.flexDirection="column"; chev?.classList.add("open"); }
+  allSubs.forEach(s=>{s.style.display="none";});allChevs.forEach(c=>c.classList.remove("open"));
+  if(!isOpen){sub.style.display="flex";sub.style.flexDirection="column";chev?.classList.add("open");}
 }
-
-function toggleMilestone(e, mi) {
-  e.stopPropagation(); if (!selectedProject) return;
+function toggleMilestone(e,mi){
+  e.stopPropagation();if(!selectedProject)return;
   const m=selectedProject.milestones[mi];
-  m.status=m.status==="done"?"pending":"done"; m.completedAt=m.status==="done"?new Date().toISOString():"";
+  m.status=m.status==="done"?"pending":"done";m.completedAt=m.status==="done"?new Date().toISOString():"";
   milestonesDirty=true;
   const item=document.getElementById("milestone-list").children[mi];
-  const check=item?.querySelector(".milestone-check"), title=item?.querySelector(".milestone-title-input");
-  if (check) check.classList.toggle("done",m.status==="done");
-  if (title) title.classList.toggle("done",m.status==="done");
+  const check=item?.querySelector(".milestone-check"),title=item?.querySelector(".milestone-title-input");
+  if(check)check.classList.toggle("done",m.status==="done");
+  if(title)title.classList.toggle("done",m.status==="done");
   item?.classList.toggle("done",m.status==="done");
-  updateProgressFromMilestones(); markFreelancerChange(selectedProject.id); saveNow();
+  updateProgressFromMilestones();markFreelancerChange(selectedProject.id);saveNow();
 }
-function toggleSubtask(mi, si) {
-  if (!selectedProject) return;
+function toggleSubtask(mi,si){
+  if(!selectedProject)return;
   const s=selectedProject.milestones[mi].subtasks[si];
-  s.status=s.status==="done"?"pending":"done"; s.completedAt=s.status==="done"?new Date().toISOString():"";
+  s.status=s.status==="done"?"pending":"done";s.completedAt=s.status==="done"?new Date().toISOString():"";
   milestonesDirty=true;
-  const list=document.getElementById("milestone-list"), msEl=list?.children[mi], stEl=msEl?.querySelectorAll(".subtask-item")[si];
-  const check=stEl?.querySelector(".subtask-check"), title=stEl?.querySelector(".subtask-title-input");
-  if (check) check.classList.toggle("done",s.status==="done");
-  if (title) title.classList.toggle("done",s.status==="done");
-  markFreelancerChange(selectedProject.id); saveNow();
+  const list=document.getElementById("milestone-list"),msEl=list?.children[mi],stEl=msEl?.querySelectorAll(".subtask-item")[si];
+  const check=stEl?.querySelector(".subtask-check"),title=stEl?.querySelector(".subtask-title-input");
+  if(check)check.classList.toggle("done",s.status==="done");
+  if(title)title.classList.toggle("done",s.status==="done");
+  markFreelancerChange(selectedProject.id);saveNow();
 }
-function editMilestoneTitle(mi, val) {
-  if (!selectedProject||!val.trim()) return;
-  selectedProject.milestones[mi].title=val.trim(); milestonesDirty=true; scheduleSave();
-}
-function editMilestoneAmount(mi, val) {
-  if (!selectedProject) return;
-  selectedProject.milestones[mi].amount=parseFloat(val)||0; milestonesDirty=true;
-  renderSpend(selectedProject); scheduleSave();
-}
-function editSubtaskTitle(mi, si, val) {
-  if (!selectedProject||!val.trim()) return;
-  selectedProject.milestones[mi].subtasks[si].title=val.trim(); milestonesDirty=true; scheduleSave();
-}
-function deleteMilestone(mi) {
-  if (!selectedProject) return;
-  selectedProject.milestones.splice(mi,1); milestonesDirty=true;
-  renderMilestones(selectedProject.milestones); updateProgressFromMilestones(); renderSpend(selectedProject); scheduleSave();
-}
-function deleteSubtask(mi, si) {
-  if (!selectedProject) return;
-  selectedProject.milestones[mi].subtasks.splice(si,1); milestonesDirty=true;
-  renderMilestones(selectedProject.milestones); scheduleSave();
-}
-function addMilestone() {
-  if (!selectedProject) return;
+function editMilestoneTitle(mi,val){if(!selectedProject||!val.trim())return;selectedProject.milestones[mi].title=val.trim();milestonesDirty=true;scheduleSave();}
+function editMilestoneAmount(mi,val){if(!selectedProject)return;selectedProject.milestones[mi].amount=parseFloat(val)||0;milestonesDirty=true;renderSpend(selectedProject);scheduleSave();}
+function editSubtaskTitle(mi,si,val){if(!selectedProject||!val.trim())return;selectedProject.milestones[mi].subtasks[si].title=val.trim();milestonesDirty=true;scheduleSave();}
+function deleteMilestone(mi){if(!selectedProject)return;selectedProject.milestones.splice(mi,1);milestonesDirty=true;renderMilestones(selectedProject.milestones);updateProgressFromMilestones();renderSpend(selectedProject);scheduleSave();}
+function deleteSubtask(mi,si){if(!selectedProject)return;selectedProject.milestones[mi].subtasks.splice(si,1);milestonesDirty=true;renderMilestones(selectedProject.milestones);scheduleSave();}
+function addMilestone(){
+  if(!selectedProject)return;
   selectedProject.milestones.push({id:"tmp-"+Date.now(),title:"New milestone",status:"pending",subtasks:[],dueDate:"",completedAt:"",order:selectedProject.milestones.length,amount:0,approvalStatus:"pending",revisionNotes:{}});
-  milestonesDirty=true; renderMilestones(selectedProject.milestones);
-  const list=document.getElementById("milestone-list"), lastMs=list.lastElementChild, input=lastMs?.querySelector(".milestone-title-input");
-  if (input) { input.focus(); input.select(); }
+  milestonesDirty=true;renderMilestones(selectedProject.milestones);
+  const list=document.getElementById("milestone-list"),lastMs=list.lastElementChild,input=lastMs?.querySelector(".milestone-title-input");
+  if(input){input.focus();input.select();}
 }
-function addSubtask(mi) {
-  if (!selectedProject) return;
+function addSubtask(mi){
+  if(!selectedProject)return;
   selectedProject.milestones[mi].subtasks.push({id:"tmp-"+Date.now(),title:"New subtask",status:"pending",completedAt:""});
-  milestonesDirty=true; renderMilestones(selectedProject.milestones);
-  const list=document.getElementById("milestone-list"), msEl=list?.children[mi], sub=msEl?.querySelector(".subtask-list");
-  if (sub) { sub.style.display="flex"; sub.style.flexDirection="column"; msEl.querySelector(".milestone-chevron")?.classList.add("open"); const inputs=sub.querySelectorAll(".subtask-title-input"); const last=inputs[inputs.length-1]; if (last) { last.focus(); last.select(); } }
+  milestonesDirty=true;renderMilestones(selectedProject.milestones);
+  const list=document.getElementById("milestone-list"),msEl=list?.children[mi],sub=msEl?.querySelector(".subtask-list");
+  if(sub){sub.style.display="flex";sub.style.flexDirection="column";msEl.querySelector(".milestone-chevron")?.classList.add("open");const inputs=sub.querySelectorAll(".subtask-title-input");const last=inputs[inputs.length-1];if(last){last.focus();last.select();}}
 }
-function updateProgressFromMilestones() {
-  if (!selectedProject) return;
-  const ms=selectedProject.milestones, total=ms.length, done=ms.filter(m=>m.status==="done"||m.approvalStatus==="approved").length;
+function updateProgressFromMilestones(){
+  if(!selectedProject)return;
+  const ms=selectedProject.milestones,total=ms.length,done=ms.filter(m=>m.status==="done"||m.approvalStatus==="approved").length;
   const progress=total>0?Math.round((done/total)*100):0;
   selectedProject.progress=progress;
   document.getElementById("detail-progress-num").textContent=progress+"%";
   document.getElementById("detail-progress-fill").style.width=progress+"%";
-  const idx=allProjects.findIndex(p=>p.id===selectedProject.id); if(idx>-1) allProjects[idx].progress=progress;
+  const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].progress=progress;
   renderProjects();
 }
-async function markRevisionDone(milestoneId, mi) {
-  try {
+async function markRevisionDone(milestoneId,mi){
+  try{
     const res=await ARK.api({action:"clear_revision",token:ARK.getToken(),milestoneId});
-    if (res.success) {
-      if (selectedProject) {
+    if(res.success){
+      if(selectedProject){
         const m=selectedProject.milestones[mi];
-        if (m) { if(m.revisionNotes&&typeof m.revisionNotes==="object"){m.revisionNotes.resolved=true;m.revisionNotes.resolvedAt=new Date().toISOString();} m.approvalStatus="pending"; m.status="in-progress"; }
-        milestonesDirty=true; renderMilestones(selectedProject.milestones); saveNow();
+        if(m){if(m.revisionNotes&&typeof m.revisionNotes==="object"){m.revisionNotes.resolved=true;m.revisionNotes.resolvedAt=new Date().toISOString();}m.approvalStatus="pending";m.status="in-progress";}
+        milestonesDirty=true;renderMilestones(selectedProject.milestones);saveNow();
       }
       ARK.showToast("Revision marked done — awaiting client approval","success");
-    } else ARK.showToast(res.error||"Failed","error");
-  } catch(e) { ARK.showToast("Connection error.","error"); }
+    }else ARK.showToast(res.error||"Failed","error");
+  }catch(e){ARK.showToast("Connection error.","error");}
 }
 
 // ═══════════════════════════════════════════════════════════
-// SAVE (debounced + immediate)
+// SAVE
 // ═══════════════════════════════════════════════════════════
 let _saveTimer=null;
-function scheduleSave() { clearTimeout(_saveTimer); _saveTimer=setTimeout(saveMilestones,8000); }
-function saveNow() { clearTimeout(_saveTimer); saveMilestones(); }
-async function saveMilestones() {
-  if (!selectedProject||!milestonesDirty) return;
-  milestonesDirty=false; markFreelancerChange(selectedProject.id);
-  try {
+function scheduleSave(){clearTimeout(_saveTimer);_saveTimer=setTimeout(saveMilestones,8000);}
+function saveNow(){clearTimeout(_saveTimer);return saveMilestones();}
+async function saveMilestones(){
+  if(!selectedProject||!milestonesDirty)return;
+  milestonesDirty=false;markFreelancerChange(selectedProject.id);
+  try{
     const res=await ARK.api({action:"save_milestones",token:ARK.getToken(),projectId:selectedProject.id,milestones:selectedProject.milestones});
-    if (res.success) {
+    if(res.success){
       selectedProject.progress=res.progress;
-      const num=document.getElementById("detail-progress-num"); if(num) num.textContent=res.progress+"%";
-      const fill=document.getElementById("detail-progress-fill"); if(fill) fill.style.width=res.progress+"%";
-      const idx=allProjects.findIndex(p=>p.id===selectedProject.id);
-      if(idx>-1) allProjects[idx].progress=res.progress;
-      // After save, resync seen to prevent dot showing for our own changes
-      if(res.updatedAt) syncSeenAfterSave(selectedProject.id, res.updatedAt);
-      else { const ts=new Date().toISOString(); syncSeenAfterSave(selectedProject.id, ts); }
+      const num=document.getElementById("detail-progress-num");if(num)num.textContent=res.progress+"%";
+      const fill=document.getElementById("detail-progress-fill");if(fill)fill.style.width=res.progress+"%";
+      const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].progress=res.progress;
+      if(res.updatedAt)syncSeenAfterSave(selectedProject.id,res.updatedAt);
+      else syncSeenAfterSave(selectedProject.id,new Date().toISOString());
       renderProjects();
     }
-  } catch(e) { milestonesDirty=true; }
+  }catch(e){milestonesDirty=true;}
 }
-window.addEventListener("beforeunload",()=>{ if(milestonesDirty) saveMilestones(); });
+window.addEventListener("beforeunload",()=>{if(milestonesDirty)saveMilestones();});
 
 // ═══════════════════════════════════════════════════════════
 // HOURLY — TIME LOGS
 // ═══════════════════════════════════════════════════════════
-async function loadTimeLogs(projectId) {
-  const list=document.getElementById("time-log-list"), empty=document.getElementById("time-log-empty");
-  list.innerHTML=""; empty.style.display="none";
-  try {
+async function loadTimeLogs(projectId){
+  const emptyEl=document.getElementById("time-log-empty");
+  const summary=document.getElementById("time-monthly-summary");
+  if(summary)summary.innerHTML=`<div style="display:flex;align-items:center;gap:8px;padding:12px 0;color:var(--ink4);font-size:.78rem;"><div class="activity-spin" style="width:14px;height:14px;"></div>Loading…</div>`;
+  if(emptyEl)emptyEl.style.display="none";
+  try{
     const res=await ARK.api({action:"get_time_logs",token:ARK.getToken(),projectId});
-    if (res.success) {
+    if(res.success){
       timeLogs=res.logs||[];
-      renderTimeLogs();
+      renderTimeLogSummary();
     }
-  } catch(e) {}
+  }catch(e){if(summary)summary.innerHTML="";}
 }
-function renderTimeLogs() {
-  const list=document.getElementById("time-log-list"), empty=document.getElementById("time-log-empty");
-  if (!timeLogs.length) { list.innerHTML=""; empty.style.display=""; return; }
-  empty.style.display="none";
+
+function renderTimeLogSummary(){
+  const summary=document.getElementById("time-monthly-summary");
+  const emptyEl=document.getElementById("time-log-empty");
+  const viewAllBtn=document.getElementById("view-all-logs-btn");
+  if(!timeLogs.length){
+    if(summary)summary.innerHTML="";
+    if(emptyEl)emptyEl.style.display="";
+    if(viewAllBtn)viewAllBtn.style.display="none";
+    return;
+  }
+  if(emptyEl)emptyEl.style.display="none";
+  if(viewAllBtn)viewAllBtn.style.display="";
+
+  // Group by month
+  const byMonth={};
+  timeLogs.forEach(l=>{
+    const d=new Date(l.date);
+    const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+    const label=d.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+    if(!byMonth[key])byMonth[key]={label,hours:0,entries:0,earned:0};
+    byMonth[key].hours+=l.hours;
+    byMonth[key].entries++;
+    byMonth[key].earned+=(selectedProject?.budgetAmount||0)*l.hours;
+  });
   const totalHours=timeLogs.reduce((s,l)=>s+l.hours,0);
+  const totalEarned=(selectedProject?.budgetAmount||0)*totalHours;
   const rate=selectedProject?.budgetAmount||0;
-  const earned=rate>0?totalHours*rate:0;
-  list.innerHTML=`<div style="border:1.5px solid var(--line2);border-radius:var(--r);overflow:hidden;">
-    ${timeLogs.map(l=>`<div class="time-log-row">
-      <div class="time-log-date">${new Date(l.date).toLocaleDateString(undefined,{month:"short",day:"numeric"})}</div>
-      <div class="time-log-hours">${l.hours}h</div>
-      <div class="time-log-desc">${ARK.escHtml(l.description||"—")}</div>
-      ${rate>0?`<div style="font-size:.74rem;font-weight:600;color:var(--accent);flex-shrink:0;">${ARK.fmtCurrency(l.hours*rate,"USD")}</div>`:""}
-    </div>`).join("")}
-    <div class="time-total">
-      <span class="time-total-label">Total logged</span>
-      <div style="text-align:right;"><div class="time-total-val">${totalHours.toFixed(1)}h</div>${earned>0?`<div style="font-size:.72rem;color:var(--accent);font-weight:600;">${ARK.fmtCurrency(earned,"USD")}</div>`:""}</div>
-    </div>
-  </div>`;
+
+  const rows=Object.entries(byMonth).sort(([a],[b])=>b.localeCompare(a)).map(([key,m])=>`
+    <div class="time-month-row">
+      <div>
+        <div class="time-month-label">${m.label}</div>
+        <div class="time-month-entries">${m.entries} entr${m.entries===1?"y":"ies"}</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="time-month-hours">${m.hours.toFixed(1)}h</div>
+        ${rate>0?`<div class="time-month-earned">${ARK.fmtCurrency(m.earned,"USD")}</div>`:""}
+      </div>
+    </div>`).join("");
+
+  if(summary)summary.innerHTML=`
+    <div class="time-monthly-grid">
+      ${rows}
+      <div class="time-grand-row">
+        <span class="time-grand-label">Grand total</span>
+        <div style="text-align:right;">
+          <div class="time-grand-val">${totalHours.toFixed(1)}h</div>
+          ${rate>0?`<div style="font-size:.75rem;color:var(--accent);font-weight:600;">${ARK.fmtCurrency(totalEarned,"USD")}</div>`:""}
+        </div>
+      </div>
+    </div>`;
 }
-function openLogTimeModal() {
+
+function openLogTimeModal(){
   document.getElementById("log-date").value=new Date().toISOString().slice(0,10);
   document.getElementById("log-hours").value="";
   document.getElementById("log-desc").value="";
   ARK.openModal("modal-log-time");
 }
-async function saveTimeLog() {
-  const date=document.getElementById("log-date").value, hours=parseFloat(document.getElementById("log-hours").value), desc=document.getElementById("log-desc").value.trim();
-  if (!date||!hours||hours<=0) { ARK.showToast("Please enter a valid date and hours","warn"); return; }
-  const btn=document.getElementById("log-save-label"), spin=document.getElementById("log-save-spin");
-  btn.style.display="none"; spin.style.display="block";
-  try {
+async function saveTimeLog(){
+  const date=document.getElementById("log-date").value,hours=parseFloat(document.getElementById("log-hours").value),desc=document.getElementById("log-desc").value.trim();
+  if(!date||!hours||hours<=0){ARK.showToast("Please enter a valid date and hours","warn");return;}
+  if(!selectedProject){ARK.showToast("No project selected","warn");return;}
+  const btn=document.getElementById("log-save-btn");
+  setBtnLoading(btn,true);
+  try{
     const res=await ARK.api({action:"log_time",token:ARK.getToken(),projectId:selectedProject.id,date,hours,description:desc});
-    if (res.success) {
+    if(res.success){
       timeLogs.unshift({date,hours,description:desc,id:res.logId});
-      renderTimeLogs(); ARK.closeModal("modal-log-time"); ARK.showToast("Time logged!","success");
-      // Update progress
-      const estHours=selectedProject.estimatedHours||40, totalH=timeLogs.reduce((s,l)=>s+l.hours,0);
+      renderTimeLogSummary();ARK.closeModal("modal-log-time");ARK.showToast("Time logged!","success");
+      const estHours=selectedProject.estimatedHours||40,totalH=timeLogs.reduce((s,l)=>s+l.hours,0);
       selectedProject.progress=Math.min(Math.round((totalH/estHours)*100),100);
-      const idx=allProjects.findIndex(p=>p.id===selectedProject.id); if(idx>-1){allProjects[idx].progress=selectedProject.progress;allProjects[idx].totalHours=totalH;}
+      const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1){allProjects[idx].progress=selectedProject.progress;allProjects[idx].totalHours=totalH;}
       renderProjects();
-    } else ARK.showToast(res.error||"Failed","error");
-  } catch(e) { ARK.showToast("Connection error.","error"); }
-  finally { btn.style.display=""; spin.style.display="none"; }
+    }else ARK.showToast(res.error||"Failed","error");
+  }catch(e){ARK.showToast("Connection error.","error");}
+  finally{setBtnLoading(btn,false);}
+}
+
+function openViewAllTimeLogs(){
+  const rate=selectedProject?.budgetAmount||0;
+  const totalHours=timeLogs.reduce((s,l)=>s+l.hours,0);
+  const totalEarned=rate*totalHours;
+  document.getElementById("vl-total-hours").textContent=totalHours.toFixed(1)+"h";
+  document.getElementById("vl-total-earned").textContent=rate>0?ARK.fmtCurrency(totalEarned,"USD"):"—";
+  document.getElementById("vl-entries").textContent=timeLogs.length;
+  renderVlList();
+  ARK.openModal("modal-view-logs");
+}
+function renderVlList(){
+  const rate=selectedProject?.budgetAmount||0;
+  const wrap=document.getElementById("vl-list-wrap");
+  if(!timeLogs.length){wrap.innerHTML=`<div style="text-align:center;padding:32px;color:var(--ink4);font-size:.8rem;">No time logs yet.</div>`;return;}
+  wrap.innerHTML=timeLogs.map((l,i)=>`
+    <div id="tl-row-${i}">
+      <div class="time-log-row-full">
+        <div class="tl-date">${new Date(l.date).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}</div>
+        <div class="tl-hours">${l.hours}h</div>
+        <div class="tl-desc">${ARK.escHtml(l.description||"—")}</div>
+        ${rate>0?`<div class="tl-earn">${ARK.fmtCurrency(l.hours*rate,"USD")}</div>`:""}
+        <button class="tl-edit-btn" onclick="openTlEdit(${i})" title="Edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+        <button class="tl-del-btn" onclick="deleteTlEntry(${i})" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button>
+      </div>
+      <div class="tl-edit-row" id="tl-edit-${i}">
+        <input class="tl-edit-input" type="date" id="tl-d-${i}" value="${l.date}" style="width:130px;">
+        <input class="tl-edit-input" type="number" id="tl-h-${i}" value="${l.hours}" min="0.25" step="0.25" style="width:70px;" placeholder="hrs">
+        <input class="tl-edit-input" type="text" id="tl-desc-${i}" value="${ARK.escHtml(l.description||"")}" placeholder="Description" style="flex:1;">
+        <button onclick="saveTlEdit(${i})" style="height:30px;padding:0 12px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);white-space:nowrap;">Save</button>
+        <button onclick="closeTlEdit(${i})" style="height:30px;padding:0 10px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button>
+      </div>
+    </div>`).join("");
+}
+function openTlEdit(i){
+  document.querySelectorAll(".tl-edit-row").forEach(r=>r.classList.remove("open"));
+  document.getElementById("tl-edit-"+i)?.classList.add("open");
+}
+function closeTlEdit(i){document.getElementById("tl-edit-"+i)?.classList.remove("open");}
+async function saveTlEdit(i){
+  const date=document.getElementById("tl-d-"+i)?.value;
+  const hours=parseFloat(document.getElementById("tl-h-"+i)?.value)||0;
+  const desc=document.getElementById("tl-desc-"+i)?.value.trim()||"";
+  if(!date||!hours){ARK.showToast("Enter valid date and hours","warn");return;}
+  const log=timeLogs[i];
+  if(!log)return;
+  // Optimistic
+  log.date=date;log.hours=hours;log.description=desc;
+  renderVlList();renderTimeLogSummary();closeTlEdit(i);
+  ARK.showToast("Time entry updated","success");
+  // Attempt backend update (if handler exists)
+  try{
+    await ARK.api({action:"update_time_log",token:ARK.getToken(),logId:log.id,date,hours,description:desc});
+  }catch(e){}
+}
+async function deleteTlEntry(i){
+  const log=timeLogs[i];if(!log)return;
+  timeLogs.splice(i,1);renderVlList();renderTimeLogSummary();
+  ARK.showToast("Entry removed","success");
+  try{await ARK.api({action:"delete_time_log",token:ARK.getToken(),logId:log.id});}catch(e){}
 }
 
 // ═══════════════════════════════════════════════════════════
 // RETAINER
 // ═══════════════════════════════════════════════════════════
-function renderRetainerSection(p) {
-  const now=new Date(), d=new Date(now.getFullYear(),now.getMonth()+retainerPeriodOffset,1);
+function renderRetainerSection(p){
+  const now=new Date(),d=new Date(now.getFullYear(),now.getMonth()+retainerPeriodOffset,1);
   const monthLabel=d.toLocaleDateString(undefined,{month:"long",year:"numeric"});
   document.getElementById("retainer-period-label").textContent=monthLabel;
   const milestones=p.milestones||[];
   const periodMs=milestones.filter(m=>{
-    if (!m.dueDate) return retainerPeriodOffset===0; // current month shows undated ones
-    const md=new Date(m.dueDate); return md.getMonth()===d.getMonth()&&md.getFullYear()===d.getFullYear();
+    if(!m.dueDate)return retainerPeriodOffset===0;
+    const md=new Date(m.dueDate);return md.getMonth()===d.getMonth()&&md.getFullYear()===d.getFullYear();
   });
+  // Show last 7
+  const shown=periodMs.slice(-7);
+  const retainerViewAllBtn=document.getElementById("retainer-view-all-btn");
+  if(retainerViewAllBtn)retainerViewAllBtn.style.display=milestones.length>0?"":"none";
   const list=document.getElementById("deliverable-list");
-  if (!periodMs.length) { list.innerHTML=`<div style="text-align:center;padding:16px 0;font-size:.78rem;color:var(--ink4);">No deliverables for ${monthLabel}.</div>`; return; }
-  list.innerHTML=periodMs.map((m,i)=>{
+  if(!shown.length){list.innerHTML=`<div style="text-align:center;padding:16px 0;font-size:.78rem;color:var(--ink4);">No deliverables for ${monthLabel}. Add one above.</div>`;return;}
+  list.innerHTML=shown.map((m)=>{
     const mi=milestones.indexOf(m);
     const isDone=m.status==="done"||m.approvalStatus==="approved";
-    return `<div class="deliverable-item" style="border-color:${isDone?"var(--accent-ln)":"var(--line2)"}">
+    return`<div class="deliverable-item" style="border-color:${isDone?"var(--accent-ln)":"var(--line2)"}">
       <button class="deliverable-status ${isDone?"done":""}" onclick="toggleMilestone(event,${mi})"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></button>
       <input style="font-size:.84rem;font-weight:600;color:${isDone?"var(--ink4)":"var(--ink)"};text-decoration:${isDone?"line-through":"none"};background:none;border:none;outline:none;font-family:var(--sans);flex:1;padding:0;border-bottom:1.5px solid transparent;transition:border-color .15s;" onfocus="this.style.borderBottomColor='var(--accent)'" onblur="this.style.borderBottomColor='transparent'" value="${ARK.escHtml(m.title)}" onchange="editMilestoneTitle(${mi},this.value)" onblur="editMilestoneTitle(${mi},this.value)">
       ${m.amount?`<span style="font-size:.74rem;font-weight:600;color:var(--ink3);">${ARK.fmtCurrency(m.amount,"USD")}</span>`:""}
@@ -1350,42 +1796,253 @@ function renderRetainerSection(p) {
       ${m.approvalStatus==="revision_requested"?`<span style="background:#f5f3ff;color:#7c3aed;font-size:.6rem;padding:2px 7px;border-radius:999px;font-weight:700;">↩</span>`:""}
     </div>`;
   }).join("");
-  // Progress for this period
+  if(periodMs.length>7){list.innerHTML+=`<div style="padding:6px 0;font-size:.72rem;color:var(--ink4);text-align:center;">Showing last 7 of ${periodMs.length} — <span style="color:var(--accent);cursor:pointer;" onclick="openRetainerViewAll()">View all</span></div>`;}
   const done=periodMs.filter(m=>m.status==="done"||m.approvalStatus==="approved").length;
-  const numEl=document.getElementById("detail-progress-num"); if(numEl) numEl.textContent=periodMs.length>0?Math.round((done/periodMs.length)*100)+"%":"—%";
-  const fillEl=document.getElementById("detail-progress-fill"); if(fillEl) fillEl.style.width=periodMs.length>0?Math.round((done/periodMs.length)*100)+"%":"0%";
+  const num=document.getElementById("detail-progress-num");if(num)num.textContent=periodMs.length>0?Math.round((done/periodMs.length)*100)+"%":"—%";
+  const fill=document.getElementById("detail-progress-fill");if(fill)fill.style.width=periodMs.length>0?Math.round((done/periodMs.length)*100)+"%":"0%";
 }
-function changeRetainerPeriod(dir) {
+function changeRetainerPeriod(dir){
   retainerPeriodOffset+=dir;
-  if (selectedProject) renderRetainerSection(selectedProject);
+  if(selectedProject)renderRetainerSection(selectedProject);
 }
-function addDeliverable() {
-  if (!selectedProject) return;
+function addDeliverable(){
+  if(!selectedProject)return;
   const base=new Date();
-  const d=new Date(base.getFullYear(),base.getMonth()+retainerPeriodOffset,15); // mid-month to avoid timezone issues
-  const year=d.getFullYear(), mon=String(d.getMonth()+1).padStart(2,"0");
+  const d=new Date(base.getFullYear(),base.getMonth()+retainerPeriodOffset,15);
+  const year=d.getFullYear(),mon=String(d.getMonth()+1).padStart(2,"0");
   const dueDate=`${year}-${mon}-15`;
   const newDel={id:"tmp-"+Date.now(),title:"New deliverable",status:"pending",subtasks:[],dueDate,completedAt:"",order:selectedProject.milestones.length,amount:0,approvalStatus:"pending",revisionNotes:{}};
   selectedProject.milestones.push(newDel);
   milestonesDirty=true;
-  // Make sure retainer section is visible
-  document.getElementById("detail-retainer-section").style.display="";
   renderRetainerSection(selectedProject);
-  // Focus the newly added input
   setTimeout(()=>{
     const list=document.getElementById("deliverable-list");
-    const inputs=list?.querySelectorAll("input[type=text],input:not([type])");
-    if(inputs?.length) { const last=inputs[inputs.length-1]; last.focus(); last.select(); }
+    const inputs=list?.querySelectorAll("input");
+    if(inputs?.length){const last=inputs[inputs.length-1];last.focus();last.select();}
   },50);
-  scheduleSave();
+  // Save immediately so deliverables persist
+  saveNow();
+}
+
+// Retainer View All Modal
+function openRetainerViewAll(){
+  if(!selectedProject)return;
+  const milestones=selectedProject.milestones||[];
+  const done=milestones.filter(m=>m.status==="done"||m.approvalStatus==="approved").length;
+  document.getElementById("ra-total").textContent=milestones.length;
+  document.getElementById("ra-done").textContent=done;
+  document.getElementById("ra-pending").textContent=milestones.length-done;
+  retainerAllView="month";
+  document.querySelectorAll(".rv-tab").forEach(t=>t.classList.remove("active"));
+  document.querySelector('.rv-tab[data-rv="month"]')?.classList.add("active");
+  renderRetainerAll("month");
+  ARK.openModal("modal-retainer-all");
+}
+function switchRetainerView(view,el){
+  retainerAllView=view;
+  document.querySelectorAll(".rv-tab").forEach(t=>t.classList.remove("active"));
+  if(el)el.classList.add("active");
+  renderRetainerAll(view);
+}
+function renderRetainerAll(view){
+  const body=document.getElementById("ra-body");
+  if(!selectedProject){body.innerHTML="";return;}
+  const milestones=selectedProject.milestones||[];
+  if(!milestones.length){body.innerHTML=`<div style="text-align:center;padding:32px;color:var(--ink4);font-size:.8rem;">No deliverables yet.</div>`;return;}
+  if(view==="month"){
+    // Group by month
+    const byMonth={};
+    milestones.forEach((m,mi)=>{
+      const key=m.dueDate?m.dueDate.slice(0,7):"no-date";
+      const label=m.dueDate?new Date(m.dueDate).toLocaleDateString(undefined,{month:"long",year:"numeric"}):"No date";
+      if(!byMonth[key])byMonth[key]={label,items:[]};
+      byMonth[key].items.push({m,mi});
+    });
+    body.innerHTML=Object.entries(byMonth).sort(([a],[b])=>b.localeCompare(a)).map(([key,g])=>{
+      const done=g.items.filter(({m})=>m.status==="done"||m.approvalStatus==="approved").length;
+      return`<div class="rv-month-header"><span class="rv-month-name">${g.label}</span><span class="rv-month-count">${done}/${g.items.length} done</span></div>
+      ${g.items.map(({m,mi})=>renderRaItem(m,mi)).join("")}`;
+    }).join("");
+  }else if(view==="week"){
+    // Group by ISO week
+    const byWeek={};
+    milestones.forEach((m,mi)=>{
+      if(!m.dueDate){const key="no-date";if(!byWeek[key])byWeek[key]={label:"No date",items:[]};byWeek[key].items.push({m,mi});return;}
+      const d=new Date(m.dueDate);
+      const mon=new Date(d);mon.setDate(d.getDate()-((d.getDay()+6)%7));
+      const key=mon.toISOString().slice(0,10);
+      const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+      const label="Week of "+mon.toLocaleDateString(undefined,{month:"short",day:"numeric"})+" – "+sun.toLocaleDateString(undefined,{month:"short",day:"numeric"});
+      if(!byWeek[key])byWeek[key]={label,items:[]};
+      byWeek[key].items.push({m,mi});
+    });
+    body.innerHTML=Object.entries(byWeek).sort(([a],[b])=>b.localeCompare(a)).map(([key,g])=>`
+      <div class="rv-week-header">${g.label} · ${g.items.length} item${g.items.length!==1?"s":""}</div>
+      ${g.items.map(({m,mi})=>renderRaItem(m,mi)).join("")}`).join("");
+  }else{
+    // Day
+    const byDay={};
+    milestones.forEach((m,mi)=>{
+      const key=m.dueDate||"no-date";
+      const label=m.dueDate?new Date(m.dueDate).toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric",year:"numeric"}):"No date";
+      if(!byDay[key])byDay[key]={label,items:[]};
+      byDay[key].items.push({m,mi});
+    });
+    body.innerHTML=Object.entries(byDay).sort(([a],[b])=>b.localeCompare(a)).map(([key,g])=>`
+      <div class="rv-day-group">${g.label}</div>
+      ${g.items.map(({m,mi})=>renderRaItem(m,mi)).join("")}`).join("");
+  }
+}
+function renderRaItem(m,mi){
+  const isDone=m.status==="done"||m.approvalStatus==="approved";
+  const date=m.dueDate?new Date(m.dueDate).toLocaleDateString(undefined,{month:"short",day:"numeric"}):"—";
+  return`<div class="retainer-deliverable-item">
+    <div class="rd-check ${isDone?"done":""}"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <span class="rd-title ${isDone?"done":""}" id="ra-title-${mi}">${ARK.escHtml(m.title)}</span>
+    <span class="rd-date">${date}</span>
+    ${m.approvalStatus==="approved"?`<span style="background:#dcfce7;color:#166534;font-size:.6rem;padding:2px 6px;border-radius:999px;font-weight:700;">✓</span>`:""}
+    <button class="rd-edit-btn" onclick="openRaEdit(${mi})" title="Edit">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    </button>
+  </div>
+  <div id="ra-edit-${mi}" style="display:none;padding:8px 16px;background:var(--accent-bg);border-bottom:1px solid var(--accent-ln);gap:8px;align-items:center;flex-wrap:wrap;">
+    <input id="ra-t-${mi}" type="text" value="${ARK.escHtml(m.title)}" style="flex:1;min-width:120px;height:30px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 8px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'">
+    <input id="ra-d-${mi}" type="date" value="${m.dueDate||""}" style="width:130px;height:30px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 8px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;">
+    <button onclick="saveRaEdit(${mi})" style="height:30px;padding:0 12px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save</button>
+    <button onclick="closeRaEdit(${mi})" style="height:30px;padding:0 10px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button>
+  </div>`;
+}
+function openRaEdit(mi){
+  document.querySelectorAll("[id^='ra-edit-']").forEach(el=>el.style.display="none");
+  const el=document.getElementById("ra-edit-"+mi);
+  if(el){el.style.display="flex";}
+}
+function closeRaEdit(mi){const el=document.getElementById("ra-edit-"+mi);if(el)el.style.display="none";}
+async function saveRaEdit(mi){
+  const title=document.getElementById("ra-t-"+mi)?.value.trim()||"";
+  const dueDate=document.getElementById("ra-d-"+mi)?.value||"";
+  if(!title)return;
+  if(!selectedProject)return;
+  selectedProject.milestones[mi].title=title;
+  selectedProject.milestones[mi].dueDate=dueDate;
+  milestonesDirty=true;
+  closeRaEdit(mi);
+  renderRetainerAll(retainerAllView);
+  renderRetainerSection(selectedProject);
+  await saveNow();
+  ARK.showToast("Deliverable updated","success");
+}
+
+// ═══════════════════════════════════════════════════════════
+// ACTIVITY / HISTORY
+// ═══════════════════════════════════════════════════════════
+async function loadActivity(projectId){
+  if(activityCache[projectId]){renderActivityFeed(activityCache[projectId]);return;}
+  document.getElementById("activity-loading").style.display="flex";
+  document.getElementById("activity-feed").style.display="none";
+  document.getElementById("activity-empty").style.display="none";
+  try{
+    const res=await ARK.api({action:"get_project_activity",token:ARK.getToken(),projectId});
+    if(res.success){
+      activityCache[projectId]=res.entries||[];
+      renderActivityFeed(activityCache[projectId]);
+      document.getElementById("activity-badge").textContent=res.entries?.length||0;
+    }else{
+      document.getElementById("activity-loading").style.display="none";
+      document.getElementById("activity-empty").style.display="";
+    }
+  }catch(e){
+    document.getElementById("activity-loading").style.display="none";
+    document.getElementById("activity-empty").style.display="";
+  }
+}
+
+function renderActivityFeed(entries){
+  document.getElementById("activity-loading").style.display="none";
+  const feed=document.getElementById("activity-feed");
+  if(!entries||!entries.length){
+    feed.style.display="none";
+    document.getElementById("activity-empty").style.display="";
+    return;
+  }
+  feed.style.display="";
+  feed.innerHTML=entries.map((e,i)=>{
+    const isClient=e.actor==="client";
+    const isSystem=e.actor==="system";
+    const dotCls=isClient?"client":isSystem?"system":"freelancer";
+    const tagCls=isClient?"client":"freelancer";
+    const tagLabel=isClient?"Client":"You";
+    const icon=getActivityIcon(e.action);
+    return`<div class="activity-item" style="animation-delay:${i*0.04}s">
+      <div class="activity-dot-wrap">
+        <div class="activity-dot ${dotCls}">${icon}</div>
+        ${i<entries.length-1?'<div class="activity-line"></div>':""}
+      </div>
+      <div class="activity-content">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+          <span class="activity-who">${ARK.escHtml(e.actorName||tagLabel)}</span>
+          <span class="activity-tag ${tagCls}">${tagLabel}</span>
+        </div>
+        <div class="activity-desc">${ARK.escHtml(formatActivityDesc(e))}</div>
+        <div class="activity-time">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ${formatActivityTime(e.timestamp)}
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function getActivityIcon(action){
+  const icons={
+    create_project:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+    update_project:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+    save_milestones:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>`,
+    approve_milestone:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+    request_revision:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>`,
+    upload_file:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`,
+    delete_project:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>`,
+    client_review:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+  };
+  return icons[action]||`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+}
+
+function formatActivityDesc(e){
+  const changes=typeof e.changes==="string"?JSON.parse(e.changes||"{}"):e.changes||{};
+  switch(e.action){
+    case"create_project":return"Created this project";
+    case"update_project":
+      if(changes.status)return`Changed status to "${changes.status}"`;
+      if(changes.title)return`Updated project title to "${changes.title}"`;
+      if(changes.budgetAmount!==undefined)return`Updated budget to $${changes.budgetAmount}`;
+      if(changes.dueDate)return`Set due date to ${ARK.fmtDate(changes.dueDate)}`;
+      return"Updated project details";
+    case"save_milestones":return`Saved ${changes.count||"?"} milestone${changes.count!==1?"s":""}`;
+    case"approve_milestone":return"Approved a milestone";
+    case"request_revision":return"Requested a revision on a milestone"+(changes.notes?`: "${changes.notes}"`:"");
+    case"upload_file":return`Uploaded file: ${changes.fileName||"file"}`;
+    case"delete_project":return"Deleted this project";
+    case"client_review":return`Left a ${changes.rating}★ review`+(changes.review?`: "${changes.review}"`:"");
+    case"clear_revision":return"Marked revision as done";
+    case"log_time":return`Logged ${changes.hours||"?"}h`;
+    default:return e.action.replace(/_/g," ");
+  }
+}
+
+function formatActivityTime(ts){
+  if(!ts)return"—";
+  const d=new Date(ts);
+  const date=d.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});
+  const time=d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
+  return`${date} at ${time}`;
 }
 
 // ═══════════════════════════════════════════════════════════
 // PROJECT FILES
 // ═══════════════════════════════════════════════════════════
-function renderProjectFiles() {
-  const list=document.getElementById("proj-attach-list"), empty=document.getElementById("proj-attach-empty");
-  if (!projectAttachments.length) { list.innerHTML=""; empty.style.display=""; return; }
+function renderProjectFiles(){
+  const list=document.getElementById("proj-attach-list"),empty=document.getElementById("proj-attach-empty");
+  if(!projectAttachments.length){list.innerHTML="";empty.style.display="";return;}
   empty.style.display="none";
   list.innerHTML=projectAttachments.map((a,i)=>`<div class="proj-attach-row">
     <span class="proj-attach-icon">${getFileIcon(a.type)}</span>
@@ -1394,108 +2051,106 @@ function renderProjectFiles() {
     <button onclick="removeProjectFile(${i})" style="width:22px;height:22px;border-radius:5px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink4);transition:all .12s;flex-shrink:0;" onmouseover="this.style.background='var(--bg3)';this.style.color='var(--red)'" onmouseout="this.style.background='none';this.style.color='var(--ink4)'"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   </div>`).join("");
 }
-function toggleProjLinkInput() {
+function toggleProjLinkInput(){
   const wrap=document.getElementById("proj-link-input-wrap");
-  const isV=wrap.style.display==="flex"; wrap.style.display=isV?"none":"flex"; wrap.style.flexDirection="column";
-  if (!isV) setTimeout(()=>document.getElementById("proj-link-url")?.focus(),50);
+  const isV=wrap.style.display==="flex";wrap.style.display=isV?"none":"flex";wrap.style.flexDirection="column";
+  if(!isV)setTimeout(()=>document.getElementById("proj-link-url")?.focus(),50);
 }
-async function saveProjectLink() {
-  const url=document.getElementById("proj-link-url")?.value.trim(), label=document.getElementById("proj-link-label")?.value.trim();
-  if (!url) return; try{new URL(url);}catch(e){ARK.showToast("Invalid URL","warn");return;}
+async function saveProjectLink(){
+  const url=document.getElementById("proj-link-url")?.value.trim(),label=document.getElementById("proj-link-label")?.value.trim();
+  if(!url)return;try{new URL(url);}catch(e){ARK.showToast("Invalid URL","warn");return;}
   projectAttachments.push({type:"link",name:label||url,url,uploadedAt:new Date().toISOString()});
-  renderProjectFiles(); toggleProjLinkInput();
-  document.getElementById("proj-link-url").value=""; document.getElementById("proj-link-label").value="";
-  await saveProjectAttachments(); ARK.showToast("Link saved!","success");
+  renderProjectFiles();toggleProjLinkInput();
+  document.getElementById("proj-link-url").value="";document.getElementById("proj-link-label").value="";
+  await saveProjectAttachments();ARK.showToast("Link saved!","success");
 }
-async function removeProjectFile(i) {
-  projectAttachments.splice(i,1); renderProjectFiles(); await saveProjectAttachments();
+async function removeProjectFile(i){
+  projectAttachments.splice(i,1);renderProjectFiles();await saveProjectAttachments();
 }
-async function saveProjectAttachments() {
-  if (!selectedProject) return;
-  try { await ARK.api({action:"save_project_attachments",token:ARK.getToken(),projectId:selectedProject.id,attachments:projectAttachments}); } catch(e) {}
+async function saveProjectAttachments(){
+  if(!selectedProject)return;
+  try{await ARK.api({action:"save_project_attachments",token:ARK.getToken(),projectId:selectedProject.id,attachments:projectAttachments});}catch(e){}
 }
-function triggerProjectUpload() {
-  const input=document.createElement("input"); input.type="file";
+function triggerProjectUpload(){
+  const input=document.createElement("input");input.type="file";
   input.accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.webp,.zip,.mp4,.mov,.fig,.sketch";
-  input.onchange=e=>handleProjectFile(e.target.files[0]); input.click();
+  input.onchange=e=>handleProjectFile(e.target.files[0]);input.click();
 }
-async function handleProjectFile(file) {
-  if (!file||!selectedProject) return;
-  const user=ARK.getUser(), fname=user?(user.firstName+" "+user.lastName):"Freelancer", cname=selectedProject.clientName||"Client";
-  try {
+async function handleProjectFile(file){
+  if(!file||!selectedProject)return;
+  const user=ARK.getUser(),fname=user?(user.firstName+" "+user.lastName):"Freelancer",cname=selectedProject.clientName||"Client";
+  try{
     const base64=await fileToBase64(file);
     const res=await ARK.api({action:"upload_to_drive",token:ARK.getToken(),fileName:`${fname} - ${cname} - ${file.name}`,mimeType:file.type||"application/octet-stream",base64Data:base64,folderId:DRIVE_FOLDER_ID,projectId:selectedProject.id});
-    if (res.success) { projectAttachments.push({type:file.type,name:file.name,url:res.viewUrl,uploadedAt:new Date().toISOString()}); renderProjectFiles(); await saveProjectAttachments(); ARK.showToast("File uploaded!","success"); }
+    if(res.success){projectAttachments.push({type:file.type,name:file.name,url:res.viewUrl,uploadedAt:new Date().toISOString()});renderProjectFiles();await saveProjectAttachments();ARK.showToast("File uploaded!","success");}
     else ARK.showToast(res.error||"Upload failed","error");
-  } catch(e) { ARK.showToast("Upload error","error"); }
+  }catch(e){ARK.showToast("Upload error","error");}
 }
 
-// ═══════════════════════════════════════════════════════════
-// MILESTONE ATTACHMENTS (existing functions unchanged)
-// ═══════════════════════════════════════════════════════════
-function toggleLinkInput(mi) { const wrap=document.getElementById("link-input-"+mi); if(!wrap)return; const isV=wrap.style.display==="flex"; document.getElementById("note-input-"+mi).style.display="none"; wrap.style.display=isV?"none":"flex"; wrap.style.flexDirection="column"; if(!isV)setTimeout(()=>document.getElementById("link-url-"+mi)?.focus(),50); }
-function toggleNoteInput(mi) { const wrap=document.getElementById("note-input-"+mi); if(!wrap)return; const isV=wrap.style.display==="flex"; document.getElementById("link-input-"+mi).style.display="none"; wrap.style.display=isV?"none":"flex"; wrap.style.flexDirection="column"; if(!isV)setTimeout(()=>document.getElementById("note-text-"+mi)?.focus(),50); }
-function saveMilestoneLink(mi) {
-  if (!selectedProject) return;
-  const url=document.getElementById("link-url-"+mi)?.value.trim(), label=document.getElementById("link-label-"+mi)?.value.trim();
-  if (!url){ARK.showToast("Please enter a URL","warn");return;} try{new URL(url);}catch(e){ARK.showToast("Invalid URL","warn");return;}
-  const m=selectedProject.milestones[mi]; if(!m.attachments)m.attachments=[];
+// Milestone attachments
+function toggleLinkInput(mi){const wrap=document.getElementById("link-input-"+mi);if(!wrap)return;const isV=wrap.style.display==="flex";document.getElementById("note-input-"+mi).style.display="none";wrap.style.display=isV?"none":"flex";wrap.style.flexDirection="column";if(!isV)setTimeout(()=>document.getElementById("link-url-"+mi)?.focus(),50);}
+function toggleNoteInput(mi){const wrap=document.getElementById("note-input-"+mi);if(!wrap)return;const isV=wrap.style.display==="flex";document.getElementById("link-input-"+mi).style.display="none";wrap.style.display=isV?"none":"flex";wrap.style.flexDirection="column";if(!isV)setTimeout(()=>document.getElementById("note-text-"+mi)?.focus(),50);}
+function saveMilestoneLink(mi){
+  if(!selectedProject)return;
+  const url=document.getElementById("link-url-"+mi)?.value.trim(),label=document.getElementById("link-label-"+mi)?.value.trim();
+  if(!url){ARK.showToast("Please enter a URL","warn");return;}try{new URL(url);}catch(e){ARK.showToast("Invalid URL","warn");return;}
+  const m=selectedProject.milestones[mi];if(!m.attachments)m.attachments=[];
   m.attachments.push({name:label||url,url,type:"link",uploadedAt:new Date().toISOString()});
-  milestonesDirty=true; renderMilestones(selectedProject.milestones); scheduleSave(); ARK.showToast("Link saved!","success");
+  milestonesDirty=true;renderMilestones(selectedProject.milestones);scheduleSave();ARK.showToast("Link saved!","success");
 }
-function saveMilestoneNote(mi) {
-  if (!selectedProject) return;
+function saveMilestoneNote(mi){
+  if(!selectedProject)return;
   const content=document.getElementById("note-text-"+mi)?.value.trim();
-  if (!content){ARK.showToast("Please write something first","warn");return;}
-  const m=selectedProject.milestones[mi]; if(!m.attachments)m.attachments=[];
+  if(!content){ARK.showToast("Please write something first","warn");return;}
+  const m=selectedProject.milestones[mi];if(!m.attachments)m.attachments=[];
   m.attachments.push({type:"note",name:"Note",content,url:"",uploadedAt:new Date().toISOString()});
-  milestonesDirty=true; renderMilestones(selectedProject.milestones); scheduleSave(); ARK.showToast("Note saved!","success");
+  milestonesDirty=true;renderMilestones(selectedProject.milestones);scheduleSave();ARK.showToast("Note saved!","success");
 }
-function triggerMilestoneUpload(mi) {
-  const input=document.createElement("input"); input.type="file";
+function triggerMilestoneUpload(mi){
+  const input=document.createElement("input");input.type="file";
   input.accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.webp,.zip,.mp4,.mov,.fig,.sketch";
-  input.onchange=e=>handleMilestoneFile(mi,e.target.files[0]); input.click();
+  input.onchange=e=>handleMilestoneFile(mi,e.target.files[0]);input.click();
 }
-async function handleMilestoneFile(mi, file) {
-  if (!file||!selectedProject) return;
-  const btn=document.querySelector(`[data-attach-mi="${mi}"]`); if(btn){btn.textContent="Uploading…";btn.disabled=true;}
-  try {
-    const base64=await fileToBase64(file), user=ARK.getUser(), fname=user?(user.firstName+" "+user.lastName):"Freelancer", cname=selectedProject.clientName||"Client";
+async function handleMilestoneFile(mi,file){
+  if(!file||!selectedProject)return;
+  const btn=document.querySelector(`[data-attach-mi="${mi}"]`);if(btn){btn.textContent="Uploading…";btn.disabled=true;}
+  try{
+    const base64=await fileToBase64(file),user=ARK.getUser(),fname=user?(user.firstName+" "+user.lastName):"Freelancer",cname=selectedProject.clientName||"Client";
     const res=await ARK.api({action:"upload_to_drive",token:ARK.getToken(),fileName:`${fname} - ${cname} - ${file.name}`,mimeType:file.type||"application/octet-stream",base64Data:base64,folderId:DRIVE_FOLDER_ID,projectId:selectedProject.id,milestoneId:selectedProject.milestones[mi]?.id||"ms-"+mi});
-    if (res.success) { if(!selectedProject.milestones[mi].attachments)selectedProject.milestones[mi].attachments=[]; selectedProject.milestones[mi].attachments.push({name:file.name,url:res.viewUrl,fileId:res.fileId,type:file.type,uploadedAt:new Date().toISOString()}); milestonesDirty=true; renderMilestones(selectedProject.milestones); scheduleSave(); ARK.showToast("File uploaded!","success"); }
+    if(res.success){if(!selectedProject.milestones[mi].attachments)selectedProject.milestones[mi].attachments=[];selectedProject.milestones[mi].attachments.push({name:file.name,url:res.viewUrl,fileId:res.fileId,type:file.type,uploadedAt:new Date().toISOString()});milestonesDirty=true;renderMilestones(selectedProject.milestones);scheduleSave();ARK.showToast("File uploaded!","success");}
     else ARK.showToast(res.error||"Upload failed","error");
-  } catch(e) { ARK.showToast("Upload error: "+e.message,"error"); }
-  finally { if(btn){btn.textContent="+ Attach";btn.disabled=false;} }
+  }catch(e){ARK.showToast("Upload error: "+e.message,"error");}
+  finally{if(btn){btn.textContent="+ Attach";btn.disabled=false;}}
 }
 
 // ═══════════════════════════════════════════════════════════
 // DELETE PROJECT
 // ═══════════════════════════════════════════════════════════
-function confirmDeleteProject() {
-  if (!selectedProject) return;
-  if (selectedProject.status==="active"||selectedProject.status==="completed") { ARK.showToast("Cannot delete active or completed projects. Change status first.","warn"); return; }
+function confirmDeleteProject(){
+  if(!selectedProject)return;
+  if(selectedProject.status==="active"||selectedProject.status==="completed"){ARK.showToast("Cannot delete active or completed projects. Change status first.","warn");return;}
   ARK.openModal("modal-delete");
 }
-async function executeDeleteProject() {
-  if (!selectedProject) return;
-  const btn=document.getElementById("delete-confirm-btn"), lbl=document.getElementById("delete-confirm-label"), spin=document.getElementById("delete-confirm-spin");
-  btn.disabled=true; lbl.style.display="none"; spin.style.display="block";
-  try {
+async function executeDeleteProject(){
+  if(!selectedProject)return;
+  const btn=document.getElementById("delete-confirm-btn");
+  setBtnLoading(btn,true);
+  try{
     const res=await ARK.api({action:"delete_project",token:ARK.getToken(),projectId:selectedProject.id});
-    if (res.success) {
+    if(res.success){
       allProjects=allProjects.filter(p=>p.id!==selectedProject.id);
-      ARK.closeModal("modal-delete"); closeDetail(); renderProjects(); updateStats();
+      ARK.closeModal("modal-delete");closeDetail();renderProjects();updateStats();
       ARK.showToast("Project deleted","success");
-    } else ARK.showToast(res.error||"Cannot delete","error");
-  } catch(e) { ARK.showToast("Connection error.","error"); }
-  finally { btn.disabled=false; lbl.style.display=""; spin.style.display="none"; }
+    }else ARK.showToast(res.error||"Cannot delete","error");
+  }catch(e){ARK.showToast("Connection error.","error");}
+  finally{setBtnLoading(btn,false);}
 }
 
 // ═══════════════════════════════════════════════════════════
 // EDIT PROJECT
 // ═══════════════════════════════════════════════════════════
-function editProject() {
-  if (!selectedProject) return;
+function editProject(){
+  if(!selectedProject)return;
   const p=selectedProject;
   document.getElementById("edit-project-id").value=p.id;
   document.getElementById("ep-title").value=p.title;
@@ -1503,47 +2158,43 @@ function editProject() {
   document.getElementById("ep-due").value=p.dueDate?p.dueDate.slice(0,10):"";
   document.getElementById("ep-budget").value=p.budgetAmount||"";
   document.getElementById("ep-hours-field").style.display=p.type==="hourly"?"":"none";
-  document.getElementById("ep-rate-field").style.display=p.type==="hourly"?"":"none";
   document.getElementById("ep-hours").value=p.estimatedHours||"";
-  document.getElementById("ep-rate").value=p.type==="hourly"?(p.budgetAmount||""):"";
   ARK.openModal("modal-edit-project");
 }
-async function saveEditProject() {
-  const id=document.getElementById("edit-project-id").value, title=document.getElementById("ep-title").value.trim();
-  if (!title) { document.getElementById("err-ep-title").style.display="block"; return; }
+async function saveEditProject(){
+  const id=document.getElementById("edit-project-id").value,title=document.getElementById("ep-title").value.trim();
+  if(!title){document.getElementById("err-ep-title").style.display="block";return;}
   document.getElementById("err-ep-title").style.display="none";
-  const btn=document.getElementById("ep-save-label"), spin=document.getElementById("ep-save-spin");
-  btn.style.display="none"; spin.style.display="block";
+  const btn=document.getElementById("ep-save-btn");
+  setBtnLoading(btn,true);
   const payload={token:ARK.getToken(),projectId:id,title,description:document.getElementById("ep-desc").value.trim(),dueDate:document.getElementById("ep-due").value,budgetAmount:parseFloat(document.getElementById("ep-budget").value)||0};
-  if (selectedProject?.type==="hourly") { payload.estimatedHours=parseFloat(document.getElementById("ep-hours").value)||40; }
-  try {
+  if(selectedProject?.type==="hourly"){payload.estimatedHours=parseFloat(document.getElementById("ep-hours").value)||40;}
+  try{
     const res=await ARK.api({action:"update_project",...payload});
-    if (res.success) {
+    if(res.success){
       const idx=allProjects.findIndex(p=>p.id===id);
-      if (idx>-1) Object.assign(allProjects[idx],{title,description:payload.description,dueDate:payload.dueDate,budgetAmount:payload.budgetAmount});
-      if (selectedProject?.id===id) Object.assign(selectedProject,{title,description:payload.description,dueDate:payload.dueDate,budgetAmount:payload.budgetAmount});
+      if(idx>-1)Object.assign(allProjects[idx],{title,description:payload.description,dueDate:payload.dueDate,budgetAmount:payload.budgetAmount});
+      if(selectedProject?.id===id)Object.assign(selectedProject,{title,description:payload.description,dueDate:payload.dueDate,budgetAmount:payload.budgetAmount});
       document.getElementById("detail-title").textContent=title;
       document.getElementById("detail-budget").textContent=payload.budgetAmount>0?ARK.fmtCurrency(payload.budgetAmount,"USD")+(selectedProject?.type==="hourly"?"/hr":""):"—";
       document.getElementById("detail-due").textContent=payload.dueDate?ARK.fmtDate(payload.dueDate):"—";
-      ARK.closeModal("modal-edit-project"); renderProjects(); ARK.showToast("Project updated","success");
-      if(res.updatedAt) syncSeenAfterSave(id,res.updatedAt); else syncSeenAfterSave(id,new Date().toISOString());
-    } else ARK.showToast(res.error||"Failed","error");
-  } catch(e) { ARK.showToast("Connection error.","error"); }
-  finally { btn.style.display=""; spin.style.display="none"; }
+      ARK.closeModal("modal-edit-project");renderProjects();ARK.showToast("Project updated","success");
+      if(res.updatedAt)syncSeenAfterSave(id,res.updatedAt);else syncSeenAfterSave(id,new Date().toISOString());
+    }else ARK.showToast(res.error||"Failed","error");
+  }catch(e){ARK.showToast("Connection error.","error");}
+  finally{setBtnLoading(btn,false);}
 }
 
 // ═══════════════════════════════════════════════════════════
 // NEW PROJECT WIZARD
 // ═══════════════════════════════════════════════════════════
-function openWizard() {
-  wizard={ step:1, totalSteps:3, type:"one-off", data:{} };
+function openWizard(){
+  wizard={step:1,totalSteps:3,type:"one-off",data:{}};
   renderWizardStep();
   document.getElementById("wizard-overlay").classList.add("open");
 }
-function closeWizard() {
-  document.getElementById("wizard-overlay").classList.remove("open");
-}
-function renderWizardStep() {
+function closeWizard(){document.getElementById("wizard-overlay").classList.remove("open");}
+function renderWizardStep(){
   const labels=["What type of project?","Project details","Client & terms"];
   const subtitles=["Choose how this project will be structured and billed.","Add the key project information.","Assign a client and set the financial terms."];
   document.getElementById("wizard-step-label").textContent=`Step ${wizard.step} of ${wizard.totalSteps}`;
@@ -1551,13 +2202,9 @@ function renderWizardStep() {
   document.getElementById("wizard-subtitle").textContent=subtitles[wizard.step-1];
   document.getElementById("wizard-back-btn").style.display=wizard.step>1?"":"none";
   document.getElementById("wizard-next-label").textContent=wizard.step===wizard.totalSteps?"Create project":"Continue";
-  for (let i=1;i<=3;i++) {
-    const dot=document.getElementById("wdot-"+i);
-    dot.classList.toggle("active",i===wizard.step);
-    dot.classList.toggle("done",i<wizard.step);
-  }
+  for(let i=1;i<=3;i++){const dot=document.getElementById("wdot-"+i);dot.classList.toggle("active",i===wizard.step);dot.classList.toggle("done",i<wizard.step);}
   const body=document.getElementById("wizard-body");
-  if (wizard.step===1) {
+  if(wizard.step===1){
     body.innerHTML=`<div class="type-grid">
       <div class="type-card ${wizard.type==="one-off"?"selected":""}" onclick="selectType('one-off',this)">
         <span class="type-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
@@ -1575,96 +2222,73 @@ function renderWizardStep() {
         <div class="type-card-desc">Recurring monthly deliverables. Consistent income with defined monthly scope.</div>
       </div>
     </div>`;
-  } else if (wizard.step===2) {
-    const isHourly=wizard.type==="hourly", isRetainer=wizard.type==="retainer";
+  }else if(wizard.step===2){
+    const isHourly=wizard.type==="hourly",isRetainer=wizard.type==="retainer";
     body.innerHTML=`
       <div class="field"><label class="field-label">Project title *</label><input class="field-input" type="text" id="w-title" value="${ARK.escHtml(wizard.data.title||"")}" placeholder="e.g. ${isHourly?"Website development":"Airbnb Automation"}" autocomplete="off"><span id="err-w-title" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
       <div class="field"><label class="field-label">Description <span style="font-weight:400;color:var(--ink4);">(max 70 words)</span></label><textarea class="field-input field-textarea" id="w-desc" rows="2" style="height:auto;padding:10px 12px;resize:vertical;" placeholder="Brief overview of the project scope…" oninput="updateWordCount('w-desc','w-desc-count')">${ARK.escHtml(wizard.data.desc||"")}</textarea><div class="word-counter" id="w-desc-count">0 / 70</div></div>
       ${!isRetainer?`<div class="field"><label class="field-label">Due date</label><input class="field-input" type="date" id="w-due" value="${wizard.data.due||""}"></div>`:`<div class="field"><label class="field-label">Contract start date</label><input class="field-input" type="date" id="w-due" value="${wizard.data.due||""}"></div>`}
-      ${isHourly?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div class="field"><label class="field-label">Estimated hours</label><input class="field-input" type="number" id="w-hours" value="${wizard.data.hours||""}" placeholder="e.g. 40"></div></div>`:""}`;
-  } else if (wizard.step===3) {
-    const isHourly=wizard.type==="hourly", isRetainer=wizard.type==="retainer";
+      ${isHourly?`<div class="field"><label class="field-label">Estimated hours</label><input class="field-input" type="number" id="w-hours" value="${wizard.data.hours||""}" placeholder="e.g. 40"></div>`:""}`;
+  }else if(wizard.step===3){
+    const isHourly=wizard.type==="hourly",isRetainer=wizard.type==="retainer";
     const clientOpts=allClients.filter(c=>c.status==="active").map(c=>`<option value="${c.id}" ${wizard.data.clientId===c.id?"selected":""}>${ARK.escHtml(c.name)}${c.company?" · "+ARK.escHtml(c.company):""}</option>`).join("");
     body.innerHTML=`
       <div class="field"><label class="field-label">Client *</label><select class="field-input field-select" id="w-client"><option value="">Select client…</option>${clientOpts}</select><span id="err-w-client" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
-      ${isHourly?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div class="field"><label class="field-label">Hourly rate ($)</label><input class="field-input" type="number" id="w-rate" value="${wizard.data.rate||""}" placeholder="e.g. 75"></div>
-        <div class="field"><label class="field-label">Currency</label><select class="field-input field-select" id="w-currency"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div>
-      </div>`:isRetainer?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div class="field"><label class="field-label">Monthly retainer ($)</label><input class="field-input" type="number" id="w-budget" value="${wizard.data.budget||""}" placeholder="e.g. 2000"></div>
-        <div class="field"><label class="field-label">Currency</label><select class="field-input field-select" id="w-currency"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div>
-      </div>`:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div class="field"><label class="field-label">Project budget ($)</label><input class="field-input" type="number" id="w-budget" value="${wizard.data.budget||""}" placeholder="e.g. 5000"></div>
-        <div class="field"><label class="field-label">Currency</label><select class="field-input field-select" id="w-currency"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div>
-      </div>`}
-      <div style="margin-top:4px;padding:12px;background:var(--bg2);border-radius:var(--r);border:1px solid var(--line2);">
-        <div style="font-size:.73rem;color:var(--ink4);margin-bottom:4px;">📋 Summary</div>
-        <div style="font-size:.82rem;color:var(--ink2);line-height:1.6;">${wizard.data.title||"Untitled"} · ${wizard.type==="hourly"?"Hourly":wizard.type==="retainer"?"Retainer":"Fixed price"} · ${wizard.data.due?"Due "+ARK.fmtDate(wizard.data.due):"No due date"}</div>
-      </div>`;
+      ${isHourly?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div class="field"><label class="field-label">Hourly rate ($)</label><input class="field-input" type="number" id="w-rate" value="${wizard.data.rate||""}" placeholder="e.g. 75"></div><div class="field"><label class="field-label">Currency</label><select class="field-input field-select" id="w-currency"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div></div>`:isRetainer?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div class="field"><label class="field-label">Monthly retainer ($)</label><input class="field-input" type="number" id="w-budget" value="${wizard.data.budget||""}" placeholder="e.g. 2000"></div><div class="field"><label class="field-label">Currency</label><select class="field-input field-select" id="w-currency"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div></div>`:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div class="field"><label class="field-label">Project budget ($)</label><input class="field-input" type="number" id="w-budget" value="${wizard.data.budget||""}" placeholder="e.g. 5000"></div><div class="field"><label class="field-label">Currency</label><select class="field-input field-select" id="w-currency"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div></div>`}
+      <div style="margin-top:4px;padding:12px;background:var(--bg2);border-radius:var(--r);border:1px solid var(--line2);"><div style="font-size:.73rem;color:var(--ink4);margin-bottom:4px;">📋 Summary</div><div style="font-size:.82rem;color:var(--ink2);line-height:1.6;">${wizard.data.title||"Untitled"} · ${wizard.type==="hourly"?"Hourly":wizard.type==="retainer"?"Retainer":"Fixed price"} · ${wizard.data.due?"Due "+ARK.fmtDate(wizard.data.due):"No due date"}</div></div>`;
   }
 }
-function selectType(type, el) {
-  wizard.type=type;
-  document.querySelectorAll(".type-card").forEach(c=>c.classList.remove("selected"));
-  el.classList.add("selected");
-}
-async function wizardNext() {
-  if (wizard.step===2) {
+function selectType(type,el){wizard.type=type;document.querySelectorAll(".type-card").forEach(c=>c.classList.remove("selected"));el.classList.add("selected");}
+async function wizardNext(){
+  if(wizard.step===2){
     const title=document.getElementById("w-title")?.value.trim();
-    if (!title) { document.getElementById("err-w-title").style.display="block"; return; }
+    if(!title){document.getElementById("err-w-title").style.display="block";return;}
     document.getElementById("err-w-title").style.display="none";
-    wizard.data.title=title;
-    wizard.data.desc=document.getElementById("w-desc")?.value.trim()||"";
-    wizard.data.due=document.getElementById("w-due")?.value||"";
-    wizard.data.hours=document.getElementById("w-hours")?.value||"";
+    wizard.data.title=title;wizard.data.desc=document.getElementById("w-desc")?.value.trim()||"";
+    wizard.data.due=document.getElementById("w-due")?.value||"";wizard.data.hours=document.getElementById("w-hours")?.value||"";
   }
-  if (wizard.step===3) {
+  if(wizard.step===3){
     const clientId=document.getElementById("w-client")?.value;
-    if (!clientId) { document.getElementById("err-w-client").style.display="block"; return; }
+    if(!clientId){document.getElementById("err-w-client").style.display="block";return;}
     document.getElementById("err-w-client").style.display="none";
-    wizard.data.clientId=clientId;
-    wizard.data.budget=document.getElementById("w-budget")?.value||"";
-    wizard.data.rate=document.getElementById("w-rate")?.value||"";
-    wizard.data.currency=document.getElementById("w-currency")?.value||"USD";
-    await createProject(); return;
+    wizard.data.clientId=clientId;wizard.data.budget=document.getElementById("w-budget")?.value||"";
+    wizard.data.rate=document.getElementById("w-rate")?.value||"";wizard.data.currency=document.getElementById("w-currency")?.value||"USD";
+    await createProject();return;
   }
-  wizard.step++; renderWizardStep();
+  wizard.step++;renderWizardStep();
 }
-function wizardBack() { if (wizard.step>1) { wizard.step--; renderWizardStep(); } }
-async function createProject() {
-  const btn=document.getElementById("wizard-next-btn"), lbl=document.getElementById("wizard-next-label"), spin=document.getElementById("wizard-next-spin");
-  btn.disabled=true; lbl.style.display="none"; spin.style.display="block";
+function wizardBack(){if(wizard.step>1){wizard.step--;renderWizardStep();}}
+async function createProject(){
+  const btn=document.getElementById("wizard-next-btn");setBtnLoading(btn,true);
   const isHourly=wizard.type==="hourly";
   const budgetAmount=isHourly?(parseFloat(wizard.data.rate)||0):(parseFloat(wizard.data.budget)||0);
   const payload={token:ARK.getToken(),title:wizard.data.title,clientId:wizard.data.clientId,description:wizard.data.desc,type:wizard.type==="one-off"?"one-off":wizard.type,dueDate:wizard.data.due,budgetType:isHourly?"hourly":"fixed",budgetAmount,currency:wizard.data.currency||"USD",estimatedHours:parseFloat(wizard.data.hours)||40};
-  try {
+  try{
     const res=await ARK.api({action:"create_project",...payload});
-    if (res.success) {
+    if(res.success){
       const client=allClients.find(c=>c.id===wizard.data.clientId);
-      res.project.clientName=client?.name||""; res.project.milestones=[];
-      allProjects.unshift(res.project);
-      closeWizard(); renderProjects(); updateStats();
+      res.project.clientName=client?.name||"";res.project.milestones=[];
+      allProjects.unshift(res.project);closeWizard();renderProjects();updateStats();
       ARK.showToast("Project created! 🎉","success");
-      // Auto open detail
       setTimeout(()=>openDetail(res.project.id),300);
-    } else ARK.showToast(res.error||"Failed to create","error");
-  } catch(e) { ARK.showToast("Connection error.","error"); }
-  finally { btn.disabled=false; lbl.style.display=""; spin.style.display="none"; }
+    }else ARK.showToast(res.error||"Failed to create","error");
+  }catch(e){ARK.showToast("Connection error.","error");}
+  finally{setBtnLoading(btn,false);}
 }
 
 // ═══════════════════════════════════════════════════════════
 // VIEW / FILTER / HELPERS
 // ═══════════════════════════════════════════════════════════
-function setView(v, el) { currentView=v; document.querySelectorAll(".view-btn").forEach(b=>b.classList.remove("active")); el.classList.add("active"); renderProjects(); }
-function setFilter(f, el) { currentFilter=f; document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active")); if(el)el.classList.add("active"); else {const fb=document.getElementById("filter-"+f)||document.getElementById("filter-all");if(fb)fb.classList.add("active");} renderProjects(); }
-function badgeHtml(status) {
+function setView(v,el){currentView=v;document.querySelectorAll(".view-btn").forEach(b=>b.classList.remove("active"));el.classList.add("active");renderProjects();}
+function setFilter(f,el){currentFilter=f;document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));if(el)el.classList.add("active");else{const fb=document.getElementById("filter-"+f)||document.getElementById("filter-all");if(fb)fb.classList.add("active");}renderProjects();}
+function badgeHtml(status){
   const map={active:"badge-active",draft:"badge-draft",paused:"badge-paused",completed:"badge-completed",cancelled:"badge-overdue"};
-  return `<span class="badge ${map[status]||"badge-draft"}"><span class="badge-dot"></span>${status}</span>`;
+  return`<span class="badge ${map[status]||"badge-draft"}"><span class="badge-dot"></span>${status}</span>`;
 }
 function fileToBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(",")[1]);r.onerror=rej;r.readAsDataURL(file);});}
 function getFileIcon(type){if(!type)return"📎";if(type==="link")return"🔗";if(type.includes("pdf"))return"📄";if(type.includes("image"))return"🖼️";if(type.includes("video"))return"🎥";if(type.includes("sheet")||type.includes("excel"))return"📊";if(type.includes("word")||type.includes("document"))return"📝";if(type.includes("presentation")||type.includes("powerpoint"))return"📑";if(type.includes("zip"))return"🗜️";return"📎";}
 function openAttachment(url){window.open(url,"_blank","noopener");}
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeDetail();closeWizard();}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeDetail();closeWizard();ARK.closeModal("modal-delete");ARK.closeModal("modal-log-time");ARK.closeModal("modal-view-logs");ARK.closeModal("modal-retainer-all");ARK.closeModal("modal-edit-project");}});
 </script>
 </body>
 </html>
