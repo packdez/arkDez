@@ -667,7 +667,7 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
 <div class="modal-overlay" id="modal-new-project" onclick="if(event.target===this)closeModal('modal-new-project')">
   <div class="modal">
     <div class="modal-header">
-      <span class="modal-title">New project request</span>
+      <span class="modal-title" id="modal-project-title">New project request</span>
       <button class="modal-close" onclick="closeModal('modal-new-project')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
@@ -677,13 +677,15 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
         <input class="field-input" type="text" id="p-title" placeholder="e.g. Website redesign" autocomplete="off">
         <span id="err-p-title" style="font-size:.71rem;color:var(--red);display:none;margin-top:2px;">Required</span>
       </div>
-      <div class="field">
+      
+      <div class="field" id="freelancer-field">
         <label class="field-label">Assign to freelancer *</label>
         <select class="field-input field-select" id="p-freelancer">
           <option value="">Select freelancer…</option>
         </select>
         <span id="err-p-fl" style="font-size:.71rem;color:var(--red);display:none;margin-top:2px;">Required</span>
       </div>
+      
       <div class="field">
         <label class="field-label">Description</label>
         <textarea class="field-input field-textarea" id="p-desc" placeholder="What does this project involve?"></textarea>
@@ -691,12 +693,17 @@ body{font-family:var(--sans);background:var(--bg2);color:var(--ink);-webkit-font
       <div class="field-row">
         <div class="field">
           <label class="field-label">Type</label>
-          <select class="field-input field-select" id="p-type">
-            <option value="one-off">One-off</option>
+          <select class="field-input field-select" id="p-type" onchange="toggleHourlyField()">
+            <option value="one-off">One-off / Fixed</option>
+            <option value="hourly">Hourly</option>
             <option value="retainer">Retainer</option>
           </select>
         </div>
-        <div class="field">
+        <div class="field" id="p-hours-field" style="display:none;">
+          <label class="field-label">Estimated hours</label>
+          <input class="field-input" type="number" id="p-hours" placeholder="e.g. 40" min="1">
+        </div>
+       <div class="field">
           <label class="field-label">Due date</label>
           <input class="field-input" type="date" id="p-due">
         </div>
@@ -998,6 +1005,7 @@ function renderCards(projects){
       <div class="progress-bar"><div class="progress-fill" style="width:${p.progress||0}%"></div></div>
       <div class="progress-label"><span>${totalM>0?doneM+"/"+totalM+" milestones":"No milestones"}</span><span>${p.progress||0}%</span></div>
       ${p.requestStatus==="pending"?`<div class="card-notice pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Awaiting freelancer acceptance</div>`:""}
+      ${p.requestStatus==="pending_client"?`<div class="card-notice ready"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Freelancer sent this project — review & activate</div>`:""}
       ${awaitApproval?`<div class="card-notice ready"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px;flex-shrink:0;"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Milestone ready for approval</div>`:""}
 
     </div>`;
@@ -1043,7 +1051,7 @@ function openDetail(id){
   markProjectSeen(p.id,p.updatedAt);updateChangeBadges();renderProjects();
   document.getElementById("detail-title").textContent=p.title;
   document.getElementById("detail-fl").textContent=p.freelancerName||"—";
-  document.getElementById("detail-type").textContent=p.type==="one-off"?"One-off":"Retainer";
+  document.getElementById("detail-type").textContent=p.type==="hourly"?"Hourly":p.type==="retainer"?"Retainer":"One-off";
   document.getElementById("detail-budget").textContent=p.budgetAmount>0?fmtCurrency(p.budgetAmount,p.currency)+(p.budgetType==="hourly"?"/hr":""):"—";
   document.getElementById("detail-due").textContent=p.dueDate?fmtDate(p.dueDate):"—";
   const dw=document.getElementById("detail-desc-wrap");
@@ -1052,8 +1060,21 @@ function openDetail(id){
   document.getElementById("detail-progress-fill").style.width=(p.progress||0)+"%";
   renderStatusSelector(p.status);
   const notice=document.getElementById("detail-request-notice");
-  if(p.requestStatus==="pending"){notice.style.display="";notice.textContent="⏳ Awaiting freelancer acceptance. You can still add milestones and files below.";}else notice.style.display="none";
-  
+  if(p.requestStatus==="pending"){
+    notice.style.display="";
+    notice.innerHTML='<strong>⏳ Awaiting freelancer acceptance.</strong> You can still add milestones and files while you wait.';
+  } else if(p.requestStatus==="pending_client"){
+    notice.style.display="";
+    notice.style.background="#eff6ff";notice.style.borderColor="#bfdbfe";notice.style.color="#1d4ed8";
+    notice.innerHTML='<strong>✓ Sent to you by your freelancer.</strong> Review and set the project to Active when ready.';
+  } else if(p.requestStatus==="declined"){
+    notice.style.display="";
+    notice.style.background="#fef2f2";notice.style.borderColor="#fecaca";notice.style.color="#991b1b";
+    notice.innerHTML='<strong>✗ Freelancer declined this project.</strong>';
+  } else {
+    notice.style.display="none";
+    notice.style.background="#fffbeb";notice.style.borderColor="#fde68a";notice.style.color="#92400e";
+  }
   renderMilestones(p.milestones||[]);
   // Show/hide "completing locked" hint in milestone section
   const msHint=document.getElementById("milestone-status-hint");
@@ -1282,7 +1303,7 @@ async function submitRevision(){
   const milestoneId=document.getElementById("revision-milestone-id").value,notes=document.getElementById("revision-notes").value.trim();
   const checklist=Array.from(document.querySelectorAll(".rev-check-item input:checked")).map(i=>i.value);
   if(!checklist.length&&!notes){showToast("Select at least one issue or add a note","warn");return;}
-  const btn=document.getElementById("revision-btn"),lbl=document.getElementById("revision-lbl"),spin=document.getElementById("revision-spin");
+  const btn=document.getElementById("revision-submit-btn"),lbl=document.getElementById("revision-submit-lbl"),spin=document.getElementById("revision-submit-spin");
   btn.disabled=true;lbl.style.display="none";spin.style.display="block";
   if(selectedProject)markClientChange(selectedProject.id);
   try{const res=await api({action:"request_revision",token:getToken(),milestoneId,checklist,notes});
@@ -1335,7 +1356,8 @@ async function saveProject(){
   if(!ok)return;
   const btn=document.getElementById("save-project-btn"),lbl=document.getElementById("save-project-lbl"),spin=document.getElementById("save-project-spin");
   btn.disabled=true;lbl.style.display="none";spin.style.display="block";
-  const payload={token:getToken(),title,description:document.getElementById("p-desc").value.trim(),type:document.getElementById("p-type").value,dueDate:document.getElementById("p-due").value,budgetType:document.getElementById("p-budget-type").value,budgetAmount:parseFloat(document.getElementById("p-budget").value)||0,currency:"USD"};
+  const pType=document.getElementById("p-type").value;
+const payload={token:getToken(),title,description:document.getElementById("p-desc").value.trim(),type:pType,dueDate:document.getElementById("p-due").value,budgetType:pType==="hourly"?"hourly":"fixed",budgetAmount:parseFloat(document.getElementById("p-budget").value)||0,currency:"USD",estimatedHours:parseFloat(document.getElementById("p-hours")?.value)||40};
   try{
     let res;
     if(id){res=await api({action:"update_project",projectId:id,...payload});if(res.success){const idx=allProjects.findIndex(p=>p.id===id);if(idx>-1)Object.assign(allProjects[idx],{title,description:payload.description,type:payload.type,dueDate:payload.dueDate,budgetType:payload.budgetType,budgetAmount:payload.budgetAmount});showToast("Project updated","success");if(selectedProject?.id===id)openDetail(id);}}
@@ -1344,8 +1366,13 @@ async function saveProject(){
   }catch(e){showToast("Connection error.","error");}
   finally{btn.disabled=false;lbl.style.display="";spin.style.display="none";document.getElementById("modal-project-title").textContent="New project request";document.getElementById("save-project-lbl").textContent="Send request";document.getElementById("freelancer-field").style.display="";document.getElementById("edit-project-id").value="";}
 }
-function clearProjectForm(){["p-title","p-desc","p-due","p-budget","edit-project-id"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});document.getElementById("p-freelancer").value="";document.getElementById("p-type").value="one-off";document.getElementById("p-budget-type").value="fixed";}
-
+function clearProjectForm(){["p-title","p-desc","p-due","p-budget","p-hours","edit-project-id"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});document.getElementById("p-freelancer").value="";document.getElementById("p-type").value="one-off";document.getElementById("p-budget-type").value="fixed";document.getElementById("p-hours-field").style.display="none";document.getElementById("p-budget").closest(".field").querySelector(".field-label").textContent="Amount ($)";}
+  function toggleHourlyField(){
+  const type=document.getElementById("p-type").value;
+  document.getElementById("p-hours-field").style.display=type==="hourly"?"":"none";
+  document.getElementById("p-budget").closest(".field").querySelector(".field-label").textContent=
+    type==="hourly"?"Hourly rate ($)":type==="retainer"?"Monthly retainer ($)":"Budget ($)";
+}
 function setView(v,el){currentView=v;document.querySelectorAll(".view-btn").forEach(b=>b.classList.remove("active"));el.classList.add("active");renderProjects();}
 function setFilter(f,el){currentFilter=f;document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));el.classList.add("active");renderProjects();}
 function openSidebar(){document.getElementById("sidebar").classList.add("open");document.getElementById("sidebar-overlay").classList.add("open");}
