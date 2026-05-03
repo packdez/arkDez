@@ -2217,7 +2217,9 @@ async function saveEditProject(){
 // ════════════════════════════════════════════════
 function openWizard(){wizard={step:1,totalSteps:3,type:"one-off",data:{}};renderWizardStep();document.getElementById("wizard-overlay").classList.add("open");}
 function closeWizard(){document.getElementById("wizard-overlay").classList.remove("open");}
-function renderWizardStep(){
+
+  
+  function renderWizardStep(){
   const labels=["What type of project?","Project details","Client & terms"];
   const subtitles=["Choose how this project will be structured and billed.","Add the key project information.","Assign a client and set the financial terms."];
   document.getElementById("wizard-step-label").textContent=`Step ${wizard.step} of ${wizard.totalSteps}`;
@@ -2228,7 +2230,6 @@ function renderWizardStep(){
   for(let i=1;i<=3;i++){const d=document.getElementById("wdot-"+i);d.classList.toggle("active",i===wizard.step);d.classList.toggle("done",i<wizard.step);}
   const body=document.getElementById("wizard-body");
   if(wizard.step===1){
-    
     body.innerHTML=`<div class="type-grid">
       <div class="type-card ${wizard.type==="one-off"?"selected":""}" onclick="selectType('one-off',this)">
         <div class="type-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
@@ -2237,7 +2238,32 @@ function renderWizardStep(){
       </div>
       <div class="type-card ${wizard.type==="hourly"?"selected":""}" onclick="selectType('hourly',this)">
         <div class="type-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9.5 2.5h5M12 2.5v2"/></svg></div>
-
+        <div class="type-card-name">Hourly</div>
+        <div class="type-card-desc">Bill by the hour. Log time daily. Great for ongoing or scope-uncertain work.</div>
+      </div>
+      <div class="type-card ${wizard.type==="retainer"?"selected":""}" onclick="selectType('retainer',this)">
+        <div class="type-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg></div>
+        <div class="type-card-name">Contract</div>
+        <div class="type-card-desc">Full-time or ongoing engagement. Monthly deliverables, consistent income, with start & end dates.</div>
+      </div>
+    </div>`;
+  }else if(wizard.step===2){
+    const isH=wizard.type==="hourly",isR=wizard.type==="retainer";
+    body.innerHTML=`
+      <div class="field"><label class="field-label">${isR?"Contract title *":"Project title *"}</label><input class="field-input" type="text" id="w-title" value="${ARK.escHtml(wizard.data.title||"")}" placeholder="e.g. ${isR?"Social Media Management":"Airbnb Automation"}" autocomplete="off"><span id="err-w-title" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
+      <div class="field"><label class="field-label">Description <span style="font-weight:400;color:var(--ink4);">(max 70 words)</span></label><textarea class="field-input field-textarea" id="w-desc" rows="2" style="height:auto;padding:10px 12px;resize:vertical;" placeholder="Brief overview of the project scope…" oninput="updateWordCount('w-desc','w-desc-count')">${ARK.escHtml(wizard.data.desc||"")}</textarea><div class="word-counter" id="w-desc-count">0 / 70</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="field"><label class="field-label">Start date</label><input class="field-input" type="date" id="w-start" value="${wizard.data.start||""}"></div>
+        <div class="field"><label class="field-label">${isR?"Contract end date (optional)":"Due date"}</label><input class="field-input" type="date" id="w-due" value="${wizard.data.due||""}"></div>
+      </div>
+      ${isH?`<div class="field"><label class="field-label">Estimated hours</label><input class="field-input" type="number" id="w-hours" value="${wizard.data.hours||""}" placeholder="e.g. 40"></div>`:""}
+      ${isR?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="field"><label class="field-label">Work hours/week</label><input class="field-input" type="number" id="w-work-hours" value="${wizard.data.workHours||""}" placeholder="e.g. 40" min="1" max="168"></div>
+        <div class="field"><label class="field-label">Notice period</label><select class="field-input field-select" id="w-notice"><option value="">None</option><option value="1 week">1 week</option><option value="2 weeks">2 weeks</option><option value="1 month">1 month</option><option value="2 months">2 months</option><option value="3 months">3 months</option></select></div>
+      </div>`:""}`;
+  }else if(wizard.step===3){
+    const isH=wizard.type==="hourly",isR=wizard.type==="retainer";
+    const clientOpts=allClients.filter(c=>c.status==="active").map(c=>`<option value="${c.id}" ${wizard.data.clientId===c.id?"selected":""}>${ARK.escHtml(c.name)}${c.company?" · "+ARK.escHtml(c.company):""}</option>`).join("");
     body.innerHTML=`
       <div class="field"><label class="field-label">Client *</label><select class="field-input field-select" id="w-client"><option value="">Select client…</option>${clientOpts}</select><span id="err-w-client" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
@@ -2250,6 +2276,8 @@ function renderWizardStep(){
       </div>`;
   }
 }
+
+  
 function selectType(type,el){wizard.type=type;document.querySelectorAll(".type-card").forEach(c=>c.classList.remove("selected"));el.classList.add("selected");}
 async function wizardNext(){
   if(wizard.step===2){
