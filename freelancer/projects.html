@@ -2228,6 +2228,7 @@ function renderWizardStep(){
   for(let i=1;i<=3;i++){const d=document.getElementById("wdot-"+i);d.classList.toggle("active",i===wizard.step);d.classList.toggle("done",i<wizard.step);}
   const body=document.getElementById("wizard-body");
   if(wizard.step===1){
+    
     body.innerHTML=`<div class="type-grid">
       <div class="type-card ${wizard.type==="one-off"?"selected":""}" onclick="selectType('one-off',this)">
         <div class="type-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
@@ -2236,11 +2237,6 @@ function renderWizardStep(){
       </div>
       <div class="type-card ${wizard.type==="hourly"?"selected":""}" onclick="selectType('hourly',this)">
         <div class="type-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9.5 2.5h5M12 2.5v2"/></svg></div>
-It looks like the response got cut off again. Let me continue from where the wizard step 3 was cut, and complete the file:
-
-The issue is the response is too long for a single message. Let me give you the remaining JavaScript portion to append:
-
-Replace the end of the <script> tag (starting from wizard step 3 body.innerHTML) with this completion:
 
     body.innerHTML=`
       <div class="field"><label class="field-label">Client *</label><select class="field-input field-select" id="w-client"><option value="">Select client…</option>${clientOpts}</select><span id="err-w-client" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
