@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Projects — ArkDez</title>
-<link rel="stylesheet" href="../assets/ark.css">
+<link rel="stylesheet" href__="../assets/ark.css">
 <style>
 /* ══ Z-INDEX: sidebar below detail overlay ══ */
 #sidebar { z-index: 100 !important; }
@@ -96,15 +96,17 @@
 .detail-topbar{height:58px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0;gap:8px;}
 .detail-topbar-title{font-size:.88rem;font-weight:700;color:var(--ink);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .detail-topbar-actions{display:flex;align-items:center;gap:3px;}
-.detail-send-btn{height:30px;padding:0 12px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:5px;transition:background .15s,transform .12s;white-space:nowrap;}
+.detail-send-btn{height:30px;padding:0 12px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:5px;transition:background .15s,transform .12s,box-shadow .15s;white-space:nowrap;}
 .detail-send-btn:hover{background:#155c33;}
-.detail-send-btn:active{transform:scale(.96);}
+.detail-send-btn:active{transform:scale(.94);box-shadow:0 0 0 3px rgba(34,197,94,.2);}
 .detail-icon-btn{width:32px;height:32px;border-radius:8px;background:none;border:1.5px solid var(--line2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink3);transition:all .15s;flex-shrink:0;}
 .detail-icon-btn:hover{background:var(--bg3);border-color:var(--line);color:var(--ink);}
+.detail-icon-btn:active{transform:scale(.9);background:var(--bg3);}
 .detail-icon-btn.danger:hover{background:#fee2e2;border-color:#fecaca;color:var(--red);}
 .detail-icon-btn svg{width:14px;height:14px;}
-.detail-close{width:32px;height:32px;border-radius:8px;background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.detail-close{width:32px;height:32px;border-radius:8px;background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;justify-content:center;transition:background .15s,transform .12s;}
 .detail-close:hover{background:var(--bg3);}
+.detail-close:active{transform:scale(.88);}
 
 /* ── Detail tabs ── */
 .detail-tabs{display:flex;border-bottom:1px solid var(--line2);padding:0 16px;background:var(--bg);flex-shrink:0;gap:0;overflow-x:auto;scrollbar-width:none;}
@@ -112,6 +114,7 @@
 .detail-tab{height:42px;padding:0 13px;border-bottom:2px solid transparent;font-size:.78rem;font-weight:600;color:var(--ink4);cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--sans);white-space:nowrap;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:5px;}
 .detail-tab:hover{color:var(--ink2);}
 .detail-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.detail-tab:active{opacity:.7;}
 .detail-tab-badge{font-size:.6rem;font-weight:700;padding:1px 5px;border-radius:999px;background:var(--bg3);color:var(--ink4);}
 .detail-tab.active .detail-tab-badge{background:var(--accent-bg);color:var(--accent);}
 .detail-scroll{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line2) transparent;}
@@ -132,10 +135,22 @@
 .tab-pane{display:none;}
 .tab-pane.active{display:block;}
 
+/* ══ TIME TAB FIXED FOOTER ══ */
+#pane-work.active{display:flex;flex-direction:column;}
+.time-tab-inner{display:flex;flex-direction:column;flex:1;overflow:hidden;}
+.time-scroll-area{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line2) transparent;padding-bottom:4px;}
+.time-scroll-area::-webkit-scrollbar{width:3px;}
+.time-scroll-area::-webkit-scrollbar-thumb{background:var(--line2);border-radius:2px;}
+.time-grand-fixed{flex-shrink:0;padding:12px 18px;border-top:2px solid var(--accent-ln);background:var(--bg);}
+.time-grand-fixed-inner{background:var(--bg);border:2px solid var(--accent-ln);border-radius:var(--r);padding:11px 14px;display:flex;align-items:center;justify-content:space-between;}
+.time-grand-label{font-size:.72rem;font-weight:700;color:var(--ink4);letter-spacing:.08em;text-transform:uppercase;}
+.time-grand-val{font-family:var(--serif);font-size:1.4rem;color:var(--ink);}
+
 /* ══ STATUS DROPDOWN ══ */
 .status-dropdown-wrap{position:relative;display:inline-block;}
 .status-dropdown-trigger{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:8px;cursor:pointer;border:1.5px solid var(--line2);background:var(--bg);font-size:.8rem;font-weight:600;font-family:var(--sans);transition:all .15s;user-select:none;min-width:130px;}
 .status-dropdown-trigger:hover{border-color:var(--line);background:var(--bg2);}
+.status-dropdown-trigger:active{transform:scale(.97);}
 .status-dropdown-trigger .sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 .status-dropdown-trigger .stext{flex:1;}
 .status-dropdown-trigger .schev{width:12px;height:12px;color:var(--ink4);flex-shrink:0;transition:transform .2s;}
@@ -144,6 +159,7 @@
 .status-dropdown-menu.open{opacity:1;pointer-events:all;transform:translateY(0);}
 .status-opt{display:flex;align-items:center;gap:9px;padding:9px 14px;font-size:.82rem;font-weight:500;cursor:pointer;transition:background .1s;font-family:var(--sans);}
 .status-opt:hover{background:var(--bg2);}
+.status-opt:active{background:var(--bg3);}
 .status-opt.active{background:var(--bg3);font-weight:700;}
 .status-opt .sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 .status-opt.blocked{opacity:.45;cursor:not-allowed;}
@@ -178,9 +194,9 @@
 .subtask-check.done svg{display:block;}
 .subtask-check svg{display:none;width:8px;height:8px;}
 .subtask-title{font-size:.77rem;color:var(--ink2);flex:1;}
-.subtask-title.done{text-decoration:line-through;color:var(--ink4);}
-.milestone-add-btn{display:flex;align-items:center;gap:6px;padding:6px 0;font-size:.78rem;color:var(--accent);font-weight:600;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:opacity .15s;}
-.milestone-add-btn:hover{opacity:.7;}
+.milestone-add-btn{display:flex;align-items:center;gap:6px;padding:6px 8px;font-size:.78rem;color:var(--accent);font-weight:600;cursor:pointer;background:none;border:none;font-family:var(--sans);transition:opacity .15s,transform .12s,background .12s;border-radius:6px;}
+.milestone-add-btn:hover{opacity:.8;background:var(--accent-bg);}
+.milestone-add-btn:active{transform:scale(.93);opacity:.7;}
 .milestone-title-input{font-size:.82rem;font-weight:600;color:var(--ink);background:none;border:none;outline:none;font-family:var(--sans);flex:1;padding:0;border-bottom:1.5px solid transparent;transition:border-color .15s;}
 .milestone-title-input:focus{border-bottom-color:var(--accent);}
 .subtask-title-input{font-size:.77rem;color:var(--ink2);flex:1;background:none;border:none;outline:none;font-family:var(--sans);padding:0;border-bottom:1.5px solid transparent;transition:border-color .15s;}
@@ -189,15 +205,19 @@
 .ms-action-btn{width:22px;height:22px;border-radius:5px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink4);transition:all .12s;opacity:0;}
 .milestone-item:hover .ms-action-btn,.subtask-item:hover .ms-action-btn{opacity:1;}
 .ms-action-btn:hover{background:var(--bg3);color:var(--red);}
+.ms-action-btn:active{transform:scale(.85);}
 .ms-action-btn svg{width:11px;height:11px;}
 .ms-amount-input{width:70px;height:26px;background:var(--bg2);border:1px solid var(--line2);border-radius:6px;padding:0 7px;font-size:.75rem;color:var(--ink);font-family:var(--sans);outline:none;text-align:right;}
 .ms-amount-input:focus{border-color:var(--accent);}
 
 /* ══ RETAINER DELIVERABLES ══ */
-.deliverable-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1.5px solid var(--line2);border-radius:var(--r);margin-bottom:5px;transition:border-color .15s;}
+.deliverable-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1.5px solid var(--line2);border-radius:var(--r);margin-bottom:5px;transition:border-color .15s,background .12s;}
 .deliverable-item:hover{border-color:var(--accent-ln);}
-.deliverable-status{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;background:none;transition:all .2s;}
+.deliverable-item.new-highlight{animation:newItemPulse .5s var(--ease) both;}
+@keyframes newItemPulse{0%{background:var(--accent-bg);border-color:var(--accent);}100%{background:transparent;border-color:var(--line2);}}
+.deliverable-status{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;background:none;transition:all .15s;}
 .deliverable-status.done{background:var(--accent);border-color:var(--accent);}
+.deliverable-status:active{transform:scale(.85);}
 .deliverable-status svg{display:none;width:10px;height:10px;}
 .deliverable-status.done svg{display:block;}
 
@@ -216,9 +236,6 @@
 .time-month-entries{font-size:.72rem;color:var(--ink4);}
 .time-month-hours{font-family:var(--serif);font-size:1.1rem;color:var(--ink);font-weight:400;flex-shrink:0;}
 .time-month-earned{font-size:.74rem;font-weight:600;color:var(--accent);margin-left:8px;}
-.time-grand-row{background:var(--bg);border:2px solid var(--accent-ln);border-radius:var(--r);padding:11px 14px;display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
-.time-grand-label{font-size:.72rem;font-weight:700;color:var(--ink4);letter-spacing:.08em;text-transform:uppercase;}
-.time-grand-val{font-family:var(--serif);font-size:1.4rem;color:var(--ink);}
 
 /* ══ ACTIVITY ══ */
 .activity-feed{display:flex;flex-direction:column;}
@@ -252,13 +269,22 @@
 .btn-loading .btn-label{opacity:0;}
 .btn-loading .btn-spin{display:block;}
 
+/* ══ BUTTON PRESS EFFECTS — GLOBAL ══ */
+.btn-primary{transition:background .15s,transform .12s,box-shadow .15s!important;}
+.btn-primary:active{transform:scale(.95)!important;box-shadow:0 0 0 3px rgba(34,197,94,.2)!important;}
+.btn-secondary{transition:background .15s,border-color .15s,transform .12s!important;}
+.btn-secondary:active{transform:scale(.95)!important;}
+.filter-btn:active{transform:scale(.95);}
+.filter-pill:active{transform:scale(.95);}
+
 /* ══ PROJECT FILES ══ */
 .proj-attach-list{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;}
 .proj-attach-row{display:flex;align-items:center;gap:7px;padding:6px 8px;background:var(--bg2);border:1px solid var(--line2);border-radius:7px;transition:border-color .15s;}
 .proj-attach-row:hover{border-color:var(--accent-ln);}
-.proj-attach-icon{font-size:.85rem;flex-shrink:0;}
+.proj-attach-icon{width:20px;height:20px;flex-shrink:0;color:var(--ink4);}
 .proj-attach-name{font-size:.76rem;color:var(--ink2);font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.proj-attach-open{font-size:.68rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:none;border-radius:4px;padding:2px 8px;cursor:pointer;flex-shrink:0;}
+.proj-attach-open{font-size:.68rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:none;border-radius:4px;padding:2px 8px;cursor:pointer;flex-shrink:0;transition:opacity .15s;}
+.proj-attach-open:active{opacity:.6;}
 
 /* ══ SKELETON ══ */
 .skeleton{background:var(--bg3);border-radius:6px;}
@@ -270,8 +296,9 @@
 .modal-overlay.open .modal{transform:none;}
 .modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid var(--line2);flex-shrink:0;}
 .modal-title{font-family:var(--serif);font-size:1.2rem;color:var(--ink);}
-.modal-close{width:28px;height:28px;border-radius:7px;background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.modal-close{width:28px;height:28px;border-radius:7px;background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;justify-content:center;transition:background .15s,transform .12s;}
 .modal-close:hover{background:var(--bg3);}
+.modal-close:active{transform:scale(.85);}
 .modal-body{padding:18px 20px;overflow-y:auto;flex:1;}
 .modal-footer{padding:14px 20px;border-top:1px solid var(--line2);display:flex;justify-content:flex-end;gap:10px;flex-shrink:0;}
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
@@ -310,6 +337,7 @@
 .tl-btn{width:24px;height:24px;border-radius:6px;background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;justify-content:center;opacity:0;transition:all .12s;}
 .time-log-row-full:hover .tl-btn{opacity:1;}
 .tl-btn:hover{background:var(--bg3);color:var(--accent);}
+.tl-btn:active{transform:scale(.85);}
 .tl-btn.del:hover{background:#fee2e2;color:var(--red);}
 .tl-edit-row{background:var(--accent-bg);padding:8px 16px;border-bottom:1px solid var(--accent-ln);display:none;gap:8px;align-items:center;flex-wrap:wrap;}
 .tl-edit-row.open{display:flex;}
@@ -321,20 +349,22 @@
 .retainer-view-tabs{display:flex;gap:0;border-bottom:1px solid var(--line2);padding:0 16px;background:var(--bg);flex-shrink:0;}
 .rv-tab{height:40px;padding:0 14px;border-bottom:2px solid transparent;font-size:.78rem;font-weight:600;color:var(--ink4);cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--sans);transition:color .15s,border-color .15s;}
 .rv-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.rv-tab:active{opacity:.7;}
 .retainer-deliverable-item{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--line2);transition:background .12s;}
 .retainer-deliverable-item:last-child{border-bottom:none;}
 .retainer-deliverable-item:hover{background:var(--bg2);}
-.rd-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.rd-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;cursor:pointer;}
 .rd-check.done{background:var(--accent);border-color:var(--accent);}
+.rd-check:active{transform:scale(.82);}
 .rd-check svg{display:none;width:9px;height:9px;}
 .rd-check.done svg{display:block;}
 .rd-title{font-size:.82rem;font-weight:500;flex:1;color:var(--ink);}
-.rd-title.done{text-decoration:line-through;color:var(--ink4);}
 .rd-date{font-size:.7rem;color:var(--ink4);width:70px;flex-shrink:0;}
 .rd-act{display:flex;gap:3px;flex-shrink:0;}
 .rd-btn{width:24px;height:24px;border-radius:6px;background:none;border:none;cursor:pointer;color:var(--ink4);display:flex;align-items:center;justify-content:center;opacity:0;transition:all .12s;}
 .retainer-deliverable-item:hover .rd-btn{opacity:1;}
 .rd-btn:hover{background:var(--bg3);color:var(--accent);}
+.rd-btn:active{transform:scale(.85);}
 .rd-btn.del:hover{background:#fee2e2;color:var(--red);}
 .rv-group-header{padding:8px 16px 4px;font-size:.67rem;font-weight:700;color:var(--ink4);letter-spacing:.08em;text-transform:uppercase;background:var(--bg2);border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;}
 .rv-group-progress{font-size:.7rem;color:var(--ink3);font-weight:600;letter-spacing:0;text-transform:none;}
@@ -364,6 +394,7 @@
 .type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;}
 .type-card{border:2px solid var(--line2);border-radius:var(--r-lg);padding:16px 14px;cursor:pointer;transition:all .2s;text-align:center;user-select:none;}
 .type-card:hover{border-color:var(--accent-ln);background:var(--accent-bg);}
+.type-card:active{transform:scale(.97);}
 .type-card.selected{border-color:var(--accent);background:var(--accent-bg);}
 .type-card-icon{margin-bottom:8px;display:flex;justify-content:center;}
 .type-card-icon svg{width:32px;height:32px;color:var(--ink3);}
@@ -373,10 +404,12 @@
 
 /* ══ SUMMARY STRIP ══ */
 .summary-strip{padding:10px 20px;background:var(--bg2);border-bottom:1px solid var(--line2);display:flex;gap:24px;flex-wrap:wrap;flex-shrink:0;}
-.ss-item{}
 .ss-label{font-size:.62rem;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.08em;}
 .ss-val{font-family:var(--serif);font-size:1.25rem;color:var(--ink);}
 .ss-val.green{color:var(--accent);}
+
+/* ══ ICON FILE ══ */
+.file-icon-svg{width:16px;height:16px;flex-shrink:0;}
 
 /* ══ RESPONSIVE ══ */
 @media(max-width:768px){
@@ -401,6 +434,7 @@
   .filter-bar{gap:5px;}
   .retainer-stats{grid-template-columns:1fr;}
   .summary-strip{gap:14px;}
+  .time-grand-fixed{padding:10px 12px;}
 }
 </style>
 </head>
@@ -413,7 +447,7 @@
 <div id="app">
   <nav id="sidebar">
     <div class="sidebar-header">
-      <a href="/" class="sidebar-brand"><div class="sidebar-brand-mark">A</div><span class="sidebar-brand-name">ArkDez</span></a>
+      <a href__="/" class="sidebar-brand"><div class="sidebar-brand-mark">A</div><span class="sidebar-brand-name">ArkDez</span></a>
     </div>
     <div class="workspace-pill" onclick="ARK.toggleUserMenu()">
       <div class="workspace-av" id="ws-av">P</div>
@@ -422,17 +456,17 @@
     </div>
     <div class="sidebar-nav">
       <div class="nav-section-label">Workspace</div>
-      <a class="nav-item" href="dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
-      <a class="nav-item" href="clients.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Clients</a>
-      <a class="nav-item active" href="projects.html" id="nav-projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Projects<span class="change-dot" id="nav-projects-dot" style="display:none;"></span></a>
-      <a class="nav-item" href="messages.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages</a>
+      <a class="nav-item" href__="dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <a class="nav-item" href__="clients.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Clients</a>
+      <a class="nav-item active" href__="projects.html" id="nav-projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Projects<span class="change-dot" id="nav-projects-dot" style="display:none;"></span></a>
+      <a class="nav-item" href__="messages.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages</a>
       <div class="nav-section-label">Finance</div>
-      <a class="nav-item" href="invoices.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Invoices</a>
+      <a class="nav-item" href__="invoices.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Invoices</a>
       <div class="nav-section-label">Delivery</div>
-      <a class="nav-item" href="documents.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>Documents</a>
-      <a class="nav-item" href="onboarding.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Onboarding</a>
+      <a class="nav-item" href__="documents.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>Documents</a>
+      <a class="nav-item" href__="onboarding.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Onboarding</a>
       <div class="nav-section-label">Account</div>
-      <a class="nav-item" href="settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings</a>
+      <a class="nav-item" href__="settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings</a>
     </div>
     <div class="sidebar-footer">
       <div class="user-pill" onclick="ARK.toggleUserMenu()" id="user-pill">
@@ -445,7 +479,7 @@
 
   <div id="user-menu">
     <div style="padding:4px;">
-      <div class="menu-item" onclick="window.location.href='settings.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile & settings</div>
+      <div class="menu-item" onclick="window.location.href__='settings.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile & settings</div>
       <div class="menu-divider"></div>
       <div class="menu-item danger" onclick="ARK.logout()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign out</div>
     </div>
@@ -539,7 +573,7 @@
     <button class="detail-tab" data-tab="activity" onclick="switchDetailTab('activity',this)">Activity <span class="detail-tab-badge" id="activity-badge">—</span></button>
   </div>
 
-  <div class="detail-scroll">
+  <div class="detail-scroll" id="detail-scroll-wrap">
 
     <!-- OVERVIEW TAB -->
     <div class="tab-pane active" id="pane-overview">
@@ -570,29 +604,39 @@
             <div class="detail-field-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span id="detail-budget-label">Budget</span></div>
             <div class="detail-field-val" id="detail-budget">—</div>
           </div>
+
+          <!-- CREATED DATE — shown for all types (moved to 2nd row, replacing due date position) -->
+          <div class="detail-field" id="detail-created-field">
+            <div class="detail-field-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Created</div>
+            <div class="detail-field-val" id="detail-created">—</div>
+          </div>
+
+          <!-- DUE DATE — shown only for non-retainer (swapped to row 3) -->
           <div class="detail-field" id="detail-due-field">
             <div class="detail-field-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Due date</div>
             <div class="detail-field-val" id="detail-due">—</div>
           </div>
+
           <div class="detail-field" id="detail-start-field">
             <div class="detail-field-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Start date</div>
             <div class="detail-field-val" id="detail-start">—</div>
           </div>
-          <div class="detail-field" id="detail-end-field" style="display:none;">
-            <div class="detail-field-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>End date</div>
-            <div class="detail-field-val" id="detail-end">—</div>
-          </div>
-          <div class="detail-field" id="detail-notice-period-field" style="display:none;">
-            <div class="detail-field-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Notice period</div>
-            <div class="detail-field-val" id="detail-notice-period">—</div>
-          </div>
+
+          <!-- RETAINER: Work hours/week shown BEFORE end date -->
           <div class="detail-field" id="detail-work-hours-field" style="display:none;">
             <div class="detail-field-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Work hours/week</div>
             <div class="detail-field-val" id="detail-work-hours">—</div>
           </div>
-          <div class="detail-field">
-            <div class="detail-field-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Created</div>
-            <div class="detail-field-val" id="detail-created">—</div>
+
+          <!-- RETAINER: End date shown AFTER work hours -->
+          <div class="detail-field" id="detail-end-field" style="display:none;">
+            <div class="detail-field-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>End date</div>
+            <div class="detail-field-val" id="detail-end">—</div>
+          </div>
+
+          <div class="detail-field" id="detail-notice-period-field" style="display:none;">
+            <div class="detail-field-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Notice period</div>
+            <div class="detail-field-val" id="detail-notice-period">—</div>
           </div>
         </div>
         <div class="detail-field" id="detail-desc-wrap" style="display:none;margin-top:4px;">
@@ -647,21 +691,34 @@
         <div class="milestone-list" id="milestone-list"></div>
       </div>
 
-      <!-- Time logs (hourly) -->
-      <div class="detail-section" id="detail-time-section" style="display:none;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-          <div class="detail-section-title" style="margin-bottom:0;">Time logs</div>
-          <div style="display:flex;gap:6px;">
-            <button class="milestone-add-btn" onclick="openViewAllTimeLogs()" id="view-all-logs-btn" style="display:none;">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View all
-            </button>
-            <button class="milestone-add-btn" onclick="openLogTimeModal()">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Log time
-            </button>
+      <!-- Time logs (hourly) — fixed grand total at bottom -->
+      <div id="detail-time-section" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+        <div class="detail-section" style="border-bottom:1px solid var(--line2);flex-shrink:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="detail-section-title" style="margin-bottom:0;">Time logs</div>
+            <div style="display:flex;gap:6px;">
+              <button class="milestone-add-btn" onclick="openViewAllTimeLogs()" id="view-all-logs-btn" style="display:none;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View all
+              </button>
+              <button class="milestone-add-btn" onclick="openLogTimeModal()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Log time
+              </button>
+            </div>
           </div>
         </div>
-        <div id="time-monthly-summary"></div>
-        <div id="time-log-empty" style="text-align:center;padding:20px 0;font-size:.78rem;color:var(--ink4);display:none;">No time logged yet. Start by logging your first hours.</div>
+        <!-- Scrollable monthly rows -->
+        <div class="time-scroll-area" id="time-monthly-summary-wrap" style="padding:12px 18px;"></div>
+        <div id="time-log-empty" style="text-align:center;padding:20px 18px;font-size:.78rem;color:var(--ink4);display:none;">No time logged yet. Start by logging your first hours.</div>
+        <!-- Fixed grand total -->
+        <div class="time-grand-fixed" id="time-grand-fixed-wrap" style="display:none;">
+          <div class="time-grand-fixed-inner">
+            <span class="time-grand-label">Grand total</span>
+            <div style="text-align:right;">
+              <div class="time-grand-val" id="time-grand-total-val">0h</div>
+              <div style="font-size:.75rem;color:var(--accent);font-weight:600;" id="time-grand-earned-val"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Retainer deliverables -->
@@ -677,7 +734,6 @@
             </button>
           </div>
         </div>
-        <!-- Last 7 most recent — no period navigation -->
         <div id="deliverable-list"></div>
       </div>
     </div>
@@ -695,7 +751,7 @@
         <div id="proj-link-input-wrap" style="display:none;flex-direction:column;gap:6px;margin-bottom:10px;">
           <input id="proj-link-url" type="url" placeholder="https://…" style="height:36px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveProjectLink()">
           <input id="proj-link-label" type="text" placeholder="Label (e.g. Design file, Live site…)" style="height:36px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveProjectLink()">
-          <div style="display:flex;gap:6px;"><button onclick="saveProjectLink()" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save link</button><button onclick="toggleProjLinkInput()" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button></div>
+          <div style="display:flex;gap:6px;"><button onclick="saveProjectLink()" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:opacity .15s,transform .12s;" onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''" onmouseleave="this.style.transform=''">Save link</button><button onclick="toggleProjLinkInput()" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);transition:opacity .15s,transform .12s;" onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''">Cancel</button></div>
         </div>
         <div class="proj-attach-list" id="proj-attach-list"></div>
         <div id="proj-attach-empty" style="font-size:.76rem;color:var(--ink4);">No files added yet.</div>
@@ -751,12 +807,12 @@
     <div class="confirm-modal-header">
       <div class="confirm-modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></div>
       <div style="font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:6px;">Delete project?</div>
-      <div style="font-size:.82rem;color:var(--ink3);line-height:1.5;">This action cannot be undone. The project and all its milestones will be permanently deleted.</div>
+      <div style="font-size:.82rem;color:var(--ink3);line-height:1.5;">This action cannot be undone. The project and all its data will be permanently deleted.</div>
     </div>
     <div class="confirm-modal-footer">
       <button class="btn-secondary" onclick="ARK.closeModal('modal-delete')">Keep it</button>
       <button class="btn-primary" style="background:var(--red);" onclick="executeDeleteProject()" id="delete-confirm-btn">
-        <span class="btn-label">Delete project</span><div class="btn-spin"></div>
+        <span class="btn-label">Delete</span><div class="btn-spin"></div>
       </button>
     </div>
   </div>
@@ -798,7 +854,6 @@
       <button class="filter-pill" data-vl="week" onclick="setVlPeriod('week',this)">This week</button>
       <button class="filter-pill" data-vl="day" onclick="setVlPeriod('day',this)">Today</button>
     </div>
-    <!-- Table header -->
     <div style="display:flex;align-items:center;gap:10px;padding:7px 16px;background:var(--bg2);border-bottom:1px solid var(--line2);flex-shrink:0;">
       <div style="font-size:.66rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;width:86px;flex-shrink:0;">Date</div>
       <div style="font-size:.66rem;font-weight:700;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;width:40px;flex-shrink:0;">Hrs</div>
@@ -854,10 +909,10 @@
 <!-- ══ EDIT PROJECT ══ -->
 <div class="modal-overlay" id="modal-edit-project" onclick="if(event.target===this)ARK.closeModal('modal-edit-project')">
   <div class="modal" style="max-width:540px;">
-    <div class="modal-header"><h2 class="modal-title">Edit project</h2><button class="modal-close" onclick="ARK.closeModal('modal-edit-project')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <div class="modal-header"><h2 class="modal-title" id="edit-modal-title">Edit project</h2><button class="modal-close" onclick="ARK.closeModal('modal-edit-project')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
     <div class="modal-body">
       <input type="hidden" id="edit-project-id">
-      <div class="field"><label class="field-label">Project title *</label><input class="field-input" type="text" id="ep-title" placeholder="e.g. Airbnb Automation" autocomplete="off"><span id="err-ep-title" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
+      <div class="field"><label class="field-label" id="ep-title-label">Project title *</label><input class="field-input" type="text" id="ep-title" placeholder="e.g. Airbnb Automation" autocomplete="off"><span id="err-ep-title" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
       <div class="field"><label class="field-label">Description <span style="font-weight:400;color:var(--ink4);">(max 70 words)</span></label><textarea class="field-input field-textarea" id="ep-desc" rows="2" style="height:auto;padding:10px 12px;resize:vertical;" placeholder="What does this project involve?" oninput="updateWordCount('ep-desc','ep-desc-count')"></textarea><div class="word-counter" id="ep-desc-count">0 / 70</div></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
         <div class="field"><label class="field-label">Start date</label><input class="field-input" type="date" id="ep-start"></div>
@@ -867,7 +922,6 @@
         <div class="field" id="ep-budget-wrap"><label class="field-label" id="ep-budget-label">Amount ($)</label><input class="field-input" type="number" id="ep-budget" placeholder="0" min="0"></div>
         <div class="field" id="ep-hours-field" style="display:none;"><label class="field-label">Estimated hours</label><input class="field-input" type="number" id="ep-hours" placeholder="e.g. 40" min="1"></div>
       </div>
-      <!-- Retainer-specific fields -->
       <div id="ep-retainer-fields" style="display:none;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
           <div class="field"><label class="field-label">Work hours/week</label><input class="field-input" type="number" id="ep-work-hours" placeholder="e.g. 40" min="1" max="168"></div>
@@ -886,6 +940,7 @@
 <style>
 @keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes newItemPulse{0%{background:var(--accent-bg);border-color:var(--accent-ln);}70%{background:var(--accent-bg);border-color:var(--accent-ln);}100%{background:transparent;border-color:var(--line2);}}
 </style>
 <script src="../assets/ark.js"></script>
 <script>
@@ -906,6 +961,9 @@ let wizard={step:1,totalSteps:3,type:"one-off",data:{}};
 let _statusDropdownOpen=false;
 let vlPeriod="all",vlSearch="",raStatusFilter="all",raSearch="",retainerAllView="month";
 
+// ── Suppress blink: track last rendered signature ──
+let _lastRenderSig="";
+
 // ── Helpers ──
 function countWords(s){return s.trim()===""?0:s.trim().split(/\s+/).length;}
 function updateWordCount(tid,cid){
@@ -916,7 +974,11 @@ function updateWordCount(tid,cid){
 function setBtnLoading(btn,on){if(!btn)return;if(on){btn.classList.add("btn-loading");btn.disabled=true;}else{btn.classList.remove("btn-loading");btn.disabled=false;}}
 
 // ── Type helpers ──
-function typeLabel(t){if(t==="hourly")return"Hourly";if(t==="retainer")return"Retainer";return"One-off";}
+function typeLabel(t){
+  if(t==="hourly")return"Hourly";
+  if(t==="retainer")return"Contract";
+  return"One-off";
+}
 function typePillHtml(t){
   const icons={
     "one-off":`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>`,
@@ -930,7 +992,7 @@ function isRetainerProject(p){return p&&p.type==="retainer";}
 function isHourlyProject(p){return p&&p.type==="hourly";}
 function isMilestoneProject(p){return p&&(p.type==="one-off"||p.type==="fixed");}
 
-// ── Status meta — retainer gets special statuses ──
+// ── Status meta ──
 function getStatusMeta(type){
   const base={
     draft:{dot:"#a3a3a3",text:"Draft",cls:"s-draft"},
@@ -984,7 +1046,25 @@ async function loadClients(){try{const res=await ARK.api({action:"get_clients",t
 
 function startPolling(){
   pollTimer=setInterval(async()=>{
-    try{const res=await ARK.api({action:"get_projects",token:ARK.getToken()});if(!res.success)return;allProjects=res.projects||[];updateStats();renderProjects();updateChangeDots();}catch(e){}
+    try{
+      const res=await ARK.api({action:"get_projects",token:ARK.getToken()});
+      if(!res.success)return;
+      // Only update if data actually changed — prevents blink
+      const newSig=JSON.stringify((res.projects||[]).map(p=>({id:p.id,updatedAt:p.updatedAt,status:p.status,progress:p.progress})));
+      if(newSig===_lastRenderSig)return;
+      _lastRenderSig=newSig;
+      allProjects=res.projects||[];
+      updateStats();
+      renderProjects();
+      updateChangeDots();
+      // Silently refresh detail panel data if open, without re-rendering entire panel
+      if(selectedProject){
+        const fresh=allProjects.find(p=>p.id===selectedProject.id);
+        if(fresh&&fresh.updatedAt!==selectedProject.updatedAt){
+          selectedProject=fresh;
+        }
+      }
+    }catch(e){}
   },30000);
 }
 
@@ -1070,7 +1150,7 @@ function renderCardView(projects){
       ${!isRetainer?`<div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:${p.progress||0}%"></div></div><div class="progress-label"><span>${p.type==="hourly"?`${(p.totalHours||0)}h logged`:totalM>0?doneM+"/"+totalM+" milestones":"No milestones"}</span><span>${p.progress||0}%</span></div></div>`:""}
       ${isPending?`<div class="card-notice request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Awaiting client acceptance</div>`:""}
       ${hasRevision?`<div class="card-notice revision"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Client requested revision</div>`:""}
-      ${p.requestStatus==="pending"?`<div class="card-notice pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Client request — <button onclick="event.stopPropagation();respondToRequest('${p.id}','accepted')" style="background:var(--accent);color:#fff;border:none;border-radius:4px;padding:1px 8px;cursor:pointer;font-size:.67rem;font-weight:700;font-family:var(--sans);margin-left:4px;">Accept</button><button onclick="event.stopPropagation();respondToRequest('${p.id}','declined')" style="background:#fee2e2;color:#991b1b;border:none;border-radius:4px;padding:1px 8px;cursor:pointer;font-size:.67rem;font-weight:700;font-family:var(--sans);margin-left:3px;">Decline</button></div>`:""}
+      ${p.requestStatus==="pending"?`<div class="card-notice pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Client request — <button onclick="event.stopPropagation();respondToRequest('${p.id}','accepted')" style="background:var(--accent);color:#fff;border:none;border-radius:4px;padding:1px 8px;cursor:pointer;font-size:.67rem;font-weight:700;font-family:var(--sans);margin-left:4px;transition:transform .12s;" onmousedown="this.style.transform='scale(.92)'" onmouseup="this.style.transform=''">Accept</button><button onclick="event.stopPropagation();respondToRequest('${p.id}','declined')" style="background:#fee2e2;color:#991b1b;border:none;border-radius:4px;padding:1px 8px;cursor:pointer;font-size:.67rem;font-weight:700;font-family:var(--sans);margin-left:3px;transition:transform .12s;" onmousedown="this.style.transform='scale(.92)'" onmouseup="this.style.transform=''">Decline</button></div>`:""}
     </div>`;
   }).join("")}</div>`;
 }
@@ -1127,38 +1207,36 @@ async function openDetail(id){
   document.getElementById("detail-title").textContent=p.title;
   document.getElementById("detail-client").textContent=p.clientName||"—";
   document.getElementById("detail-type-wrap").innerHTML=typePillHtml(p.type);
-  
-  // Budget label varies by type
+
   const budgetLabel=document.getElementById("detail-budget-label");
   if(budgetLabel)budgetLabel.textContent=p.type==="hourly"?"Hourly rate":p.type==="retainer"?"Monthly rate":"Budget";
   document.getElementById("detail-budget").textContent=p.budgetAmount>0?ARK.fmtCurrency(p.budgetAmount,p.currency)+(p.type==="hourly"?"/hr":p.type==="retainer"?"/mo":""):"—";
 
-  // Dates
   const isRetainer=isRetainerProject(p);
-  document.getElementById("detail-due").textContent=p.dueDate?ARK.fmtDate(p.dueDate):"—";
-  document.getElementById("detail-start").textContent=p.startDate?ARK.fmtDate(p.startDate):"—";
+
+  // CREATED date always shown (now in position of old due date)
   document.getElementById("detail-created").textContent=ARK.fmtDate(p.createdAt);
 
-  // Show/hide due date for retainer
+  // Due date — hidden for retainer
+  document.getElementById("detail-due").textContent=p.dueDate?ARK.fmtDate(p.dueDate):"—";
   const dueField=document.getElementById("detail-due-field");
   if(dueField)dueField.style.display=isRetainer?"none":"";
 
-  // Retainer end date
-  const endField=document.getElementById("detail-end-field");
-  if(endField){
-    endField.style.display=isRetainer?"":"none";
-    document.getElementById("detail-end").textContent=p.endDate?ARK.fmtDate(p.endDate):p.status==="ended"?"Auto-populated on end":"—";
-  }
+  document.getElementById("detail-start").textContent=p.startDate?ARK.fmtDate(p.startDate):"—";
 
-  // Retainer extra fields
-  const npField=document.getElementById("detail-notice-period-field");
+  // RETAINER specific fields: Work hours BEFORE end date
   const whField=document.getElementById("detail-work-hours-field");
+  const endField=document.getElementById("detail-end-field");
+  const npField=document.getElementById("detail-notice-period-field");
+
   if(isRetainer){
-    if(npField){npField.style.display="";document.getElementById("detail-notice-period").textContent=p.noticePeriod||"Not set";}
     if(whField){whField.style.display="";document.getElementById("detail-work-hours").textContent=p.workHoursPerWeek?p.workHoursPerWeek+"h/week":"Not set";}
+    if(endField){endField.style.display="";document.getElementById("detail-end").textContent=p.endDate?ARK.fmtDate(p.endDate):p.status==="ended"?"Auto-populated on end":"—";}
+    if(npField){npField.style.display="";document.getElementById("detail-notice-period").textContent=p.noticePeriod||"Not set";}
   }else{
-    if(npField)npField.style.display="none";
     if(whField)whField.style.display="none";
+    if(endField)endField.style.display="none";
+    if(npField)npField.style.display="none";
   }
 
   const dw=document.getElementById("detail-desc-wrap");
@@ -1174,7 +1252,12 @@ async function openDetail(id){
   const isMilestone=isMilestoneProject(p);
   const isHourly=isHourlyProject(p);
 
-  // Progress (one-off only for overview)
+  // Edit modal title: "Contract" for retainer
+  const editTitle=document.getElementById("edit-modal-title");
+  if(editTitle)editTitle.textContent=isRetainer?"Edit contract":"Edit project";
+  const epTitleLabel=document.getElementById("ep-title-label");
+  if(epTitleLabel)epTitleLabel.textContent=isRetainer?"Contract title *":"Project title *";
+
   document.getElementById("detail-progress-section").style.display=isMilestone?"":"none";
   if(isMilestone){
     document.getElementById("detail-progress-num").textContent=(p.progress||0)+"%";
@@ -1183,7 +1266,6 @@ async function openDetail(id){
   }
   document.getElementById("detail-spend-section").style.display=isMilestone?"":"none";
 
-  // Retainer overview stats
   document.getElementById("detail-retainer-overview").style.display=isRetainer?"":"none";
   if(isRetainer)updateRetainerOverviewStats(p);
 
@@ -1192,7 +1274,11 @@ async function openDetail(id){
   if(tabWork)tabWork.textContent=isHourly?"Time":(isRetainer?"Deliverables":"Milestones");
 
   document.getElementById("detail-milestones-section").style.display=isMilestone?"":"none";
-  document.getElementById("detail-time-section").style.display=isHourly?"":"none";
+
+  // Time section: show as flex for fixed-footer layout
+  const timeSection=document.getElementById("detail-time-section");
+  if(timeSection)timeSection.style.display=isHourly?"flex":"none";
+
   document.getElementById("detail-retainer-section").style.display=isRetainer?"":"none";
 
   if(isMilestone){renderMilestones(p.milestones||[]);milestonesDirty=false;}
@@ -1220,6 +1306,19 @@ function switchDetailTab(tab,el){
   if(el)el.classList.add("active");else{const b=document.querySelector(`.detail-tab[data-tab="${tab}"]`);if(b)b.classList.add("active");}
   document.querySelectorAll(".tab-pane").forEach(p=>p.classList.remove("active"));
   document.getElementById("pane-"+tab)?.classList.add("active");
+
+  // For work tab with hourly: make detail-scroll not overflow so fixed footer works
+  const detailScroll=document.getElementById("detail-scroll-wrap");
+  if(tab==="work"&&selectedProject&&isHourlyProject(selectedProject)){
+    detailScroll.style.overflow="hidden";
+    detailScroll.style.display="flex";
+    detailScroll.style.flexDirection="column";
+  }else{
+    detailScroll.style.overflow="";
+    detailScroll.style.display="";
+    detailScroll.style.flexDirection="";
+  }
+
   if(tab==="activity"&&selectedProject)loadActivity(selectedProject.id);
 }
 
@@ -1240,7 +1339,8 @@ function renderStatusDropdown(current,type){
     const isBlocked=s==="active"&&blockedActive&&current!=="active";
     return`<div class="status-opt ${s===current?"active":""} ${isBlocked?"blocked":""} ${m.cls}" onclick="${isBlocked?"ARK.showToast('Project must be accepted by client first','warn')":"doChangeStatus('"+s+"')"}" title="${isBlocked?"Awaiting client acceptance":""}">
       <span class="sdot" style="background:${m.dot};"></span>
-      <span class="stext">${m.text}${isBlocked?" 🔒":""}</span>
+      <span class="stext">${m.text}${isBlocked?` <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:inline;vertical-align:middle;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>`:""}
+      </span>
       ${s===current?`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="margin-left:auto;color:var(--accent)"><polyline points="20 6 9 17 4 12"/></svg>`:""}
     </div>`;
   }).join("");
@@ -1263,7 +1363,6 @@ async function doChangeStatus(status){
   markFreelancerChange(selectedProject.id);
   const old=selectedProject.status;
   selectedProject.status=status;
-  // Auto-populate endDate for retainer when ended
   if(status==="ended"&&isRetainerProject(selectedProject)&&!selectedProject.endDate){
     selectedProject.endDate=new Date().toISOString().slice(0,10);
     document.getElementById("detail-end").textContent=ARK.fmtDate(selectedProject.endDate);
@@ -1272,6 +1371,8 @@ async function doChangeStatus(status){
   const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].status=status;
   renderProjects();
   document.getElementById("detail-delete-btn").style.display=(status==="active"||status==="completed")?"none":"";
+  // Track activity
+  _addLocalActivity(selectedProject.id,"update_project",{status},"freelancer");
   try{
     const payload={action:"update_project",token:ARK.getToken(),projectId:selectedProject.id,status};
     if(status==="ended"&&selectedProject.endDate)payload.endDate=selectedProject.endDate;
@@ -1297,7 +1398,7 @@ async function respondToRequest(projectId,response){
     if(res.success){
       const idx=allProjects.findIndex(p=>p.id===projectId);
       if(idx>-1){allProjects[idx].requestStatus=response;allProjects[idx].status=response==="accepted"?"active":"cancelled";}
-      ARK.showToast(response==="accepted"?"Project accepted! Now Active.":"Project declined","success");
+      ARK.showToast(response==="accepted"?"Project accepted — now Active.":"Project declined","success");
       renderProjects();if(selectedProject?.id===projectId)openDetail(projectId);
     }else ARK.showToast(res.error||"Failed","error");
   }catch(e){ARK.showToast("Connection error.","error");}
@@ -1310,7 +1411,7 @@ async function sendProjectRequest(){
     if(res.success){
       selectedProject.requestStatus="pending_client";
       const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].requestStatus="pending_client";
-      btn.style.display="none";renderRequestInfo(selectedProject);ARK.showToast("Request sent to client!","success");
+      btn.style.display="none";renderRequestInfo(selectedProject);ARK.showToast("Request sent to client","success");
     }else ARK.showToast(res.error||"Failed","error");
   }catch(e){ARK.showToast("Connection error.","error");}
   finally{setBtnLoading(btn,false);}
@@ -1353,8 +1454,8 @@ function renderMilestones(milestones){
           <span style="font-size:.72rem;color:var(--ink4);font-weight:600;">${selectedProject?.currency==="EUR"?"€":selectedProject?.currency==="GBP"?"£":"$"}</span>
           <input class="ms-amount-input" type="number" value="${m.amount||""}" placeholder="0" min="0" step="0.01" onclick="event.stopPropagation()" onchange="editMilestoneAmount(${mi},this.value)" onblur="editMilestoneAmount(${mi},this.value)">
         </div>
-        ${ap==="approved"?`<span style="background:#dcfce7;color:#166634;font-size:.6rem;flex-shrink:0;padding:2px 6px;border-radius:999px;font-weight:700;">✓ OK</span>`:""}
-        ${ap==="revision_requested"?`<span style="background:#f5f3ff;color:#7c3aed;font-size:.6rem;flex-shrink:0;padding:2px 6px;border-radius:999px;font-weight:700;">↩ Rev</span>`:""}
+        ${ap==="approved"?`<span style="background:#dcfce7;color:#166634;font-size:.6rem;flex-shrink:0;padding:2px 6px;border-radius:999px;font-weight:700;display:inline-flex;align-items:center;gap:2px;"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>OK</span>`:""}
+        ${ap==="revision_requested"?`<span style="background:#f5f3ff;color:#7c3aed;font-size:.6rem;flex-shrink:0;padding:2px 6px;border-radius:999px;font-weight:700;display:inline-flex;align-items:center;gap:2px;"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Rev</span>`:""}
         <div class="milestone-actions"><button class="ms-action-btn" onclick="event.stopPropagation();deleteMilestone(${mi})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div>
         <div class="milestone-chevron ${isOpen?"open":""}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
       </div>
@@ -1364,34 +1465,34 @@ function renderMilestones(milestones){
           <input class="subtask-title-input ${s.status==="done"?"done":""}" value="${ARK.escHtml(s.title)}" onchange="editSubtaskTitle(${mi},${si},this.value)" onblur="editSubtaskTitle(${mi},${si},this.value)" placeholder="Subtask title">
           <button class="ms-action-btn" style="opacity:0" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0" onclick="deleteSubtask(${mi},${si})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>`).join("")}
-        <button onclick="addSubtask(${mi})" style="display:flex;align-items:center;gap:5px;padding:5px 0 2px;font-size:.72rem;color:var(--ink4);cursor:pointer;background:none;border:none;font-family:var(--sans);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'">
+        <button onclick="addSubtask(${mi})" style="display:flex;align-items:center;gap:5px;padding:5px 0 2px;font-size:.72rem;color:var(--ink4);cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s,transform .12s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'" onmousedown="this.style.transform='scale(.9)'" onmouseup="this.style.transform=''">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add subtask
         </button>
         ${(m.attachments||[]).length>0?`<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line2);display:flex;flex-direction:column;gap:4px;">
           ${(m.attachments||[]).map(a=>a.type==="note"
-            ?`<div style="border:1px solid var(--line2);border-radius:6px;overflow:hidden;"><div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);cursor:pointer;"><span>📝</span><span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;">Note</span></div><div style="display:none;padding:7px 10px;font-size:.75rem;color:var(--ink3);line-height:1.6;background:var(--bg2);border-top:1px solid var(--line2);white-space:pre-wrap;">${ARK.escHtml(a.content||"")}</div></div>`
-            :`<div style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);border:1px solid var(--line2);border-radius:6px;"><span>${getFileIcon(a.type)}</span><span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ARK.escHtml(a.name)}</span><button onclick="openAttachment('${ARK.escHtml(a.url)}')" style="font-size:.68rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:none;border-radius:4px;padding:2px 7px;cursor:pointer;">Open</button></div>`
+            ?`<div style="border:1px solid var(--line2);border-radius:6px;overflow:hidden;"><div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);cursor:pointer;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--ink4)"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;">Note</span></div><div style="display:none;padding:7px 10px;font-size:.75rem;color:var(--ink3);line-height:1.6;background:var(--bg2);border-top:1px solid var(--line2);white-space:pre-wrap;">${ARK.escHtml(a.content||"")}</div></div>`
+            :`<div style="display:flex;align-items:center;gap:7px;padding:5px 6px;background:var(--bg);border:1px solid var(--line2);border-radius:6px;">${getFileIconSvg(a.type)}<span style="font-size:.72rem;color:var(--ink2);font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ARK.escHtml(a.name)}</span><button onclick="openAttachment('${ARK.escHtml(a.url)}')" style="font-size:.68rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:none;border-radius:4px;padding:2px 7px;cursor:pointer;transition:opacity .15s;" onmousedown="this.style.opacity='.6'" onmouseup="this.style.opacity='1'">Open</button></div>`
           ).join("")}
         </div>`:""}
         <div style="display:flex;align-items:center;gap:10px;margin-top:4px;flex-wrap:wrap;">
-          <button data-attach-mi="${mi}" onclick="triggerMilestoneUpload(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);cursor:pointer;background:none;border:none;font-family:var(--sans);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Attach</button>
-          <button onclick="toggleLinkInput(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);cursor:pointer;background:none;border:none;font-family:var(--sans);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>Link</button>
-          <button onclick="toggleNoteInput(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);cursor:pointer;background:none;border:none;font-family:var(--sans);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Note</button>
+          <button data-attach-mi="${mi}" onclick="triggerMilestoneUpload(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s,transform .12s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'" onmousedown="this.style.transform='scale(.9)'" onmouseup="this.style.transform=''"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Attach</button>
+          <button onclick="toggleLinkInput(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s,transform .12s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'" onmousedown="this.style.transform='scale(.9)'" onmouseup="this.style.transform=''"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>Link</button>
+          <button onclick="toggleNoteInput(${mi})" style="display:flex;align-items:center;gap:4px;padding:4px 0;font-size:.72rem;color:var(--ink4);cursor:pointer;background:none;border:none;font-family:var(--sans);transition:color .15s,transform .12s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink4)'" onmousedown="this.style.transform='scale(.9)'" onmouseup="this.style.transform=''"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Note</button>
         </div>
         <div id="link-input-${mi}" style="display:none;flex-direction:column;gap:6px;margin-top:6px;">
           <input id="link-url-${mi}" type="url" placeholder="https://…" style="height:34px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveMilestoneLink(${mi})">
           <input id="link-label-${mi}" type="text" placeholder="Label…" style="height:34px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;width:100%;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')saveMilestoneLink(${mi})">
-          <div style="display:flex;gap:6px;"><button onclick="saveMilestoneLink(${mi})" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save</button><button onclick="toggleLinkInput(${mi})" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button></div>
+          <div style="display:flex;gap:6px;"><button onclick="saveMilestoneLink(${mi})" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:transform .12s;" onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''">Save</button><button onclick="toggleLinkInput(${mi})" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);transition:transform .12s;" onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''">Cancel</button></div>
         </div>
         <div id="note-input-${mi}" style="display:none;flex-direction:column;gap:6px;margin-top:6px;">
           <textarea id="note-text-${mi}" rows="3" placeholder="Add a milestone note…" style="background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:9px 10px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;resize:vertical;min-height:72px;width:100%;line-height:1.5;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'"></textarea>
-          <div style="display:flex;gap:6px;"><button onclick="saveMilestoneNote(${mi})" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save</button><button onclick="toggleNoteInput(${mi})" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button></div>
+          <div style="display:flex;gap:6px;"><button onclick="saveMilestoneNote(${mi})" style="height:30px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:transform .12s;" onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''">Save</button><button onclick="toggleNoteInput(${mi})" style="height:30px;padding:0 12px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);transition:transform .12s;" onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''">Cancel</button></div>
         </div>
         ${ap==="revision_requested"?`<div style="margin-top:8px;padding:10px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:var(--r);">
-          <div style="font-size:.74rem;font-weight:700;color:#7c3aed;margin-bottom:5px;">↩ Client requested revision</div>
+          <div style="font-size:.74rem;font-weight:700;color:#7c3aed;margin-bottom:5px;display:flex;align-items:center;gap:5px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Client requested revision</div>
           ${(revNotes.checklist||[]).length?`<div style="font-size:.73rem;color:#5b21b6;margin-bottom:4px;">${(revNotes.checklist||[]).map(c=>"• "+c.replace(/_/g," ")).join("<br>")}</div>`:""}
           ${revNotes.notes?`<div style="font-size:.73rem;color:#5b21b6;font-style:italic;">"${ARK.escHtml(revNotes.notes)}"</div>`:""}
-          <button onclick="markRevisionDone('${m.id}',${mi})" style="margin-top:8px;display:flex;align-items:center;gap:5px;height:30px;padding:0 12px;background:#f0fdf4;color:#166534;border:1.5px solid #bbf7d0;border-radius:var(--r);font-size:.73rem;font-weight:700;cursor:pointer;font-family:var(--sans);">
+          <button onclick="markRevisionDone('${m.id}',${mi})" style="margin-top:8px;display:flex;align-items:center;gap:5px;height:30px;padding:0 12px;background:#f0fdf4;color:#166534;border:1.5px solid #bbf7d0;border-radius:var(--r);font-size:.73rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:transform .12s;" onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Mark done
           </button>
         </div>`:""}
@@ -1492,34 +1593,49 @@ async function saveMilestones(){
       const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1)allProjects[idx].progress=res.progress;
       syncSeenAfterSave(selectedProject.id,res.updatedAt||new Date().toISOString());
       renderProjects();
-      // Update retainer overview
       if(isRetainerProject(selectedProject))updateRetainerOverviewStats(selectedProject);
+      // Track activity
+      _addLocalActivity(selectedProject.id,"save_milestones",{count:selectedProject.milestones.length},"freelancer");
     }
   }catch(e){milestonesDirty=true;}
 }
 window.addEventListener("beforeunload",()=>{if(milestonesDirty)saveMilestones();});
 
 // ════════════════════════════════════════════════
-// HOURLY — TIME LOGS
+// HOURLY — TIME LOGS (fixed grand total)
 // ════════════════════════════════════════════════
 async function loadTimeLogs(projectId){
-  const summary=document.getElementById("time-monthly-summary");
+  const wrap=document.getElementById("time-monthly-summary-wrap");
   const emptyEl=document.getElementById("time-log-empty");
-  if(summary)summary.innerHTML=`<div style="display:flex;align-items:center;gap:8px;padding:12px 0;color:var(--ink4);font-size:.78rem;"><div class="activity-spin" style="width:14px;height:14px;border:2px solid var(--line2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;"></div>Loading…</div>`;
+  const grandWrap=document.getElementById("time-grand-fixed-wrap");
+  if(wrap)wrap.innerHTML=`<div style="display:flex;align-items:center;gap:8px;padding:12px 0;color:var(--ink4);font-size:.78rem;"><div class="activity-spin" style="width:14px;height:14px;border:2px solid var(--line2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;"></div>Loading…</div>`;
   if(emptyEl)emptyEl.style.display="none";
+  if(grandWrap)grandWrap.style.display="none";
   try{
     const res=await ARK.api({action:"get_time_logs",token:ARK.getToken(),projectId});
     if(res.success){timeLogs=res.logs||[];renderTimeLogSummary();}
-    else{if(summary)summary.innerHTML="";if(emptyEl)emptyEl.style.display="";}
-  }catch(e){if(summary)summary.innerHTML="";if(emptyEl)emptyEl.style.display="";}
+    else{if(wrap)wrap.innerHTML="";if(emptyEl)emptyEl.style.display="";}
+  }catch(e){if(wrap)wrap.innerHTML="";if(emptyEl)emptyEl.style.display="";}
 }
 
 function renderTimeLogSummary(){
-  const summary=document.getElementById("time-monthly-summary");
+  const wrap=document.getElementById("time-monthly-summary-wrap");
   const emptyEl=document.getElementById("time-log-empty");
   const viewBtn=document.getElementById("view-all-logs-btn");
-  if(!timeLogs.length){if(summary)summary.innerHTML="";if(emptyEl)emptyEl.style.display="";if(viewBtn)viewBtn.style.display="none";return;}
-  if(emptyEl)emptyEl.style.display="none";if(viewBtn)viewBtn.style.display="";
+  const grandWrap=document.getElementById("time-grand-fixed-wrap");
+  const grandVal=document.getElementById("time-grand-total-val");
+  const grandEarned=document.getElementById("time-grand-earned-val");
+
+  if(!timeLogs.length){
+    if(wrap)wrap.innerHTML="";
+    if(emptyEl)emptyEl.style.display="";
+    if(viewBtn)viewBtn.style.display="none";
+    if(grandWrap)grandWrap.style.display="none";
+    return;
+  }
+  if(emptyEl)emptyEl.style.display="none";
+  if(viewBtn)viewBtn.style.display="";
+
   const byMonth={};
   timeLogs.forEach(l=>{
     const d=new Date(l.date);const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
@@ -1530,6 +1646,7 @@ function renderTimeLogSummary(){
   const totalHours=timeLogs.reduce((s,l)=>s+l.hours,0);
   const rate=selectedProject?.budgetAmount||0;
   const totalEarned=rate*totalHours;
+
   const rows=Object.entries(byMonth).sort(([a],[b])=>b.localeCompare(a)).map(([,m])=>`
     <div class="time-month-row">
       <div><div class="time-month-label">${m.label}</div><div class="time-month-entries">${m.entries} entr${m.entries===1?"y":"ies"}</div></div>
@@ -1538,11 +1655,13 @@ function renderTimeLogSummary(){
         ${rate>0?`<div class="time-month-earned">${ARK.fmtCurrency(rate*m.hours,"USD")}</div>`:""}
       </div>
     </div>`).join("");
-  if(summary)summary.innerHTML=`<div class="time-monthly-grid">${rows}
-    <div class="time-grand-row">
-      <span class="time-grand-label">Grand total</span>
-      <div style="text-align:right;"><div class="time-grand-val">${totalHours.toFixed(1)}h</div>${rate>0?`<div style="font-size:.75rem;color:var(--accent);font-weight:600;">${ARK.fmtCurrency(totalEarned,"USD")}</div>`:""}</div>
-    </div></div>`;
+
+  if(wrap)wrap.innerHTML=`<div class="time-monthly-grid">${rows}</div>`;
+
+  // Update fixed grand total bar
+  if(grandWrap)grandWrap.style.display="";
+  if(grandVal)grandVal.textContent=totalHours.toFixed(1)+"h";
+  if(grandEarned)grandEarned.textContent=rate>0?ARK.fmtCurrency(totalEarned,"USD"):"";
 }
 
 function openLogTimeModal(){
@@ -1559,11 +1678,12 @@ async function saveTimeLog(){
     const res=await ARK.api({action:"log_time",token:ARK.getToken(),projectId:selectedProject.id,date,hours,description:desc});
     if(res.success){
       timeLogs.unshift({date,hours,description:desc,id:res.logId});
-      renderTimeLogSummary();ARK.closeModal("modal-log-time");ARK.showToast("Time logged!","success");
+      renderTimeLogSummary();ARK.closeModal("modal-log-time");ARK.showToast("Time logged","success");
       const estH=selectedProject.estimatedHours||40,totalH=timeLogs.reduce((s,l)=>s+l.hours,0);
       selectedProject.progress=Math.min(Math.round((totalH/estH)*100),100);
       const idx=allProjects.findIndex(p=>p.id===selectedProject.id);if(idx>-1){allProjects[idx].progress=selectedProject.progress;allProjects[idx].totalHours=totalH;}
       renderProjects();
+      _addLocalActivity(selectedProject.id,"log_time",{hours,description:desc},"freelancer");
     }else ARK.showToast(res.error||"Failed","error");
   }catch(e){ARK.showToast("Connection error.","error");}
   finally{setBtnLoading(btn,false);}
@@ -1618,8 +1738,8 @@ function renderVlList(){
         <input class="tl-edit-input" type="date" id="tl-d-${origIdx}" value="${l.date}" style="width:130px;">
         <input class="tl-edit-input" type="number" id="tl-h-${origIdx}" value="${l.hours}" min="0.25" step="0.25" style="width:70px;" placeholder="hrs">
         <input class="tl-edit-input" type="text" id="tl-desc-${origIdx}" value="${ARK.escHtml(l.description||"")}" placeholder="Description" style="flex:1;min-width:100px;">
-        <button onclick="saveTlEdit(${origIdx})" style="height:30px;padding:0 12px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);white-space:nowrap;">Save</button>
-        <button onclick="closeTlEdit(${origIdx})" style="height:30px;padding:0 10px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button>
+        <button onclick="saveTlEdit(${origIdx})" style="height:30px;padding:0 12px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);white-space:nowrap;transition:transform .12s;" onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''">Save</button>
+        <button onclick="closeTlEdit(${origIdx})" style="height:30px;padding:0 10px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);transition:transform .12s;" onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''">Cancel</button>
       </div>
     </div>`;
   }).join("");
@@ -1641,7 +1761,7 @@ async function deleteTlEntry(i){
 }
 
 // ════════════════════════════════════════════════
-// RETAINER
+// RETAINER (Contract)
 // ════════════════════════════════════════════════
 function updateRetainerOverviewStats(p){
   const ms=p.milestones||[];
@@ -1659,7 +1779,6 @@ function renderRetainerSection(p){
   const ms=p.milestones||[];
   const viewBtn=document.getElementById("retainer-view-all-btn");
   if(viewBtn)viewBtn.style.display=ms.length>0?"":"none";
-  // Sort by createdAt desc (most recently added), take last 7
   const sorted=[...ms].sort((a,b)=>{
     const ta=a.createdAt||a.id||"";const tb=b.createdAt||b.id||"";return tb.localeCompare(ta);
   });
@@ -1669,25 +1788,58 @@ function renderRetainerSection(p){
   list.innerHTML=shown.map(m=>{
     const mi=ms.indexOf(m);const isDone=m.status==="done"||m.approvalStatus==="approved";
     return`<div class="deliverable-item" style="border-color:${isDone?"var(--accent-ln)":"var(--line2)"}">
-      <button class="deliverable-status ${isDone?"done":""}" onclick="toggleMilestone(event,${mi})"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></button>
-      <input style="font-size:.84rem;font-weight:600;color:${isDone?"var(--ink4)":"var(--ink)"};text-decoration:${isDone?"line-through":"none"};background:none;border:none;outline:none;font-family:var(--sans);flex:1;padding:0;border-bottom:1.5px solid transparent;transition:border-color .15s;" onfocus="this.style.borderBottomColor='var(--accent)'" onblur="this.style.borderBottomColor='transparent'" value="${ARK.escHtml(m.title)}" onchange="editMilestoneTitle(${mi},this.value)">
+      <button class="deliverable-status ${isDone?"done":""}" onclick="toggleDeliverableStatus(event,${mi})"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></button>
+      <input style="font-size:.84rem;font-weight:600;color:${isDone?"var(--ink3)":"var(--ink)"};background:none;border:none;outline:none;font-family:var(--sans);flex:1;padding:0;border-bottom:1.5px solid transparent;transition:border-color .15s;" onfocus="this.style.borderBottomColor='var(--accent)'" onblur="this.style.borderBottomColor='transparent'" value="${ARK.escHtml(m.title)}" onchange="editMilestoneTitle(${mi},this.value)">
       ${m.dueDate?`<span style="font-size:.7rem;color:var(--ink4);">${new Date(m.dueDate).toLocaleDateString(undefined,{month:"short",day:"numeric"})}</span>`:""}
-      ${m.approvalStatus==="approved"?`<span style="background:#dcfce7;color:#166534;font-size:.6rem;padding:2px 6px;border-radius:999px;font-weight:700;">✓</span>`:""}
-      ${m.approvalStatus==="revision_requested"?`<span style="background:#f5f3ff;color:#7c3aed;font-size:.6rem;padding:2px 6px;border-radius:999px;font-weight:700;">↩</span>`:""}
+      ${m.approvalStatus==="approved"?`<span style="background:#dcfce7;color:#166534;font-size:.6rem;padding:2px 6px;border-radius:999px;font-weight:700;display:inline-flex;align-items:center;gap:2px;"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>`:""}
+      ${m.approvalStatus==="revision_requested"?`<span style="background:#f5f3ff;color:#7c3aed;font-size:.6rem;padding:2px 6px;border-radius:999px;font-weight:700;display:inline-flex;align-items:center;gap:2px;"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></span>`:""}
     </div>`;
   }).join("");
   if(ms.length>7)list.innerHTML+=`<div style="padding:6px 0;font-size:.72rem;color:var(--ink4);text-align:center;">${ms.length-7} more — <span style="color:var(--accent);cursor:pointer;font-weight:600;" onclick="openRetainerViewAll()">View all ${ms.length}</span></div>`;
 }
 
+// Deliverable check toggle: instant, no strikethrough
+function toggleDeliverableStatus(e,mi){
+  e.stopPropagation();
+  if(!selectedProject)return;
+  const m=selectedProject.milestones[mi];
+  const newDone=!(m.status==="done"||m.approvalStatus==="approved");
+  m.status=newDone?"done":"pending";
+  m.completedAt=newDone?new Date().toISOString():"";
+  // Instant DOM update without full re-render
+  const btn=e.currentTarget;
+  btn.classList.toggle("done",newDone);
+  const item=btn.closest(".deliverable-item");
+  if(item){
+    item.style.borderColor=newDone?"var(--accent-ln)":"var(--line2)";
+    const inp=item.querySelector("input");
+    if(inp)inp.style.color=newDone?"var(--ink3)":"var(--ink)";
+  }
+  milestonesDirty=true;
+  updateRetainerOverviewStats(selectedProject);
+  markFreelancerChange(selectedProject.id);
+  saveNow();
+}
+
 function addDeliverable(){
   if(!selectedProject)return;
   const newDel={id:"tmp-"+Date.now(),title:"New deliverable",status:"pending",subtasks:[],dueDate:new Date().toISOString().slice(0,10),completedAt:"",order:selectedProject.milestones.length,amount:0,approvalStatus:"pending",revisionNotes:{},createdAt:new Date().toISOString()};
-  selectedProject.milestones.push(newDel);milestonesDirty=true;
-  renderRetainerSection(selectedProject);updateRetainerOverviewStats(selectedProject);
+  selectedProject.milestones.unshift(newDel); // Add to front so it appears first
+  milestonesDirty=true;
+  renderRetainerSection(selectedProject);
+  updateRetainerOverviewStats(selectedProject);
+  // Focus the very first input (the new one, since we unshift'd)
   setTimeout(()=>{
-    const list=document.getElementById("deliverable-list"),inputs=list?.querySelectorAll("input");
-    if(inputs?.length){const last=inputs[inputs.length-1];last.focus();last.select();}
-  },50);
+    const list=document.getElementById("deliverable-list");
+    const firstInput=list?.querySelector(".deliverable-item input");
+    if(firstInput){
+      firstInput.focus();
+      firstInput.select();
+      // Pulse animation on new item
+      const item=firstInput.closest(".deliverable-item");
+      if(item){item.classList.add("new-highlight");setTimeout(()=>item.classList.remove("new-highlight"),600);}
+    }
+  },30);
   saveNow();
 }
 
@@ -1769,11 +1921,11 @@ function renderRaItem(m,mi){
   const isDone=m.status==="done"||m.approvalStatus==="approved";
   const date=m.dueDate?new Date(m.dueDate).toLocaleDateString(undefined,{month:"short",day:"numeric"}):"—";
   return`<div class="retainer-deliverable-item">
-    <div class="rd-check ${isDone?"done":""}"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <div class="rd-check ${isDone?"done":""}" onclick="toggleRaItemCheck(${mi},this)"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
     <span class="rd-title ${isDone?"done":""}">${ARK.escHtml(m.title)}</span>
     <span class="rd-date">${date}</span>
-    ${m.approvalStatus==="approved"?`<span style="background:#dcfce7;color:#166534;font-size:.6rem;padding:2px 6px;border-radius:999px;font-weight:700;">✓</span>`:""}
-    ${m.approvalStatus==="revision_requested"?`<span style="background:#f5f3ff;color:#7c3aed;font-size:.6rem;padding:2px 6px;border-radius:999px;font-weight:700;">↩</span>`:""}
+    ${m.approvalStatus==="approved"?`<span style="background:#dcfce7;color:#166534;font-size:.6rem;padding:2px 6px;border-radius:999px;font-weight:700;display:inline-flex;align-items:center;gap:2px;"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>`:""}
+    ${m.approvalStatus==="revision_requested"?`<span style="background:#f5f3ff;color:#7c3aed;font-size:.6rem;padding:2px 6px;border-radius:999px;font-weight:700;display:inline-flex;align-items:center;gap:2px;"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></span>`:""}
     <div class="rd-act">
       <button class="rd-btn" onclick="openRaEdit(${mi})" title="Edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
     </div>
@@ -1781,10 +1933,30 @@ function renderRaItem(m,mi){
   <div id="ra-edit-${mi}" style="display:none;padding:8px 16px;background:var(--accent-bg);border-bottom:1px solid var(--accent-ln);gap:8px;align-items:center;flex-wrap:wrap;">
     <input id="ra-t-${mi}" type="text" value="${ARK.escHtml(m.title)}" style="flex:1;min-width:120px;height:30px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 8px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--line2)'">
     <input id="ra-d-${mi}" type="date" value="${m.dueDate||""}" style="width:130px;height:30px;background:var(--bg);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 8px;font-size:.78rem;color:var(--ink);font-family:var(--sans);outline:none;">
-    <button onclick="saveRaEdit(${mi})" style="height:30px;padding:0 12px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);">Save</button>
-    <button onclick="closeRaEdit(${mi})" style="height:30px;padding:0 10px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);">Cancel</button>
+    <button onclick="saveRaEdit(${mi})" style="height:30px;padding:0 12px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:transform .12s;" onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''">Save</button>
+    <button onclick="closeRaEdit(${mi})" style="height:30px;padding:0 10px;background:var(--bg3);color:var(--ink3);border:none;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:var(--sans);transition:transform .12s;" onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''">Cancel</button>
   </div>`;
 }
+
+// Instant check toggle in view-all modal (no strikethrough)
+function toggleRaItemCheck(mi,btn){
+  if(!selectedProject)return;
+  const m=selectedProject.milestones[mi];
+  const newDone=!(m.status==="done"||m.approvalStatus==="approved");
+  m.status=newDone?"done":"pending";
+  m.completedAt=newDone?new Date().toISOString():"";
+  btn.classList.toggle("done",newDone);
+  const row=btn.closest(".retainer-deliverable-item");
+  if(row){
+    const titleEl=row.querySelector(".rd-title");
+    if(titleEl){titleEl.classList.toggle("done",false);} // No strikethrough
+  }
+  milestonesDirty=true;
+  updateRetainerOverviewStats(selectedProject);
+  markFreelancerChange(selectedProject.id);
+  saveNow();
+}
+
 function openRaEdit(mi){document.querySelectorAll("[id^='ra-edit-']").forEach(el=>el.style.display="none");const el=document.getElementById("ra-edit-"+mi);if(el)el.style.display="flex";}
 function closeRaEdit(mi){const el=document.getElementById("ra-edit-"+mi);if(el)el.style.display="none";}
 async function saveRaEdit(mi){
@@ -1796,19 +1968,57 @@ async function saveRaEdit(mi){
 }
 
 // ════════════════════════════════════════════════
-// ACTIVITY
+// ACTIVITY — local + server
 // ════════════════════════════════════════════════
+// Local activity cache per project (accumulates before server fetch)
+const _localActivity={};
+
+function _addLocalActivity(projectId,action,changes,actor){
+  if(!projectId)return;
+  if(!_localActivity[projectId])_localActivity[projectId]=[];
+  const user=ARK.getUser();
+  _localActivity[projectId].unshift({
+    action,
+    changes,
+    actor:actor||"freelancer",
+    actorName:actor==="client"?(selectedProject?.clientName||"Client"):(user?(user.firstName+" "+user.lastName):"You"),
+    timestamp:new Date().toISOString(),
+    local:true
+  });
+  // If activity tab is open for this project, re-render
+  if(currentDetailTab==="activity"&&selectedProject?.id===projectId){
+    const cached=activityCache[projectId]||[];
+    renderActivityFeed([..._localActivity[projectId],...cached]);
+  }
+}
+
 async function loadActivity(projectId){
-  if(activityCache[projectId]){renderActivityFeed(activityCache[projectId]);return;}
+  if(activityCache[projectId]){
+    const local=_localActivity[projectId]||[];
+    renderActivityFeed([...local,...activityCache[projectId]]);
+    return;
+  }
   document.getElementById("activity-loading").style.display="flex";
   document.getElementById("activity-feed").style.display="none";
   document.getElementById("activity-empty").style.display="none";
   try{
     const res=await ARK.api({action:"get_project_activity",token:ARK.getToken(),projectId});
-    if(res.success){activityCache[projectId]=res.entries||[];renderActivityFeed(activityCache[projectId]);document.getElementById("activity-badge").textContent=res.entries?.length||0;}
-    else{document.getElementById("activity-loading").style.display="none";document.getElementById("activity-empty").style.display="";}
-  }catch(e){document.getElementById("activity-loading").style.display="none";document.getElementById("activity-empty").style.display="";}
+    if(res.success){
+      activityCache[projectId]=res.entries||[];
+      const local=_localActivity[projectId]||[];
+      const combined=[...local,...activityCache[projectId]];
+      renderActivityFeed(combined);
+      document.getElementById("activity-badge").textContent=combined.length||0;
+    }else{
+      document.getElementById("activity-loading").style.display="none";
+      document.getElementById("activity-empty").style.display="";
+    }
+  }catch(e){
+    document.getElementById("activity-loading").style.display="none";
+    document.getElementById("activity-empty").style.display="";
+  }
 }
+
 function renderActivityFeed(entries){
   document.getElementById("activity-loading").style.display="none";
   const feed=document.getElementById("activity-feed");
@@ -1827,6 +2037,7 @@ function renderActivityFeed(entries){
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
           <span class="activity-who">${ARK.escHtml(e.actorName||tagLabel)}</span>
           <span class="activity-tag ${dotCls}">${tagLabel}</span>
+          ${e.local?`<span style="font-size:.58rem;color:var(--ink4);background:var(--bg3);padding:1px 5px;border-radius:4px;">just now</span>`:""}
         </div>
         <div style="font-size:.78rem;color:var(--ink2);line-height:1.5;">${ARK.escHtml(formatActivityDesc(e))}</div>
         <div class="activity-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${formatActivityTime(e.timestamp)}</div>
@@ -1835,7 +2046,16 @@ function renderActivityFeed(entries){
   }).join("");
 }
 function getActivityIcon(action){
-  const icons={create_project:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,update_project:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,save_milestones:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>`,approve_milestone:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`,request_revision:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>`,upload_file:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`,client_review:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`};
+  const icons={
+    create_project:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+    update_project:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+    save_milestones:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>`,
+    approve_milestone:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+    request_revision:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>`,
+    upload_file:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`,
+    client_review:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    log_time:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`
+  };
   return icons[action]||`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
 }
 function formatActivityDesc(e){
@@ -1848,8 +2068,8 @@ function formatActivityDesc(e){
     case"request_revision":return"Requested revision"+(changes.notes?`: "${changes.notes}"`:"");
     case"upload_file":return`Uploaded: ${changes.fileName||"file"}`;
     case"delete_project":return"Deleted this project";
-    case"client_review":return`Left ${changes.rating}★ review`+(changes.review?`: "${changes.review}"`:"");
-    case"log_time":return`Logged ${changes.hours||"?"}h`;
+    case"client_review":return`Left ${changes.rating}-star review`+(changes.review?`: "${changes.review}"`:"");
+    case"log_time":return`Logged ${changes.hours||"?"}h${changes.description?` — ${changes.description}`:""}`;
     default:return e.action.replace(/_/g," ");
   }
 }
@@ -1866,10 +2086,10 @@ function renderProjectFiles(){
   if(!projectAttachments.length){list.innerHTML="";empty.style.display="";return;}
   empty.style.display="none";
   list.innerHTML=projectAttachments.map((a,i)=>`<div class="proj-attach-row">
-    <span class="proj-attach-icon">${getFileIcon(a.type)}</span>
+    <span class="proj-attach-icon">${getFileIconSvg(a.type)}</span>
     <span class="proj-attach-name" title="${ARK.escHtml(a.name)}">${ARK.escHtml(a.name)}</span>
     ${a.url?`<button class="proj-attach-open" onclick="openAttachment('${ARK.escHtml(a.url)}')">Open</button>`:""}
-    <button onclick="removeProjectFile(${i})" style="width:22px;height:22px;border-radius:5px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink4);" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--ink4)'"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <button onclick="removeProjectFile(${i})" style="width:22px;height:22px;border-radius:5px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink4);transition:color .15s,transform .12s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--ink4)'" onmousedown="this.style.transform='scale(.85)'" onmouseup="this.style.transform=''"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   </div>`).join("");
 }
 function toggleProjLinkInput(){
@@ -1881,7 +2101,8 @@ async function saveProjectLink(){
   if(!url)return;try{new URL(url);}catch(e){ARK.showToast("Invalid URL","warn");return;}
   projectAttachments.push({type:"link",name:label||url,url,uploadedAt:new Date().toISOString()});
   renderProjectFiles();toggleProjLinkInput();document.getElementById("proj-link-url").value="";document.getElementById("proj-link-label").value="";
-  await saveProjectAttachments();ARK.showToast("Link saved!","success");
+  await saveProjectAttachments();ARK.showToast("Link saved","success");
+  _addLocalActivity(selectedProject?.id,"upload_file",{fileName:label||url},"freelancer");
 }
 async function removeProjectFile(i){projectAttachments.splice(i,1);renderProjectFiles();await saveProjectAttachments();}
 async function saveProjectAttachments(){
@@ -1899,22 +2120,24 @@ async function handleProjectFile(file){
   try{
     const base64=await fileToBase64(file);
     const res=await ARK.api({action:"upload_to_drive",token:ARK.getToken(),fileName:`${fname} - ${cname} - ${file.name}`,mimeType:file.type||"application/octet-stream",base64Data:base64,folderId:DRIVE_FOLDER_ID,projectId:selectedProject.id});
-    if(res.success){projectAttachments.push({type:file.type,name:file.name,url:res.viewUrl,uploadedAt:new Date().toISOString()});renderProjectFiles();await saveProjectAttachments();ARK.showToast("File uploaded!","success");}
-    else ARK.showToast(res.error||"Upload failed","error");
+    if(res.success){
+      projectAttachments.push({type:file.type,name:file.name,url:res.viewUrl,uploadedAt:new Date().toISOString()});
+      renderProjectFiles();await saveProjectAttachments();ARK.showToast("File uploaded","success");
+      _addLocalActivity(selectedProject.id,"upload_file",{fileName:file.name},"freelancer");
+    }else ARK.showToast(res.error||"Upload failed","error");
   }catch(e){ARK.showToast("Upload error","error");}
 }
 
-// Milestone attachments helpers
 function toggleLinkInput(mi){const w=document.getElementById("link-input-"+mi);if(!w)return;const v=w.style.display==="flex";document.getElementById("note-input-"+mi).style.display="none";w.style.display=v?"none":"flex";w.style.flexDirection="column";if(!v)setTimeout(()=>document.getElementById("link-url-"+mi)?.focus(),50);}
 function toggleNoteInput(mi){const w=document.getElementById("note-input-"+mi);if(!w)return;const v=w.style.display==="flex";document.getElementById("link-input-"+mi).style.display="none";w.style.display=v?"none":"flex";w.style.flexDirection="column";if(!v)setTimeout(()=>document.getElementById("note-text-"+mi)?.focus(),50);}
-function saveMilestoneLink(mi){if(!selectedProject)return;const url=document.getElementById("link-url-"+mi)?.value.trim(),label=document.getElementById("link-label-"+mi)?.value.trim();if(!url){ARK.showToast("Enter a URL","warn");return;}try{new URL(url);}catch(e){ARK.showToast("Invalid URL","warn");return;}const m=selectedProject.milestones[mi];if(!m.attachments)m.attachments=[];m.attachments.push({name:label||url,url,type:"link",uploadedAt:new Date().toISOString()});milestonesDirty=true;renderMilestones(selectedProject.milestones);scheduleSave();ARK.showToast("Link saved!","success");}
-function saveMilestoneNote(mi){if(!selectedProject)return;const content=document.getElementById("note-text-"+mi)?.value.trim();if(!content){ARK.showToast("Write something first","warn");return;}const m=selectedProject.milestones[mi];if(!m.attachments)m.attachments=[];m.attachments.push({type:"note",name:"Note",content,url:"",uploadedAt:new Date().toISOString()});milestonesDirty=true;renderMilestones(selectedProject.milestones);scheduleSave();ARK.showToast("Note saved!","success");}
+function saveMilestoneLink(mi){if(!selectedProject)return;const url=document.getElementById("link-url-"+mi)?.value.trim(),label=document.getElementById("link-label-"+mi)?.value.trim();if(!url){ARK.showToast("Enter a URL","warn");return;}try{new URL(url);}catch(e){ARK.showToast("Invalid URL","warn");return;}const m=selectedProject.milestones[mi];if(!m.attachments)m.attachments=[];m.attachments.push({name:label||url,url,type:"link",uploadedAt:new Date().toISOString()});milestonesDirty=true;renderMilestones(selectedProject.milestones);scheduleSave();ARK.showToast("Link saved","success");}
+function saveMilestoneNote(mi){if(!selectedProject)return;const content=document.getElementById("note-text-"+mi)?.value.trim();if(!content){ARK.showToast("Write something first","warn");return;}const m=selectedProject.milestones[mi];if(!m.attachments)m.attachments=[];m.attachments.push({type:"note",name:"Note",content,url:"",uploadedAt:new Date().toISOString()});milestonesDirty=true;renderMilestones(selectedProject.milestones);scheduleSave();ARK.showToast("Note saved","success");}
 function triggerMilestoneUpload(mi){const input=document.createElement("input");input.type="file";input.accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.webp,.zip,.mp4,.mov,.fig,.sketch";input.onchange=e=>handleMilestoneFile(mi,e.target.files[0]);input.click();}
 async function handleMilestoneFile(mi,file){
   if(!file||!selectedProject)return;const btn=document.querySelector(`[data-attach-mi="${mi}"]`);if(btn){btn.textContent="Uploading…";btn.disabled=true;}
   try{const base64=await fileToBase64(file),user=ARK.getUser(),fname=user?(user.firstName+" "+user.lastName):"Freelancer",cname=selectedProject.clientName||"Client";
     const res=await ARK.api({action:"upload_to_drive",token:ARK.getToken(),fileName:`${fname} - ${cname} - ${file.name}`,mimeType:file.type||"application/octet-stream",base64Data:base64,folderId:DRIVE_FOLDER_ID,projectId:selectedProject.id,milestoneId:selectedProject.milestones[mi]?.id||"ms-"+mi});
-    if(res.success){if(!selectedProject.milestones[mi].attachments)selectedProject.milestones[mi].attachments=[];selectedProject.milestones[mi].attachments.push({name:file.name,url:res.viewUrl,fileId:res.fileId,type:file.type,uploadedAt:new Date().toISOString()});milestonesDirty=true;renderMilestones(selectedProject.milestones);scheduleSave();ARK.showToast("File uploaded!","success");}
+    if(res.success){if(!selectedProject.milestones[mi].attachments)selectedProject.milestones[mi].attachments=[];selectedProject.milestones[mi].attachments.push({name:file.name,url:res.viewUrl,fileId:res.fileId,type:file.type,uploadedAt:new Date().toISOString()});milestonesDirty=true;renderMilestones(selectedProject.milestones);scheduleSave();ARK.showToast("File uploaded","success");}
     else ARK.showToast(res.error||"Upload failed","error");
   }catch(e){ARK.showToast("Upload error: "+e.message,"error");}
   finally{if(btn){btn.textContent="Attach";btn.disabled=false;}}
@@ -1954,6 +2177,8 @@ function editProject(){
     document.getElementById("ep-work-hours").value=p.workHoursPerWeek||"";
     document.getElementById("ep-notice-period").value=p.noticePeriod||"";
   }
+  // Update modal title
+  const mt=document.getElementById("edit-modal-title");if(mt)mt.textContent=isRetainerProject(p)?"Edit contract":"Edit project";
   ARK.openModal("modal-edit-project");
 }
 async function saveEditProject(){
@@ -1979,8 +2204,9 @@ async function saveEditProject(){
         document.getElementById("detail-notice-period").textContent=payload.noticePeriod||"Not set";
         document.getElementById("detail-work-hours").textContent=payload.workHoursPerWeek?payload.workHoursPerWeek+"h/week":"Not set";
       }
-      ARK.closeModal("modal-edit-project");renderProjects();ARK.showToast("Project updated","success");
+      ARK.closeModal("modal-edit-project");renderProjects();ARK.showToast("Saved","success");
       syncSeenAfterSave(id,res.updatedAt||new Date().toISOString());
+      _addLocalActivity(id,"update_project",{title},"freelancer");
     }else ARK.showToast(res.error||"Failed","error");
   }catch(e){ARK.showToast("Connection error.","error");}
   finally{setBtnLoading(btn,false);}
@@ -2010,32 +2236,12 @@ function renderWizardStep(){
       </div>
       <div class="type-card ${wizard.type==="hourly"?"selected":""}" onclick="selectType('hourly',this)">
         <div class="type-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9.5 2.5h5M12 2.5v2"/></svg></div>
-        <div class="type-card-name">Hourly</div>
-        <div class="type-card-desc">Bill by the hour. Log time daily. Great for ongoing or scope-uncertain work.</div>
-      </div>
-      <div class="type-card ${wizard.type==="retainer"?"selected":""}" onclick="selectType('retainer',this)">
-        <div class="type-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg></div>
-        <div class="type-card-name">Retainer</div>
-        <div class="type-card-desc">Full-time or ongoing engagement. Monthly deliverables, consistent income, with start & end dates.</div>
-      </div>
-    </div>`;
-  }else if(wizard.step===2){
-    const isH=wizard.type==="hourly",isR=wizard.type==="retainer";
-    body.innerHTML=`
-      <div class="field"><label class="field-label">Project title *</label><input class="field-input" type="text" id="w-title" value="${ARK.escHtml(wizard.data.title||"")}" placeholder="e.g. ${isR?"Social Media Management":"Airbnb Automation"}" autocomplete="off"><span id="err-w-title" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
-      <div class="field"><label class="field-label">Description <span style="font-weight:400;color:var(--ink4);">(max 70 words)</span></label><textarea class="field-input field-textarea" id="w-desc" rows="2" style="height:auto;padding:10px 12px;resize:vertical;" placeholder="Brief overview of the project scope…" oninput="updateWordCount('w-desc','w-desc-count')">${ARK.escHtml(wizard.data.desc||"")}</textarea><div class="word-counter" id="w-desc-count">0 / 70</div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div class="field"><label class="field-label">Start date</label><input class="field-input" type="date" id="w-start" value="${wizard.data.start||""}"></div>
-        <div class="field"><label class="field-label">${isR?"Contract end date (optional)":"Due date"}</label><input class="field-input" type="date" id="w-due" value="${wizard.data.due||""}"></div>
-      </div>
-      ${isH?`<div class="field"><label class="field-label">Estimated hours</label><input class="field-input" type="number" id="w-hours" value="${wizard.data.hours||""}" placeholder="e.g. 40"></div>`:""}
-      ${isR?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div class="field"><label class="field-label">Work hours/week</label><input class="field-input" type="number" id="w-work-hours" value="${wizard.data.workHours||""}" placeholder="e.g. 40" min="1" max="168"></div>
-        <div class="field"><label class="field-label">Notice period</label><select class="field-input field-select" id="w-notice"><option value="">None</option><option value="1 week">1 week</option><option value="2 weeks">2 weeks</option><option value="1 month">1 month</option><option value="2 months">2 months</option><option value="3 months">3 months</option></select></div>
-      </div>`:""}`;
-  }else if(wizard.step===3){
-    const isH=wizard.type==="hourly",isR=wizard.type==="retainer";
-    const clientOpts=allClients.filter(c=>c.status==="active").map(c=>`<option value="${c.id}" ${wizard.data.clientId===c.id?"selected":""}>${ARK.escHtml(c.name)}${c.company?" · "+ARK.escHtml(c.company):""}</option>`).join("");
+It looks like the response got cut off again. Let me continue from where the wizard step 3 was cut, and complete the file:
+
+The issue is the response is too long for a single message. Let me give you the remaining JavaScript portion to append:
+
+Replace the end of the <script> tag (starting from wizard step 3 body.innerHTML) with this completion:
+
     body.innerHTML=`
       <div class="field"><label class="field-label">Client *</label><select class="field-input field-select" id="w-client"><option value="">Select client…</option>${clientOpts}</select><span id="err-w-client" style="font-size:.72rem;color:var(--red);display:none;margin-top:2px;">Required</span></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
@@ -2043,8 +2249,8 @@ function renderWizardStep(){
         <div class="field"><label class="field-label">Currency</label><select class="field-input field-select" id="w-currency"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div>
       </div>
       <div style="margin-top:4px;padding:12px;background:var(--bg2);border-radius:var(--r);border:1px solid var(--line2);">
-        <div style="font-size:.73rem;color:var(--ink4);margin-bottom:4px;display:flex;align-items:center;gap:5px;">📋 Summary</div>
-        <div style="font-size:.82rem;color:var(--ink2);line-height:1.6;">${wizard.data.title||"Untitled"} · ${wizard.type==="hourly"?"Hourly":wizard.type==="retainer"?"Retainer (ongoing)":"Fixed price"}${wizard.data.start?" · Starts "+ARK.fmtDate(wizard.data.start):""}${wizard.data.due?" · "+wizard.type==="retainer"?"Ends ":"Due "+ARK.fmtDate(wizard.data.due):""}</div>
+        <div style="font-size:.73rem;color:var(--ink4);margin-bottom:4px;display:flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Summary</div>
+        <div style="font-size:.82rem;color:var(--ink2);line-height:1.6;">${wizard.data.title||"Untitled"} · ${wizard.type==="hourly"?"Hourly":wizard.type==="retainer"?"Contract (ongoing)":"Fixed price"}${wizard.data.start?" · Starts "+ARK.fmtDate(wizard.data.start):""}${wizard.data.due?" · Due "+ARK.fmtDate(wizard.data.due):""}</div>
       </div>`;
   }
 }
@@ -2083,7 +2289,9 @@ async function createProject(){
       const client=allClients.find(c=>c.id===wizard.data.clientId);
       res.project.clientName=client?.name||"";res.project.milestones=[];
       allProjects.unshift(res.project);closeWizard();renderProjects();updateStats();
-      ARK.showToast("Project created! 🎉","success");setTimeout(()=>openDetail(res.project.id),300);
+      ARK.showToast("Project created","success");
+      _addLocalActivity(res.project.id,"create_project",{},"freelancer");
+      setTimeout(()=>openDetail(res.project.id),300);
     }else ARK.showToast(res.error||"Failed to create","error");
   }catch(e){ARK.showToast("Connection error.","error");}
   finally{setBtnLoading(btn,false);}
@@ -2100,7 +2308,19 @@ function badgeHtml(status){
   return`<span class="badge ${map[status]||"badge-draft"}"><span class="badge-dot"></span>${labels[status]||status}</span>`;
 }
 function fileToBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(",")[1]);r.onerror=rej;r.readAsDataURL(file);});}
-function getFileIcon(type){if(!type)return"📎";if(type==="link")return"🔗";if(type.includes("pdf"))return"📄";if(type.includes("image"))return"🖼️";if(type.includes("video"))return"🎥";if(type.includes("sheet")||type.includes("excel"))return"📊";if(type.includes("word")||type.includes("document"))return"📝";if(type.includes("presentation")||type.includes("powerpoint"))return"📑";if(type.includes("zip"))return"🗜️";return"📎";}
+
+// SVG file icons (no emojis)
+function getFileIconSvg(type){
+  if(!type)return`<svg class="file-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>`;
+  if(type==="link")return`<svg class="file-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>`;
+  if(type.includes("pdf"))return`<svg class="file-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`;
+  if(type.includes("image"))return`<svg class="file-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
+  if(type.includes("video"))return`<svg class="file-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>`;
+  if(type.includes("sheet")||type.includes("excel"))return`<svg class="file-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`;
+  if(type.includes("zip"))return`<svg class="file-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`;
+  return`<svg class="file-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>`;
+}
+
 function openAttachment(url){window.open(url,"_blank","noopener");}
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeDetail();closeWizard();["modal-delete","modal-log-time","modal-view-logs","modal-retainer-all","modal-edit-project"].forEach(id=>ARK.closeModal(id));}});
 </script>
